@@ -19,7 +19,7 @@ dental_data_formatted <- dental_data %>%
 
 # add derived fields
 # reformat month and calculates UDAs delivered from FP17s
-dental_data_formatted <- dental_data %>% 
+dental_data_formatted <- dental_data_formatted %>% 
   rowwise() %>% 
   mutate(YEAR_MONTH = as.Date(paste(substr(YEAR_MONTH, 1, 4), substr(YEAR_MONTH, 5, 6), "01", sep = "-")), 
          UDA_BAND_1_DELIVERED = BAND_1_DELIVERED*1, 
