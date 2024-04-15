@@ -27,3 +27,4 @@ contract_data_formatted <- contract_data_formatted %>%
 write.csv(contract_data_formatted, 
           "N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/BSA_published_data/time_series_contractual_formatted.csv", 
           row.names = FALSE)
+
