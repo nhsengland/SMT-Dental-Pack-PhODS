@@ -5,7 +5,7 @@ library(tidyverse)
 dental_data <- read.csv("N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/BSA_published_data/time_series_dental_activity.csv")
 
 # read in contract to ICB mapping table
-source("N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/contract_to_icb_mapping.R")
+source("N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/BSA_published_data/contract_to_icb_mapping.R")
 
 # join tables to add region column and map all months to ICBs
 dental_data_formatted <- dental_data %>% 
@@ -37,3 +37,9 @@ dental_data_formatted <- dental_data_formatted %>%
                                                                   UDA_BAND_3_DELIVERED, 
                                                                   UDA_BAND_URGENT_DELIVERED, 
                                                                   na.rm = TRUE)))
+
+# save out as csv
+write.csv(dental_data_formatted, 
+          "N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/BSA_published_data/time_series_dental_formatted.csv", 
+          row.names = FALSE)
+

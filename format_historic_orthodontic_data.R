@@ -2,13 +2,13 @@
 library(tidyverse)
 
 # read in time series file
-contract_data <- read.csv("N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/BSA_published_data/time_series_contractual.csv")
+orthodontic_data <- read.csv("N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/BSA_published_data/time_series_orthodontic_activity.csv")
 
 # read in contract to ICB mapping table
 source("N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/BSA_published_data/contract_to_icb_mapping.R")
 
 # join tables to add region column and map all months to ICBs
-contract_data_formatted <- contract_data %>% 
+orthodontic_data_formatted <- orthodontic_data %>% 
   left_join(extract, by = c("CONTRACT_NUMBER" = "contract_number")) %>% 
   select(-c(COMMISSIONER_CODE, COMMISSIONER_NAME)) %>% 
   rename("COMMISSIONER_NAME" = commissioner_name, 
@@ -17,13 +17,11 @@ contract_data_formatted <- contract_data %>%
          "REGION_CODE" = region_code) %>% 
   select(YEAR_MONTH, COMMISSIONER_NAME, COMMISSIONER_CODE, REGION_NAME, REGION_CODE, everything())
 
-# reformat month, contract start date, and contract end date
-contract_data_formatted <- contract_data_formatted %>% 
-  mutate(YEAR_MONTH = as.Date(paste(substr(YEAR_MONTH, 1, 4), substr(YEAR_MONTH, 5, 6), "01", sep = "-")), 
-         START_DATE = as.Date(START_DATE, format = "%d/%m/%Y"), 
-         END_DATE = as.Date(END_DATE, format = "%d/%m/%Y"))
+# reformat month column
+orthodontic_data_formatted <- orthodontic_data_formatted %>% 
+  mutate(YEAR_MONTH = as.Date(paste(substr(YEAR_MONTH, 1, 4), substr(YEAR_MONTH, 5, 6), "01", sep = "-")))
 
 # save out as csv
-write.csv(contract_data_formatted, 
-          "N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/BSA_published_data/time_series_contractual_formatted.csv", 
+write.csv(orthodontic_data_formatted, 
+          "N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/BSA_published_data/time_series_orthodontic_formatted.csv", 
           row.names = FALSE)
