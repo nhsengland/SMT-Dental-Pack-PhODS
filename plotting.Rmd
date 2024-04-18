@@ -1,0 +1,240 @@
+---
+title: "plotting for SMT Dental Pack"
+---
+
+```{r packages}
+
+library(ggrepel)
+
+```
+
+
+```{r UDA delivered/contracted}
+
+plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data, 
+                                     UDAorUOA = "UDA",
+                                     level = "National",
+                                     region_STP_name = NULL,
+                                     plotChart = TRUE, 
+                                     all_regions_and_STPs = FALSE){
+  
+  data <- data %>%
+    mutate(month = as.Date(month))
+ 
+  
+  #filter for STP or region
+  if(level == "Regional"){
+    data <- data %>%
+      filter(region_name == region_STP_name )
+    subtitle <- region_STP_name
+  }else if(level == "STP"){
+    data <- data %>%
+      filter(commissioner_name == region_STP_name)
+    subtitle <- region_STP_name
+  }else{
+    subtitle <- "England"
+  }
+  
+  if(UDAorUOA == "UDA"){
+    #get data into the right format
+    data <- get_delivery_data(data = UDA_calendar_data, UDAorUOA = "UDA", all_regions_and_STPs = F)
+    data <- data%>%filter(month>"2021-03-01")
+    title <- "monthly percentage of usual annual contracted UDAs \nsubmitted across all contracts* scaled up to 12 months**"
+    ylab <- "% of contracted UDAs submitted"
+    #captionTitle <- "*These are treatment months."
+    
+    lineCol <- "#CC79A7"
+    septemberTarget <- 60
+    decemberTarget <- 65
+    marchTarget <- 85
+    juneTarget <- 95
+    
+    ##colnames(data)
+    data <- data %>% 
+      mutate(perc_standardised_wd_int = case_when(month == as.Date("2023-04-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (20/250)*100),
+                                                  month == as.Date("2023-05-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (23/250)*100),
+                                                  month == as.Date("2023-06-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (22/250)*100),
+                                                  month == as.Date("2023-07-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (21/250)*100),
+                                                  month == as.Date("2023-08-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (23/250)*100),
+                                                  month == as.Date("2023-09-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (21/250)*100),
+                                                  month == as.Date("2023-10-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (22/250)*100),
+                                                  month == as.Date("2023-11-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (22/250)*100),
+                                                  month == as.Date("2023-12-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (19/250)*100),
+                                                  month == as.Date("2024-01-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (22/250)*100),
+                                                  month == as.Date("2024-02-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (21/250)*100),
+                                                  month == as.Date("2024-03-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (21/250)*100)
+                                                  
+      )) %>% 
+      mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
+    
+    
+  }else{
+    #get data into the right format
+    data <- get_delivery_data(data = UOA_calendar_data, UDAorUOA = "UOA", all_regions_and_STPs = F)
+    title <- "monthly percentage of usual annual contracted UOAs \nsubmitted across all contracts* scaled up to 12 months**"
+    ylab <- "% of contracted UOAs submitted"
+    #captionTitle <- "**These are treatment months.."
+    lineCol <- "steelblue"
+    septemberTarget <- 80
+    decemberTarget <- 85
+    marchTarget <- 90
+    juneTarget <- 100
+  }
+  
+  data <- data %>%
+    mutate(month = as.Date(month))
+  
+  if(plotChart == TRUE){
+    #plot code
+    p <- ggplot(data) +
+      theme_bw() +
+      #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+      geom_line(aes(x = month,
+                    y = perc_UDA_UOA_delivered),
+                colour = lineCol,
+                linewidth = 1) +
+      geom_line(aes(x = month,
+                    y = perc_standardised_wd),
+                colour = "blue",
+                linewidth = 1) +
+      geom_point(aes(x = month,
+                     y = perc_UDA_UOA_delivered),
+                 colour = lineCol
+      ) 
+    
+      
+      p <- p +
+        geom_segment(aes(x = as.Date("2021-04-01"), y = septemberTarget, xend = as.Date("2021-09-01"), yend = septemberTarget),
+                     colour = "#0072B2",
+                     linetype = "dashed") +
+        geom_segment(aes(x = as.Date("2021-10-01"), y = decemberTarget, xend = as.Date("2021-12-01"), yend = decemberTarget),
+                     colour = "#0072B2",
+                     linetype = "dashed") +
+        geom_segment(aes(x = as.Date("2022-01-01"), y = marchTarget, xend = as.Date("2022-03-01"), yend = marchTarget),
+                    colour = "#0072B2",
+                     linetype = "dashed") +
+        geom_segment(aes(x = as.Date("2022-04-01"), y = juneTarget, xend = as.Date("2022-06-01"), yend = juneTarget),
+                     colour = "#0072B2",
+                     linetype = "dashed") +
+        
+        annotate(geom = "text",
+                 x = as.Date("2021-04-01") + lubridate::weeks(2),
+                 y = septemberTarget - 5,
+                 label = "H1 threshold",
+                 size = 3,
+                 colour = "#0072B2") +
+        annotate(geom = "text",
+                 x = as.Date("2021-10-01") + lubridate::weeks(2),
+                 y = decemberTarget - 5,
+                 label = "Q3 threshold",
+                 size = 3,
+                 colour = "#0072B2") +
+        annotate(geom = "text",
+                 x = as.Date("2022-01-01") + lubridate::weeks(2),
+                 y = marchTarget - 5,
+                 label = "Q4 threshold",
+                 size = 3,
+                 colour = "#0072B2") +
+        annotate(geom = "text",
+                 x = as.Date("2022-04-01") + lubridate::weeks(2),
+                 y = juneTarget - 5,
+                 label = "Q1 threshold",
+                 size = 3,
+                 colour = "#0072B2") +
+        
+        annotate(geom = "text",
+                 x = data$month,
+                 y = data$perc_UDA_UOA_delivered + 5,
+                 label = paste0(data$perc_UDA_UOA_delivered, "%"),
+                 ##paste0(data$perc_standardised_wd [nrow(data)], "%")
+                 size = 3) +
+        annotate(geom = "text",
+                 x = data$month,
+                 y = data$perc_standardised_wd - 3,
+                 label = paste0(data$perc_standardised_wd, "%"),
+                 size = 3,
+                 color="blue")
+      
+
+    
+    p <- p +
+      scale_x_date(date_breaks = "1 month",
+                   date_labels = "%b-%y") +
+      scale_y_continuous(limits = c(0, max(c(data$perc_UDA_UOA_delivered, 95), na.rm = T) + 5),
+                         breaks = seq(0, max(c(data$perc_UDA_UOA_delivered, 95), na.rm = T) + 5, 10)) +
+      labs(title = title,
+           x = "Month",
+           y = ylab,
+           subtitle = subtitle) +
+      theme(axis.text.x = element_text(angle = 90, vjust=-0.0001
+      ))
+    
+    p
+    
+  }else{
+    
+    if(UDAorUOA == "UDA"){
+      new_col_names <- c(`Calendar month` = "month",
+                         `Region Name` = "region_name",
+                         `Commissioner Name` = "commissioner_name",
+                         `Monthly UDAs delivered` = "monthly_UDA_UOAs_delivered",
+                         `Annual contracted UDAs` = "annual_contracted_UDA_UOA",
+                         `Scaled monthly UDAs delivered` = "scaled_monthly_UDA_UOAs_delivered",
+                         `Scaled monthly percentage of contracted UDAs delivered` = "perc_UDA_UOA_delivered")
+    }else{
+      new_col_names <- c(`Calendar month` = "month",
+                         `Region Name` = "region_name",
+                         `Commissioner Name` = "commissioner_name",
+                         `Monthly UOAs delivered` = "monthly_UDA_UOAs_delivered",
+                         `Annual contracted UOAs` = "annual_contracted_UDA_UOA",
+                         `Scaled monthly UOAs delivered` = "scaled_monthly_UDA_UOAs_delivered",
+                         `Scaled monthly percentage of contracted UOAs delivered` = "perc_UDA_UOA_delivered")
+    }
+    
+    
+    data <- data %>%
+      rename(any_of(new_col_names))
+  }
+}
+
+```
+
+```{r number of contract}
+
+get_num_contracts <- function(data = UDA_calendar_data,
+                              UDAorUOA = "UDA",
+                              level = "National",
+                              region_STP_name = NULL){
+  
+  
+  #filter for STP or region
+  if(level == "Regional"){
+    data <- data %>% 
+      filter(region_name == region_STP_name )
+  }else if(level == "STP"){
+    data <- data %>% 
+      filter(commissioner_name == region_STP_name)
+    subtitle <- region_STP_name
+  }
+  
+  data <- data %>%
+    filter(month == max(data$month))
+  
+  nrow(data)
+}
+
+
+```
+
