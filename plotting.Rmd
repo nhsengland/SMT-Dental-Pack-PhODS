@@ -49,35 +49,26 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
     marchTarget <- 85
     juneTarget <- 95
     
-    ##colnames(data)
+    #method 1-- function to calculate the number of working days -- you can use it if you want
+#    Nweekdays <- function(a, b, holidays, weekend) { 
+#    possible_days <- seq(a, b, "days")
+  # Count all days that are not weekend and
+  # are not holidays
+#    sum(!weekdays(possible_days) %in% weekend & !possible_days %in% holidays)
+#    }
+
+#    weekend <-  c("Saturday", "Sunday")
+#    holidays <- as.Date(c("2023-04-07", "2023-04-10", "2023-05-01",'2023-08-28', '2023-12-25','2023-12-26', '2024-01-01', '2024-03-29', '2024-04-01', '2024-05-06', '2024-08-26', '2024-12-25','2024-12-26','2025-01-01'))
+#    Nweekdays(as.Date("2017-08-01"), as.Date("2017-12-31"), holidays, weekend)
+    
+
+#method 2 -- to calculate working days
     data <- data %>% 
-      mutate(perc_standardised_wd_int = case_when(month == as.Date("2023-04-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (20/250)*100),
-                                                  month == as.Date("2023-05-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (23/250)*100),
-                                                  month == as.Date("2023-06-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (22/250)*100),
-                                                  month == as.Date("2023-07-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (21/250)*100),
-                                                  month == as.Date("2023-08-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (23/250)*100),
-                                                  month == as.Date("2023-09-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (21/250)*100),
-                                                  month == as.Date("2023-10-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (22/250)*100),
-                                                  month == as.Date("2023-11-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (22/250)*100),
-                                                  month == as.Date("2023-12-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (19/250)*100),
-                                                  month == as.Date("2024-01-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (22/250)*100),
-                                                  month == as.Date("2024-02-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (21/250)*100),
-                                                  month == as.Date("2024-03-01") ~ ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (21/250)*100)
-                                                  
-      )) %>% 
+      left_join(working_days,by=c('month')) %>% 
+      mutate(perc_standardised_wd_int = ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
+                                                                                      (`no workdays`/`total workdays`)*100))%>% 
       mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
+    
     
     
   }else{
