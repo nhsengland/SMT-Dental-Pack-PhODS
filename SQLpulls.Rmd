@@ -92,7 +92,7 @@ UOA_calendar_data<-pull_UOA_calendar_data()%>%
 names(UOA_calendar_data) <- base::tolower(names(UOA_calendar_data))
 UOA_calendar_data<-UOA_calendar_data%>%
   rename(month=year_month,commissioner_ods_code_icb=commissioner_code,name_or_company_name=provider_name,annual_contracted_UOA=uoa_perf_tar,UOA_delivered=uoa_delivered,
-         orthodontic_starts=ORTHO_TRT_STARTED,orthodontic_completions=ORTHO_TRT_COMPLETED)
+         orthodontic_starts=ortho_trt_started,orthodontic_completions=ortho_trt_completed)
 
 
 
