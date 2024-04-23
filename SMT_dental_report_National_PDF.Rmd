@@ -58,3 +58,41 @@ plot_UDA_UOA_delivery_wd(data = UDA_calendar_data,
 * The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
 
+## UDA activity- treatment data standardised by working days
+
+```{r UDA_activity_Calendar2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
+                                             plotChart = TRUE, 
+                                             all_regions_and_STPs = FALSE,
+                                             level = "National",
+                                             region_STP_name = Null)
+```
+
+* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+
+* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+
+
+
+## UOA activity- treatment data standardised by working days
+
+```{r UOA_activity_Calendar1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                                             plotChart = TRUE, 
+                                             all_regions_and_STPs = FALSE,
+                                             level = "National",
+                                             region_STP_name = Null)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UOAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UOAs/12.
+
+* The black trend line shows the average performance of contracts. In current financial year scaled up by 12.
+
+
+
+## 111 dental related call volumes
+
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_111_referrals()
+```
