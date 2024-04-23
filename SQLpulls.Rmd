@@ -26,7 +26,7 @@ pull_contractual_dataset <- function(){
   sql <- "SELECT [YEAR_MONTH],
                 [CONTRACT_NUMBER]
   FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[contractual_dataset]
-  where [YEAR_MONTH] > '2021-03-01'"
+  where [YEAR_MONTH] > '2016-03-01'"
   result <- dbSendQuery(con, sql)
   contractual_dataset <- dbFetch(result)
   dbClearResult(result)
@@ -52,7 +52,7 @@ pull_UDA_calendar_data <- function(){
   
   sql <- "SELECT *
   FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[general_dental_activity]
-  where [YEAR_MONTH] > '2021-03-01'"
+  where [YEAR_MONTH] > '2016-03-01'"
   result <- dbSendQuery(con, sql)
   UDA_calendar_data <- dbFetch(result)
   dbClearResult(result)
@@ -79,7 +79,7 @@ pull_UOA_calendar_data <- function(){
   
   sql <- "SELECT *
   FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[orthodontic_activity]
-  where [Year_Month] > '2021-03-01'"
+  where [Year_Month] > '2016-03-01'"
   result <- dbSendQuery(con, sql)
   UOA_calendar_data <- dbFetch(result)
   dbClearResult(result)
@@ -88,12 +88,19 @@ pull_UOA_calendar_data <- function(){
 }
 
 UOA_calendar_data<-pull_UOA_calendar_data()%>%
+  filter(UOA_DELIVERED!='1')%>%
   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
 names(UOA_calendar_data) <- base::tolower(names(UOA_calendar_data))
 UOA_calendar_data<-UOA_calendar_data%>%
-  rename(month=year_month,commissioner_ods_code_icb=commissioner_code,name_or_company_name=provider_name,annual_contracted_UOA=uoa_perf_tar,UOA_delivered=uoa_delivered,
-         orthodontic_starts=ortho_trt_started,orthodontic_completions=ortho_trt_completed)
+  rename(month=year_month,commissioner_ods_code_icb=commissioner_code,name_or_company_name=provider_name,annual_contracted_UOA=uoa_perf_tar,UOA_delivered=uoa_delivered,orthodontic_starts=ortho_trt_started,orthodontic_completions=ortho_trt_completed)
 
 
 
 ```
+
+
+
+```{r dental 111 data}
+dental_data_111 <- read_excel("N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/111_pathways_data/dental_data_111.xlsx")
+```
+

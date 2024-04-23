@@ -1,0 +1,52 @@
+\titlegraphic{\includegraphics[width=12cm, height=2cm]{footer.JPG}}
+\setbeamertemplate{footline}
+{
+    \leavevmode%
+    \hbox{%
+        \begin{beamercolorbox}[wd = .5\paperwidth, ht = 1ex, dp = 1ex, center]{author in head/foot}%
+            CONFIDENTIAL: Not for onward sharing
+        \end{beamercolorbox}%
+        \begin{beamercolorbox}[wd = .5\paperwidth, ht = 1ex, dp = 1ex, center]{date in head/foot}%
+            \insertframenumber{}
+        \end{beamercolorbox}
+    }%
+    \vskip3pt%
+}
+
+\setbeamertemplate{headline}
+{
+    \leavevmode%
+    \hbox{%
+        \begin{beamercolorbox}[wd = \paperwidth, ht = 20pt, dp = 0pt, right]{date in head/foot}%
+            \includegraphics[width=1.5cm, height=4.5cm]{logo.JPG}
+        \end{beamercolorbox}
+    }%
+    % \vskip3pt%
+}
+
+\addtobeamertemplate{frametitle}{\vspace*{-0.7cm}}{\vspace*{0.2cm}}
+
+
+
+% \usepackage{graphicx}
+% \usepackage{fancyhdr}
+%    \pagestyle{fancy}
+%    \fancyhead[R]{\includegraphics[width=1.5cm, height=4.5cm]{logo.JPG}}
+% \renewcommand{\headrulewidth}{0pt}
+% 
+% \addtobeamertemplate{footline}{\begin{center}\rule{0.6\paperwidth}{0.4pt}\end{center}\vspace*{-1ex}}{}
+
+% \setbeamertemplate{headline}
+% {
+%     \leavevmode%
+%     \hbox{%
+%         \begin{beamercolorbox}[wd = .5\paperwidth, ht = 1ex, dp = 1ex, center]{author in head/foot}%
+%             \pgfdeclareimage[height=1.5cm, width=4.5cm]{logo}{logo.JPG}
+%             \logo{\pgfuseimage{logo}}
+%         \end{beamercolorbox}
+%     }%
+%     \vskip3pt%
+% }
+% 
+% \addtobeamertemplate{headline}{\begin{center}\rule{0.6\paperwidth}{0.4pt}\end{center}\vspace*{-1ex}}{}
+
