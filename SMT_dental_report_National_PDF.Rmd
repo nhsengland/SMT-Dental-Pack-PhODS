@@ -1,0 +1,98 @@
+---
+title: "Dental Data Pack"
+subtitle:  "National"
+author: "`r paste(format(Sys.time(), '%B, %Y'), ' - Reporting up to end of', format(Sys.Date() - lubridate::weeks(4), '%B, %Y'))`"
+output:
+  beamer_presentation:
+    slide_level: 2
+    toc: true
+    includes:
+      in_header: slide_format2.tex
+  slidy_presentation: default
+sansfont: Calibri Light
+fontsize: 8pt
+classoption: aspectratio = 169
+##always_allow_html: true
+---
+
+
+```{r libraries, include = FALSE}
+library(tidyverse)
+library(readxl)
+library(DBI)
+library(odbc)
+library(reactable)
+library(downloadthis)
+library(lubridate)
+library(knitr)
+library(tidyverse)
+library(downloadthis)
+library(ggrepel)
+options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
+options(knitr.duplicate.label = 'allow')
+
+source(knitr::purl("SQLpulls.Rmd", output = tempfile()))
+source(knitr::purl("Data_Processing.Rmd", output = tempfile()), local = TRUE)
+source(knitr::purl("plotting.Rmd", output = tempfile()), local = TRUE)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+## UDA Activity Data
+
+```{r UDA_activity_Calendar1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  level = "National",
+                                  region_STP_name = NULL,
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE)
+```
+
+* This graph shows the average monthly performance of the **`r get_num_contracts(level = "National", region_STP_name = NULL)`** GDS contracts scaled up by 12 months measured against the delivery thresholds (60% for Apr-Sep 21, 65% for Oct-Dec, 85% for Jan-Mar, 95% for Apr-Jun 22 and 100% going forward).
+
+
+* The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+
+
+## UDA activity- treatment data standardised by working days
+
+```{r UDA_activity_Calendar2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
+                                             plotChart = TRUE, 
+                                             all_regions_and_STPs = FALSE,
+                                             level = "National",
+                                             region_STP_name = Null)
+```
+
+* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+
+* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+
+
+
+## UOA activity- treatment data standardised by working days
+
+```{r UOA_activity_Calendar1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                                             plotChart = TRUE, 
+                                             all_regions_and_STPs = FALSE,
+                                             level = "National",
+                                             region_STP_name = Null)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UOAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UOAs/12.
+
+* The black trend line shows the average performance of contracts. In current financial year scaled up by 12.
+
+
+
+## 111 dental related call volumes
+
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_111_referrals()
+```

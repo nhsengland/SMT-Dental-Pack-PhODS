@@ -1,0 +1,79 @@
+---
+title: "produce clean data for plotting for SMT Dental Pack"
+---
+
+
+```{r UDA delivered/contracted}
+
+get_delivery_data <- function(data = UDA_calendar_data,
+                              UDAorUOA = "UDA",
+                              all_regions_and_STPs = F,
+                              contractor_level = F,
+                              renameColumns = F){
+  
+  
+  #show all ICBs in output data if specified
+  if(all_regions_and_STPs == TRUE){
+    
+    data <- data %>%
+      group_by(month, region_name, commissioner_name)
+    
+    
+  }else if(contractor_level == TRUE){
+    
+    data <- data %>%
+      group_by(month, contract_number, commissioner_name)
+    
+  }else{
+    data <- data %>%
+      group_by(month)
+  }
+  
+  #group by month and sum UDAs delivered
+  UDA_UOAs_delivered <- data %>%
+    summarise(monthly_UDA_UOAs_delivered = ifelse(UDAorUOA == "UDA", 
+                                                  sum(UDA_delivered, na.rm = T),
+                                                  sum(UOA_delivered, na.rm = T)),
+              annual_contracted_UDA_UOA = ifelse(UDAorUOA == "UDA",
+                                                 sum(annual_contracted_UDA, na.rm = T),
+                                                 sum(annual_contracted_UOA, na.rm = T))
+    )
+  
+  new_data <- UDA_UOAs_delivered %>%
+    #April data needs scaling differently
+    mutate(scaled_monthly_UDA_UOAs_delivered = monthly_UDA_UOAs_delivered * 12) %>%
+    mutate(perc_UDA_UOA_delivered = round(scaled_monthly_UDA_UOAs_delivered * 100 / annual_contracted_UDA_UOA)) 
+  
+  #for PCOR and SOF table
+  if(renameColumns){
+    
+    new_data <- new_data %>%
+      select(treatment_month = month,
+             commissioner_name,
+             region_name,
+             monthly_UDAs_delivered = monthly_UDA_UOAs_delivered,
+             scaled_monthly_UDAs_delivered = scaled_monthly_UDA_UOAs_delivered,
+             annual_contracted_UDAs = annual_contracted_UDA_UOA,
+             scaled_perc_UDAs_delivered = perc_UDA_UOA_delivered) %>%
+      mutate(threshold_perc = case_when(treatment_month >= as.Date("2021-04-01") & treatment_month < as.Date("2021-10-01") ~ "60",
+                                        treatment_month >= as.Date("2021-10-01") & treatment_month < as.Date("2022-01-01") ~ "65",
+                                        treatment_month >= as.Date("2022-01-01") & treatment_month < as.Date("2022-04-01") ~ "85",
+                                        treatment_month >= as.Date("2022-04-01") & treatment_month < as.Date("2022-07-01") ~ "95"))
+  }
+  
+  new_data
+  
+}
+
+
+
+```
+
+
+```{r historic UDA}
+
+
+
+
+```
+
