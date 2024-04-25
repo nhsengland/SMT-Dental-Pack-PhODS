@@ -87,8 +87,9 @@ pull_UOA_calendar_data <- function(){
   UOA_calendar_data
 }
 
-UOA_calendar_data<-pull_UOA_calendar_data()%>%
-  filter(UOA_DELIVERED!='1')%>%
+UOA_calendar_data<-pull_UOA_calendar_data()
+UOA_calendar_data = dplyr::filter(UOA_calendar_data, as.numeric(UOA_DELIVERED) <= 1.0)
+UOA_calendar_data<-UOA_calendar_data%>%
   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
 names(UOA_calendar_data) <- base::tolower(names(UOA_calendar_data))
 UOA_calendar_data<-UOA_calendar_data%>%
