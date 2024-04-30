@@ -605,3 +605,213 @@ plot_111_referrals <- function(data = dental_data_111,
 
 ```
 
+``` {r YTD UDA/UDA delivered}
+plot_YTD_UDA_UOA_delivery <- function(data = UDA_scheduled_data, 
+                                      historic_data = historical_UDA_scheduled_data,
+                                      UDAorUOA = "UDA",
+                                      level = "National",
+                                      region_STP_name = NULL,
+                                      plotChart = TRUE, 
+                                      all_regions_and_STPs = FALSE){
+
+  #filter for STP or region
+  if(level == "Regional"){
+    data <- data %>%
+      filter(region_name == region_STP_name )
+    subtitle <- region_STP_name
+  }else if(level == "STP"){
+    data <- data %>%
+      filter(commissioner_name == region_STP_name)
+    subtitle <- region_STP_name
+  }else{
+    subtitle <- "England"
+  }
+  
+  if(UDAorUOA == "UDA"){
+    #get data into the right format
+    data <- get_delivery_data(data, UDAorUOA = "UDA", all_regions_and_STPs = all_regions_and_STPs)
+    title <- "YTD UDA delivery across all contracts* against annual contracted UDAs (millions)"
+    ylab <- "YTD UDA delivery (millions)"
+    #captionTitle <- "*These are treatment months..."
+    lineCol <- "#CC79A7"
+    labels <- c("Expected YTD delivery to meet contracted UDAs \nif delivery were equal across the financial year", 
+                "Total annual contracted UDAs", 
+                "Actual YTD delivery")
+  }else{
+    #get data into the right format
+    data <- get_delivery_data(data, UDAorUOA = "UOA", all_regions_and_STPs = all_regions_and_STPs)
+    title <- "YTD UOA delivery across all contracts* against annual contracted UOAs (millions)"
+    ylab <- "YTD UOA delivery (millions)"
+    #captionTitle <- "*These are treatment months..."
+    lineCol <- "steelblue"
+    labels <- c("Expected YTD delivery to meet contracted UOAs \nif delivery were equal across the financial year",
+            "Total annual contracted UOAs", 
+            "Actual YTD delivery")
+  }
+  
+  # extract previous financial year
+  historic_data <- data %>% 
+    filter(month >= as.Date("2022-04-01") & month <= as.Date("2023-03-01")) %>% ##must be updated each financial year
+    mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
+  
+  data <- data %>%
+    filter(month >= as.Date("2023-04-01")) %>% ##must be updated each financial year
+    mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
+  
+  #get the mean annual contracted UDAs across the months
+  ##mean_annual_contracted_UDA_UOAs <- mean(data$annual_contracted_UDA_UOA)
+  
+  ## this has been chaged to latest contracted UDA / UOA on November 2023 by ME after checking with CK
+  # add latest contracted UDA/UOA as a column to use in plot
+  # also add for previous financial year
+  # output both as a value to be used in later calculations
+  data$latest_annual_contracted_UDA_UOAs<- dplyr::last(data$annual_contracted_UDA_UOA)
+  mean_annual_contracted_UDA_UOAs<- dplyr::last(data$annual_contracted_UDA_UOA)
+  historic_data$latest_annual_contracted_UDA_UOAs<- dplyr::last(historic_data$annual_contracted_UDA_UOA)
+  mean_annual_contracted_UDA_UOAs_historic<- dplyr::last(historic_data$annual_contracted_UDA_UOA)
+  
+  #add in blanks for the rest of the year
+  if(all_regions_and_STPs == FALSE & nrow(data) < 12){
+  
+    if(!(as.Date("2023-05-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2023-05-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  
+    if(!(as.Date("2023-06-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2023-06-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  
+    if(!(as.Date("2023-07-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2023-07-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  
+    if(!(as.Date("2023-08-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2023-08-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  
+    if(!(as.Date("2023-09-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2023-09-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  
+    if(!(as.Date("2023-10-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2023-10-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  
+    if(!(as.Date("2023-11-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2023-11-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  
+    if(!(as.Date("2023-12-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2023-12-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  
+    if(!(as.Date("2024-01-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-01-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  
+    if(!(as.Date("2024-02-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-02-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  
+    if(!(as.Date("2024-03-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-03-01"), 
+                              latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
+    }
+  }
+  
+
+  #add column for expected delivery
+  data_to_print <- data %>%
+    mutate(expected_delivery = seq(mean_annual_contracted_UDA_UOAs/12, mean_annual_contracted_UDA_UOAs, mean_annual_contracted_UDA_UOAs/12)) %>%
+    select(month, YTD_delivery, expected_delivery, latest_annual_contracted_UDA_UOAs)
+  
+  #pivot for plotting
+  data <- data_to_print %>%
+    pivot_longer(cols = c("YTD_delivery", "expected_delivery", "latest_annual_contracted_UDA_UOAs"), 
+               names_to = "measure", values_to = "value")
+
+  # format historic data to match current year
+  historic_data_to_print <- historic_data %>% 
+    mutate(expected_delivery = seq(mean_annual_contracted_UDA_UOAs_historic/12, mean_annual_contracted_UDA_UOAs_historic, mean_annual_contracted_UDA_UOAs_historic/12)) %>%
+    select(month, YTD_delivery, expected_delivery, latest_annual_contracted_UDA_UOAs)
+
+  historic_data <- historic_data_to_print %>% 
+    pivot_longer(cols = c("YTD_delivery", "expected_delivery", "latest_annual_contracted_UDA_UOAs"), 
+                names_to = "measure", values_to = "value")
+
+  # bind current and previous financial years
+  # pivot so latest contracted UDA or UOAs is a separate column
+  data <- rbind(historic_data, data) %>% 
+    mutate(year_type = ifelse(month > max(historic_data$month), "Current Financial Year", "Previous Financial Year"))
+
+  data$year_type <- factor(data$year_type, levels = c("Previous Financial Year",
+                                                      "Current Financial Year"))  
+  
+  if(plotChart == TRUE){
+    #plot code
+    p <- ggplot(data) +
+        theme_bw() +
+        geom_line(aes(x = month,
+                      y = value/1000000,
+                      colour = measure,
+                      linetype = measure),
+                  size = 1) +
+        geom_point(aes(x = month,
+                      y = value/1000000,
+                      colour = measure#,
+                      #shape = measure
+        )
+        ) +
+        #geom_hline(yintercept = latest_annual_contracted_UDA_UOAs/1000000,
+        #           linetype = "dashed") +
+        scale_x_date(date_breaks = "1 month",
+                    date_labels = "%b-%y") +
+        # scale_y_continuous(limits = c(0, max(c(data$perc_UDA_UOA_delivered, 95), na.rm = T) + 5),
+        #                    breaks = seq(0, max(c(data$perc_UDA_UOA_delivered, 95), na.rm = T) + 5, 10)) +
+        labs(title = title,
+            x = "Month",
+            y = ylab,
+            subtitle = subtitle,
+            #caption = captionTitle,
+            colour = "",
+            linetype = ""#,
+            #shape = ""
+        ) +
+        theme(axis.text.x = element_text(angle = 90, vjust=-0.0001
+        )) +
+        facet_wrap(vars(year_type),
+                  scales = "free_x") +
+        #annotate(geom = "text",
+        #         x = as.Date("2023-05-01") + lubridate::weeks(2),
+        #         y = mean_annual_contracted_UDA_UOAs/1000000 - mean_annual_contracted_UDA_UOAs/16000000,
+        #         label = "Total annual contracted UDAs",
+        #         size = 3) +
+        scale_colour_manual(values = c("grey", "black", lineCol), labels = labels) +
+        scale_linetype_manual(values = c("dashed", "dashed", "solid"), labels = labels,
+                              guide = "none") +
+        # scale_shape_manual(values = c("4", "1"), labels = c("Expected YTD delivery to meet contracted UDAs \nif delivery were equal across the year",
+        #                                                                 "Actual YTD delivery")) +
+        theme(legend.position="bottom")
+    
+    
+    p
+    
+  }else{
+    
+    data_to_print <- data_to_print %>%
+      rename(Month = month,
+             `YTD delivery` = YTD_delivery,
+             `Required YTD delivery in order to meet contracted UDAs` = expected_delivery)
+  }
+}
+```
