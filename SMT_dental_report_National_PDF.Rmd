@@ -57,6 +57,16 @@ plot_UDA_UOA_delivery_wd(data = UDA_calendar_data,
 
 * The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
+## YTD UDA delivery
+
+```{r YTD UDA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
+                          UDAorUOA = "UDA", 
+                          level = "National", 
+                          region_STP_name = NULL, 
+                          plotChart = TRUE, 
+                          all_regions_and_STPs = FALSE)
+```
 
 ## UDA activity- treatment data standardised by working days
 
@@ -95,4 +105,14 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
 plot_111_referrals()
+```
+
+
+## YTD UOA delivery
+```{r YTD UOA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+                          UDAorUOA = "UOA", 
+                          level = "National", 
+                          region_STP_name = NULL, 
+                          all_regions_and_STPs = FALSE)
 ```
