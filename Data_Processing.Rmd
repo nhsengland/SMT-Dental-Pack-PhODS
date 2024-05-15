@@ -12,7 +12,7 @@ get_delivery_data <- function(data = UDA_calendar_data,
                               renameColumns = F){
   
   
-  #show all ICBs in output data if specified
+  #show different levels of information in output data if specified
   if(all_regions_and_STPs == TRUE){
     
     data <- data %>%
@@ -29,7 +29,7 @@ get_delivery_data <- function(data = UDA_calendar_data,
       group_by(month)
   }
   
-  #group by month and sum UDAs delivered
+  #group by month/ICB/Region (depends on the previous step) and sum UDAs delivered and contracted UDA
   UDA_UOAs_delivered <- data %>%
     summarise(monthly_UDA_UOAs_delivered = ifelse(UDAorUOA == "UDA", 
                                                   sum(UDA_delivered, na.rm = T),
@@ -40,7 +40,7 @@ get_delivery_data <- function(data = UDA_calendar_data,
     )
   
   new_data <- UDA_UOAs_delivered %>%
-    #April data needs scaling differently
+    #scale data up *12 and then calculate percentage of UDA delivered
     mutate(scaled_monthly_UDA_UOAs_delivered = monthly_UDA_UOAs_delivered * 12) %>%
     mutate(perc_UDA_UOA_delivered = round(scaled_monthly_UDA_UOAs_delivered * 100 / annual_contracted_UDA_UOA)) 
   
@@ -64,14 +64,6 @@ get_delivery_data <- function(data = UDA_calendar_data,
   new_data
   
 }
-
-
-
-```
-
-
-```{r historic UDA}
-
 
 
 
