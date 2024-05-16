@@ -63,9 +63,11 @@ pull_UDA_calendar_data <- function(){
   UDA_calendar_data
 }
 
-#only include contractors in contractual_dataset - rename fields
+#only include contractors in contractual_dataset
 UDA_calendar_data<-pull_UDA_calendar_data()%>%
   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
+#exclude those with UDA target less than 1 - rename fields
+UDA_calendar_data = dplyr::filter(UDA_calendar_data, as.numeric(UDA_PERF_TARGET) > 1.0)
 names(UDA_calendar_data) <- base::tolower(names(UDA_calendar_data))
 UDA_calendar_data<-UDA_calendar_data%>%
   rename(month=year_month,annual_contracted_UDA=uda_perf_target,UDA_delivered=uda_delivered,commissioner_ods_code_icb=commissioner_code,name_or_company_name=provider_name,
@@ -95,7 +97,7 @@ pull_UOA_calendar_data <- function(){
 }
 
 UOA_calendar_data<-pull_UOA_calendar_data()
-#only include contractors in contractual_dataset - rename fields
+#only include contractors in contractual_dataset and exclude those with UOA target less than 1 - rename fields
 UOA_calendar_data = dplyr::filter(UOA_calendar_data, as.numeric(UOA_PERF_TAR) > 1.0)
 UOA_calendar_data<-UOA_calendar_data%>%
   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))

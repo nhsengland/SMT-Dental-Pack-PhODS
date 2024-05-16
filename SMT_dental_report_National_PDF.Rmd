@@ -35,13 +35,10 @@ options(knitr.duplicate.label = 'allow')
 source(knitr::purl("SQLpulls.Rmd", output = tempfile()))
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()), local = TRUE)
 source(knitr::purl("plotting.Rmd", output = tempfile()), local = TRUE)
-```
 
-```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
-
-
+<!---
 ## UDA Activity Data
 
 ```{r UDA_activity_Calendar1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
@@ -58,7 +55,7 @@ plot_UDA_UOA_delivery_wd(data = UDA_calendar_data,
 
 * The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-
+-->
 ## UDA activity- treatment data standardised by working days
 
 ```{r UDA_activity_Calendar2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
@@ -67,9 +64,10 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              region_STP_name = NULL)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UDAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days). 
+
 
 ## YTD UDA delivery
 
@@ -81,7 +79,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ## UOA activity- treatment data standardised by working days
 
@@ -93,9 +91,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 
 * This data excludes contracts with zero or one annual contracted UOAs.
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UOAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UOAs/12.
-
-* The black trend line shows the average performance of contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 
 ## YTD UOA delivery
 ```{r YTD UOA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
@@ -105,7 +101,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                           region_STP_name = NULL, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 ## 111 dental related call volumes
 

@@ -39,29 +39,27 @@ get_delivery_data <- function(data = UDA_calendar_data,
                                                  sum(annual_contracted_UOA, na.rm = T))
     )
   
-  new_data <- UDA_UOAs_delivered %>%
+  #new_data <- UDA_UOAs_delivered %>%
     #scale data up *12 and then calculate percentage of UDA delivered
-    mutate(scaled_monthly_UDA_UOAs_delivered = monthly_UDA_UOAs_delivered * 12) %>%
-    mutate(perc_UDA_UOA_delivered = round(scaled_monthly_UDA_UOAs_delivered * 100 / annual_contracted_UDA_UOA)) 
+  #  mutate(scaled_monthly_UDA_UOAs_delivered = monthly_UDA_UOAs_delivered * 12) %>%
+   # mutate(perc_UDA_UOA_delivered = round(scaled_monthly_UDA_UOAs_delivered * 100 / annual_contracted_UDA_UOA)) 
   
   #for PCOR and SOF table
   if(renameColumns){
     
-    new_data <- new_data %>%
+    new_data <- UDA_UOAs_delivered %>%
       select(treatment_month = month,
              commissioner_name,
              region_name,
              monthly_UDAs_delivered = monthly_UDA_UOAs_delivered,
-             scaled_monthly_UDAs_delivered = scaled_monthly_UDA_UOAs_delivered,
-             annual_contracted_UDAs = annual_contracted_UDA_UOA,
-             scaled_perc_UDAs_delivered = perc_UDA_UOA_delivered) %>%
-      mutate(threshold_perc = case_when(treatment_month >= as.Date("2021-04-01") & treatment_month < as.Date("2021-10-01") ~ "60",
-                                        treatment_month >= as.Date("2021-10-01") & treatment_month < as.Date("2022-01-01") ~ "65",
-                                        treatment_month >= as.Date("2022-01-01") & treatment_month < as.Date("2022-04-01") ~ "85",
-                                        treatment_month >= as.Date("2022-04-01") & treatment_month < as.Date("2022-07-01") ~ "95"))
+             annual_contracted_UDAs = annual_contracted_UDA_UOA)# %>%
+      #mutate(threshold_perc = case_when(treatment_month >= as.Date("2021-04-01") & treatment_month < as.Date("2021-10-01") ~ "60",
+      #                                  treatment_month >= as.Date("2021-10-01") & treatment_month < as.Date("2022-01-01") ~ "65",
+      #                                  treatment_month >= as.Date("2022-01-01") & treatment_month < as.Date("2022-04-01") ~ "85",
+      #                                  treatment_month >= as.Date("2022-04-01") & treatment_month < as.Date("2022-07-01") ~ "95"))
   }
   
-  new_data
+  new_data <- UDA_UOAs_delivered
   
 }
 
