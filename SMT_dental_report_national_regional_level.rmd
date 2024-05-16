@@ -1,0 +1,717 @@
+---
+title: "Dental Data Pack"
+subtitle: "National"
+date: "`r paste(format(Sys.time(), '%B, %Y'), ' - Reporting up to end of', format(Sys.Date() - lubridate::weeks(4), '%B, %Y'))`"
+output:
+  xaringan::moon_reader:
+    css: [theme.css, nhsr-fonts.css]
+    self_contained: true
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(readxl)
+library(DBI)
+library(odbc)
+library(reactable)
+library(downloadthis)
+library(lubridate)
+library(knitr)
+library(ggrepel)
+options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
+options(knitr.duplicate.label = 'allow')
+
+#avoid standard form
+options(scipen=999)
+
+# Suppress summarise info
+options(dplyr.summarise.inform = FALSE)
+
+```
+
+```{r xaringan-panelset, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+```{r, message =FALSE, include=FALSE}
+source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
+```
+
+```{r, message =FALSE, include=FALSE}
+source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
+```
+
+```{r, message =FALSE, include=FALSE}
+source(knitr::purl("plotting.Rmd", output = tempfile()))
+```
+
+
+name: contracts-table
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: 100%;
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+```
+
+
+<!---
+
+### UDA Activity Data
+
+```{r xaringan-panelset-UDA_delivery_wd, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[National]
+```{r UDA_delivery_wd1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  level = "National",
+                                  region_STP_name = NULL,
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE)
+```
+
+* This graph shows the average monthly performance of the **`r get_num_contracts(level = "National", region_STP_name = NULL)`** GDS contracts scaled up by 12 months measured against the delivery thresholds (60% for Apr-Sep 21, 65% for Oct-Dec, 85% for Jan-Mar, 95% for Apr-Jun 22 and 100% going forward).
+
+* The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+
+
+
+]
+.panel[.panel-name[South East]
+```{r UDA_delivery_wd2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "South East")
+```
+
+* This graph shows the average monthly performance of the **`r get_num_contracts(level = "Regional", region_STP_name = "South East")`** GDS contracts scaled up by 12 months measured against the delivery thresholds (60% for Apr-Sep 21, 65% for Oct-Dec, 85% for Jan-Mar, 95% for Apr-Jun 22 and 100% going forward).
+
+* The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+
+
+]
+.panel[.panel-name[South West]
+```{r UDA_delivery_wd3, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "South West")
+```
+
+* This graph shows the average monthly performance of the **`r get_num_contracts(level = "Regional", region_STP_name = "South West")`** GDS contracts scaled up by 12 months measured against the delivery thresholds (60% for Apr-Sep 21, 65% for Oct-Dec, 85% for Jan-Mar, 95% for Apr-Jun 22 and 100% going forward).
+
+* The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+
+
+]
+.panel[.panel-name[North West]
+```{r UDA_delivery_wd4, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "North West")
+```
+
+* This graph shows the average monthly performance of the **`r get_num_contracts(level = "Regional", region_STP_name = "North West")`** GDS contracts scaled up by 12 months measured against the delivery thresholds (60% for Apr-Sep 21, 65% for Oct-Dec, 85% for Jan-Mar, 95% for Apr-Jun 22 and 100% going forward).
+
+* The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+
+
+]
+.panel[.panel-name[North East and Yorkshire]
+```{r UDA_delivery_wd5, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "North East And Yorkshire")
+
+```
+
+* This graph shows the average monthly performance of the **`r get_num_contracts(level = "Regional", region_STP_name = "North East and Yorkshire")`** GDS contracts scaled up by 12 months measured against the delivery thresholds (60% for Apr-Sep 21, 65% for Oct-Dec, 85% for Jan-Mar, 95% for Apr-Jun 22 and 100% going forward).
+
+* The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+
+
+]
+.panel[.panel-name[London]
+```{r UDA_delivery_wd6, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "London")
+
+```
+
+* This graph shows the average monthly performance of the **`r get_num_contracts(level = "Regional", region_STP_name = "London")`** GDS contracts scaled up by 12 months measured against the delivery thresholds (60% for Apr-Sep 21, 65% for Oct-Dec, 85% for Jan-Mar, 95% for Apr-Jun 22 and 100% going forward).
+
+* The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+
+]
+.panel[.panel-name[Midlands]
+```{r UDA_delivery_wd7, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "Midlands")
+
+```
+
+* This graph shows the average monthly performance of the **`r get_num_contracts(level = "Regional", region_STP_name = "Midlands")`** GDS contracts scaled up by 12 months measured against the delivery thresholds (60% for Apr-Sep 21, 65% for Oct-Dec, 85% for Jan-Mar, 95% for Apr-Jun 22 and 100% going forward).
+
+* The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+
+
+]
+.panel[.panel-name[East of England]
+```{r UDA_delivery_wd8, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "East Of England")
+```
+
+* This graph shows the average monthly performance of the **`r get_num_contracts(level = "Regional", region_STP_name = "East of England")`** GDS contracts scaled up by 12 months measured against the delivery thresholds (60% for Apr-Sep 21, 65% for Oct-Dec, 85% for Jan-Mar, 95% for Apr-Jun 22 and 100% going forward).
+
+* The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+]
+.panel[.panel-name[All]
+```{r UDA_delivery_wd9, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_all_regions(data = UDA_calendar_data, 
+                                              UDAorUOA = "UDA",
+                                              level = "National",
+                                              region_STP_name = NULL,
+                                              plotChart = TRUE, 
+                                              all_regions_and_STPs = TRUE)
+```
+
+]
+
+]
+
+-->
+
+
+### UDA activity- treatment data standardised by working days
+
+```{r xaringan-panelset-historic_UDA_delivery_wd, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+ .panel[.panel-name[National]
+```{r historic_UDA_delivery_wd1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
+                                             level = "National",
+                                            region_STP_name = NULL)
+
+```
+
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days). 
+]
+
+ .panel[.panel-name[South East]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
+                                             level = "Regional",
+                                             region_STP_name = "South East")
+
+```
+
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days). 
+
+ ]
+ .panel[.panel-name[South West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
+                                             level = "Regional",
+                                             region_STP_name = "South West")
+
+```
+
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days). 
+
+ ]
+ .panel[.panel-name[North West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
+                                             level = "Regional",
+                                             region_STP_name = "North West")
+```
+
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days). 
+
+ ]
+ .panel[.panel-name[North East and Yorkshire]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data, 
+                                             level = "Regional",
+                                             region_STP_name = "North East And Yorkshire")
+```
+
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days). 
+ ]
+.panel[.panel-name[London]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data, 
+                                             level = "Regional",
+                                             region_STP_name = "London")
+```
+
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days). 
+ ]
+ .panel[.panel-name[Midlands]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data, 
+                                             level = "Regional",
+                                             region_STP_name = "Midlands")
+```
+
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days). 
+ ]
+ .panel[.panel-name[East of England]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data, 
+                                             level = "Regional",
+                                             region_STP_name = "East Of England")
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days). 
+]
+.panel[.panel-name[All]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_all_regions(data = UDA_calendar_data, 
+                                              UDAorUOA = "UDA",
+                                              level = "National",
+                                              region_STP_name = NULL,
+                                              plotChart = TRUE, 
+                                              all_regions_and_STPs = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* The denominator is annual contracted UDAs * (monthly working days/annual working days). 
+ ]
+ ]
+
+---
+### YTD UDA delivery
+
+```{r xaringan-panelset-YTD_UDA_UOA_delivery, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[National]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
+                          UDAorUOA = "UDA", 
+                          level = "National", 
+                          region_STP_name = NULL, 
+                          plotChart = TRUE, 
+                          all_regions_and_STPs = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[South East]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "South East")
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[South West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "South West")
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[North West]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "North West")
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[North East and Yorkshire]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "North East And Yorkshire")
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[London]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "London")
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[Midlands]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "Midlands")
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[East of England]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
+                                  UDAorUOA = "UDA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "East Of England")
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+
+]
+
+---
+### UOA activity- treatment data standardised by working days
+
+```{r xaringan-panelset-historic_UOA_delivery_wd, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[National]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                                             level = "National",
+                                             region_STP_name = NULL)
+
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
+
+]
+.panel[.panel-name[South East]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                                             level = "Regional",
+                                             region_STP_name = "South East")
+
+
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
+
+]
+.panel[.panel-name[South West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                                             level = "Regional",
+                                             region_STP_name = "South West")
+
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
+
+]
+.panel[.panel-name[North West]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                                             level = "Regional",
+                                             region_STP_name = "North West")
+
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
+
+]
+.panel[.panel-name[North East and Yorkshire]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                                             level = "Regional",
+                                             region_STP_name = "North East And Yorkshire")
+
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
+
+]
+.panel[.panel-name[London]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                                             level = "Regional",
+                                             region_STP_name = "London")
+
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
+
+]
+.panel[.panel-name[Midlands]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                                             level = "Regional",
+                                             region_STP_name = "Midlands")
+
+
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
+
+]
+.panel[.panel-name[East of England]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                                             level = "Regional",
+                                             region_STP_name = "East Of England")
+
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
+
+]
+.panel[.panel-name[All]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_UDA_UOA_delivery_all_regions(data = UOA_calendar_data, 
+                                              UDAorUOA = "UOA",
+                                              level = "National",
+                                              region_STP_name = NULL,
+                                              plotChart = TRUE, 
+                                              all_regions_and_STPs = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* The denominator is annual contracted UDAs * (monthly working days/annual working days). 
+]
+]
+---
+
+### YTD UOA delivery
+
+```{r xaringan-panelset-YTD_UOA_delivery, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[National]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+                          UDAorUOA = "UOA", 
+                          level = "National", 
+                          region_STP_name = NULL, 
+                          all_regions_and_STPs = FALSE)
+
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[South East]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+                                  UDAorUOA = "UOA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "South East")
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[South West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+                                  UDAorUOA = "UOA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "South West")
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[North West]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+                                  UDAorUOA = "UOA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "North West")
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[North East and Yorkshire]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+                                  UDAorUOA = "UOA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "North East And Yorkshire")
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[London]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+                                  UDAorUOA = "UOA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "London")
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[Midlands]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+                                  UDAorUOA = "UOA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "Midlands")
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[East of England]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+                                  UDAorUOA = "UOA",
+                                  plotChart = TRUE, 
+                                  all_regions_and_STPs = FALSE,
+                                  level = "Regional",
+                                  region_STP_name = "East Of England")
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+
+]
+
+---
+
+
+name: 111-call-volumes
+
+### 111 dental related call volumes
+
+```{r xaringan-panelset-111_volumes_breakdown, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+
+ <font size="2">
+.panelset[
+
+ .panel[.panel-name[National]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_111_referrals()
+```
+
+
+ ]
+  .panel[.panel-name[National breakdown by disposition]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_breakdown_111_referrals()
+```
+
+
+ ]
+ ]
+
+
+

@@ -40,15 +40,15 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
     data <- get_delivery_data(data = data, UDAorUOA = "UDA", all_regions_and_STPs =all_regions_and_STPs)
     data <- data%>%filter(month>"2021-03-01")
     #set title and ylab and target of percentage of UDA delivered for each quarter
-    title <- "monthly percentage of usual annual contracted UDAs \nsubmitted across all contracts* scaled up to 12 months**"
+    title <- "monthly percentage of usual annual contracted UDAs \nsubmitted across all contracts standardised by working days"
     ylab <- "% of contracted UDAs submitted"
     #captionTitle <- "*These are treatment months."
     
     lineCol <- "#CC79A7"
-    septemberTarget <- 60
-    decemberTarget <- 65
-    marchTarget <- 85
-    juneTarget <- 95
+  #  septemberTarget <- 60
+  #  decemberTarget <- 65
+  #  marchTarget <- 85
+  #  juneTarget <- 95
     
     #method 1-- function to calculate the number of working days -- you can use it if you want
 #    Nweekdays <- function(a, b, holidays, weekend) { 
@@ -64,10 +64,8 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
     
 
 #method 2 -- to calculate working days
-    data <- data %>% 
-      left_join(working_days,by=c('month')) %>% 
-      mutate(perc_standardised_wd_int = ((monthly_UDA_UOAs_delivered /annual_contracted_UDA_UOA)/
-                                                                                      (`no workdays`/`total workdays`)*100))%>% 
+    data <- data %>% left_join(working_days,by=c('month')) %>% 
+      mutate(perc_standardised_wd_int = 100*monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`)))%>% 
       mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
     
     
@@ -75,14 +73,19 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
   }else{
     #get data into the right format if this is for UOA
     data <- get_delivery_data(data = data, UDAorUOA = "UOA", all_regions_and_STPs = F)
-    title <- "monthly percentage of usual annual contracted UOAs \nsubmitted across all contracts* scaled up to 12 months**"
+    title <- "monthly percentage of usual annual contracted UOAs \nsubmitted across all contracts standardised by working days"
     ylab <- "% of contracted UOAs submitted"
     #captionTitle <- "**These are treatment months.."
     lineCol <- "steelblue"
-    septemberTarget <- 80
-    decemberTarget <- 85
-    marchTarget <- 90
-    juneTarget <- 100
+   # septemberTarget <- 80
+   # decemberTarget <- 85
+   # marchTarget <- 90
+  #  juneTarget <- 100
+    
+    #method 2 -- to calculate working days
+    data <- data %>% left_join(working_days,by=c('month')) %>% 
+      mutate(perc_standardised_wd_int = 100*monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`)))%>% 
+      mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
   }
   
   data <- data %>%
@@ -93,65 +96,65 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
     p <- ggplot(data) +
       theme_bw() +
       #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-      geom_line(aes(x = month,
-                    y = perc_UDA_UOA_delivered),
-                colour = lineCol,
-                linewidth = 1) +
+      #geom_line(aes(x = month,
+      #              y = perc_UDA_UOA_delivered),
+      #          colour = lineCol,
+      #          linewidth = 1) +
       geom_line(aes(x = month,
                     y = perc_standardised_wd),
                 colour = "blue",
                 linewidth = 1) +
       geom_point(aes(x = month,
-                     y = perc_UDA_UOA_delivered),
+                     y = perc_standardised_wd),
                  colour = lineCol
       ) 
     
       
       p <- p +
-        geom_segment(aes(x = as.Date("2021-04-01"), y = septemberTarget, xend = as.Date("2021-09-01"), yend = septemberTarget),
-                     colour = "#0072B2",
-                     linetype = "dashed") +
-        geom_segment(aes(x = as.Date("2021-10-01"), y = decemberTarget, xend = as.Date("2021-12-01"), yend = decemberTarget),
-                     colour = "#0072B2",
-                     linetype = "dashed") +
-        geom_segment(aes(x = as.Date("2022-01-01"), y = marchTarget, xend = as.Date("2022-03-01"), yend = marchTarget),
-                    colour = "#0072B2",
-                     linetype = "dashed") +
-        geom_segment(aes(x = as.Date("2022-04-01"), y = juneTarget, xend = as.Date("2022-06-01"), yend = juneTarget),
-                     colour = "#0072B2",
-                     linetype = "dashed") +
+       # geom_segment(aes(x = as.Date("2021-04-01"), y = septemberTarget, xend = as.Date("2021-09-01"), yend = septemberTarget),
+       #              colour = "#0072B2",
+       #              linetype = "dashed") +
+       # geom_segment(aes(x = as.Date("2021-10-01"), y = decemberTarget, xend = as.Date("2021-12-01"), yend = decemberTarget),
+       #              colour = "#0072B2",
+       #              linetype = "dashed") +
+       # geom_segment(aes(x = as.Date("2022-01-01"), y = marchTarget, xend = as.Date("2022-03-01"), yend = marchTarget),
+       #             colour = "#0072B2",
+       #              linetype = "dashed") +
+       # geom_segment(aes(x = as.Date("2022-04-01"), y = juneTarget, xend = as.Date("2022-06-01"), yend = juneTarget),
+       #              colour = "#0072B2",
+        #             linetype = "dashed") +
+       # 
+       # annotate(geom = "text",
+       #          x = as.Date("2021-04-01") + lubridate::weeks(2),
+       #          y = septemberTarget - 5,
+       #          label = "H1 threshold",
+       #          size = 3,
+        #         colour = "#0072B2") +
+        #annotate(geom = "text",
+        #         x = as.Date("2021-10-01") + lubridate::weeks(2),
+        #         y = decemberTarget - 5,
+        #         label = "Q3 threshold",
+        #         size = 3,
+        #         colour = "#0072B2") +
+       # annotate(geom = "text",
+       #          x = as.Date("2022-01-01") + lubridate::weeks(2),
+       #          y = marchTarget - 5,
+       #          label = "Q4 threshold",
+       #          size = 3,
+       #          colour = "#0072B2") +
+       # annotate(geom = "text",
+       #          x = as.Date("2022-04-01") + lubridate::weeks(2),
+       #          y = juneTarget - 5,
+       #          label = "Q1 threshold",
+       #          size = 3,
+        #         colour = "#0072B2") +
         
-        annotate(geom = "text",
-                 x = as.Date("2021-04-01") + lubridate::weeks(2),
-                 y = septemberTarget - 5,
-                 label = "H1 threshold",
-                 size = 3,
-                 colour = "#0072B2") +
-        annotate(geom = "text",
-                 x = as.Date("2021-10-01") + lubridate::weeks(2),
-                 y = decemberTarget - 5,
-                 label = "Q3 threshold",
-                 size = 3,
-                 colour = "#0072B2") +
-        annotate(geom = "text",
-                 x = as.Date("2022-01-01") + lubridate::weeks(2),
-                 y = marchTarget - 5,
-                 label = "Q4 threshold",
-                 size = 3,
-                 colour = "#0072B2") +
-        annotate(geom = "text",
-                 x = as.Date("2022-04-01") + lubridate::weeks(2),
-                 y = juneTarget - 5,
-                 label = "Q1 threshold",
-                 size = 3,
-                 colour = "#0072B2") +
-        
-        annotate(geom = "text",
-                 x = data$month,
-                 y = data$perc_UDA_UOA_delivered + 5,
-                 label = paste0(data$perc_UDA_UOA_delivered, "%"),
-                 ##paste0(data$perc_standardised_wd [nrow(data)], "%")
-                 size = 3) +
+       # annotate(geom = "text",
+       #          x = data$month,
+       #          y = data$perc_UDA_UOA_delivered + 5,
+       #          label = paste0(data$perc_UDA_UOA_delivered, "%"),
+       #          ##paste0(data$perc_standardised_wd [nrow(data)], "%")
+       #          size = 3) +
         annotate(geom = "text",
                  x = data$month,
                  y = data$perc_standardised_wd - 3,
@@ -164,8 +167,8 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
     p <- p +
       scale_x_date(date_breaks = "1 month",
                    date_labels = "%b-%y") +
-      scale_y_continuous(limits = c(0, max(c(data$perc_UDA_UOA_delivered, 95), na.rm = T) + 5),
-                         breaks = seq(0, max(c(data$perc_UDA_UOA_delivered, 95), na.rm = T) + 5, 10)) +
+      scale_y_continuous(limits = c(0, max(c(data$perc_standardised_wd, 95), na.rm = T) + 5),
+                         breaks = seq(0, max(c(data$perc_standardised_wd, 95), na.rm = T) + 5, 10)) +
       labs(title = title,
            x = "Month",
            y = ylab,
@@ -183,16 +186,16 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
                          `Commissioner Name` = "commissioner_name",
                          `Monthly UDAs delivered` = "monthly_UDA_UOAs_delivered",
                          `Annual contracted UDAs` = "annual_contracted_UDA_UOA",
-                         `Scaled monthly UDAs delivered` = "scaled_monthly_UDA_UOAs_delivered",
-                         `Scaled monthly percentage of contracted UDAs delivered` = "perc_UDA_UOA_delivered")
+                         #`Scaled monthly UDAs delivered` = "scaled_monthly_UDA_UOAs_delivered",
+                         `Standardised monthly percentage of contracted UDAs delivered` = "perc_standardised_wd")
     }else{
       new_col_names <- c(`Calendar month` = "month",
                          `Region Name` = "region_name",
                          `Commissioner Name` = "commissioner_name",
                          `Monthly UOAs delivered` = "monthly_UDA_UOAs_delivered",
                          `Annual contracted UOAs` = "annual_contracted_UDA_UOA",
-                         `Scaled monthly UOAs delivered` = "scaled_monthly_UDA_UOAs_delivered",
-                         `Scaled monthly percentage of contracted UOAs delivered` = "perc_UDA_UOA_delivered")
+                         #`Scaled monthly UOAs delivered` = "scaled_monthly_UDA_UOAs_delivered",
+                         `Standardised monthly percentage of contracted UOAs delivered` = "perc_standardised_wd")
     }
     
     
@@ -205,62 +208,101 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
 
 
 ```{r UDA/UOA %delivered/contracted - standardised by working days without historical data -- include all regions}
-plot_UDA_delivery_all_regions <- function(data = UDA_calendar_data, 
+plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data, 
                                               UDAorUOA = "UDA",
                                               level = "National",
                                               region_STP_name = NULL,
                                               plotChart = TRUE, 
                                               all_regions_and_STPs = FALSE){
-  #include data only after 2021-04-01 and select fields needed
+  
+   
+  if(UDAorUOA == "UDA"){
+     #include data only after 2021-04-01 and select fields needed
    data <- data %>%
     mutate(month = as.Date(month))%>%
     filter(month >= as.Date ("2021-04-01"))%>%
       select(month, contract_number, commissioner_name, region_name, 
              annual_contracted_UDA, UDA_delivered)
 
-  
+ 
   #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
  data <- get_delivery_data(data = data, UDAorUOA = "UDA", all_regions_and_STPs = TRUE)
   data <- data%>%filter(month>"2021-03-01")
+ 
   data <- data %>%
     group_by(month, region_name) %>%
-    summarise(annual_contracted_UDA_UOA = sum(annual_contracted_UDA_UOA, na.rm = TRUE),
-              scaled_monthly_UDA_UOAs_delivered = sum(scaled_monthly_UDA_UOAs_delivered, na.rm = TRUE)) %>%
-    mutate(perc_UDA_UOA_delivered = scaled_monthly_UDA_UOAs_delivered * 100 / annual_contracted_UDA_UOA) %>%
+    summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
+              annual_contracted_UDA_UOA = sum(annual_contracted_UDA_UOA, na.rm = TRUE)) %>%
     filter(!is.na(region_name))
   
-  title <- "calendar monthly percentage of usual annual contracted UDAs \nsubmitted across all contracts* scaled up to 12 months**"
+   data <- data %>% left_join(working_days,by=c('month')) %>% 
+      mutate(perc_standardised_wd_int = 100*(monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`))))%>% 
+      mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
+   
+  title <- "calendar monthly percentage of usual annual contracted UDAs \nsubmitted across all contracts standardised by working days"
   ylab <- "% of contracted UDAs submitted"
-  captionTitle <- "*These are calendar months and data has been scaled up by 12."
+ # captionTitle <- "*These are calendar months and data has been scaled up by 12."
   lineCol <- "coral"
   lineCol <- "#CC79A7"
-  septemberTarget <- 60
-  decemberTarget <- 65
-  marchTarget <- 85
-  juneTarget <- 95
+ # septemberTarget <- 60
+ # decemberTarget <- 65
+ # marchTarget <- 85
+ # juneTarget <- 95
+  }else{
+    
+       data <- data %>%
+    mutate(month = as.Date(month))%>%
+    filter(month >= as.Date ("2021-04-01"))%>%
+      select(month, contract_number, commissioner_name, region_name, 
+             annual_contracted_UOA, UOA_delivered)
+       
+    #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+ data <- get_delivery_data(data = data, UDAorUOA = "UOA", all_regions_and_STPs = TRUE)
+  data <- data%>%filter(month>"2021-03-01")
+ 
+  data <- data %>%
+    group_by(month, region_name) %>%
+    summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
+              annual_contracted_UDA_UOA = sum(annual_contracted_UDA_UOA, na.rm = TRUE)) %>%
+    filter(!is.na(region_name))
   
+   data <- data %>% left_join(working_days,by=c('month')) %>% 
+      mutate(perc_standardised_wd_int = 100*(monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`))))%>% 
+      mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
+   
+  title <- "calendar monthly percentage of usual annual contracted UOAs \nsubmitted across all contracts standardised by working days"
+  ylab <- "% of contracted UOAs submitted"
+ # captionTitle <- "*These are calendar months and data has been scaled up by 12."
+  lineCol <- "coral"
+  lineCol <- "#CC79A7"
+ # septemberTarget <- 60
+ # decemberTarget <- 65
+ # marchTarget <- 85
+ # juneTarget <- 95
+  }   
+    
   if(plotChart == TRUE){
     #plot code
     p <- ggplot(data) +
       theme_bw() +
       #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
       geom_line(aes(x = month, 
-                    y = perc_UDA_UOA_delivered, 
+                    y = perc_standardised_wd, 
                     colour = region_name), 
                 size = 1) +
       geom_point(aes(x = month, 
-                     y = perc_UDA_UOA_delivered, 
+                     y = perc_standardised_wd, 
                      colour = region_name)
       ) +
       
       scale_x_date(date_breaks = "1 month", 
                    date_labels = "%b-%y") +
-      scale_y_continuous(limits = c(0, max(c(data$perc_UDA_UOA_delivered, 95), na.rm = T) + 5),
-                         breaks = seq(0, max(c(data$perc_UDA_UOA_delivered, 95), na.rm = T) + 5, 10)) +
+      scale_y_continuous(limits = c(0, max(c(data$perc_standardised_wd, 95), na.rm = T) + 5),
+                         breaks = seq(0, max(c(data$perc_standardised_wd, 95), na.rm = T) + 5, 10)) +
       labs(title = title, 
            x = "Month",
            y = ylab, 
-           caption = captionTitle,
+           #caption = captionTitle,
            colour = "Region") +
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001
       ))
@@ -365,7 +407,7 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
     filter(month >= as.Date ("2023-04-01")) %>% ## this needs to be updated every FY
     left_join(working_days,by=c('month')) %>% 
     #mutate(scaled_UDA_delivery = UDA_delivery * 12) %>%
-    mutate(perc_UDA_deliverd = (UDA_delivery /(contracted_UDAs*(`no workdays`/`total workdays`))*100)) %>%
+    mutate(perc_UDA_deliverd =100* (UDA_delivery /(contracted_UDAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UDA_deliverd = round(perc_UDA_deliverd, digits = 0)) %>% 
     add_row(month = seq(as.Date("2016-04-01"), as.Date("2023-03-01"), lubridate::month(1))) %>% # need to add every FY
     mutate(financial_year = case_when(month >= as.Date("2016-04-01") & month < as.Date("2017-04-01") ~ "2016/17",
@@ -504,7 +546,7 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     filter(month >= as.Date ("2023-04-01")) %>% ## this needs to be updated every FY
     left_join(working_days,by=c('month')) %>% 
    # mutate(scaled_UOA_delivery = UOA_delivery * 12) %>%
-    mutate(perc_UOA_delivered = (UOA_delivery / (contracted_UOAs*(`no workdays`/`total workdays`))*100)) %>%
+    mutate(perc_UOA_delivered =100* (UOA_delivery / (contracted_UOAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UOA_delivered = round(perc_UOA_delivered, digits = 0))%>% 
     add_row(month = seq(as.Date("2016-04-01"), as.Date("2023-03-01"), lubridate::month(1))) %>%
     mutate(financial_year = case_when(month >= as.Date("2016-04-01") & month < as.Date("2017-04-01") ~ "2016/17",
