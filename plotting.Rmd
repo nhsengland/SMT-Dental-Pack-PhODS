@@ -318,6 +318,121 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
 ```
 
 
+```{r UDA/UOA %delivered/contracted - standardised by working days without historical data -- include all ICBs}
+plot_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data, 
+                                              UDAorUOA = "UOA",
+                                              plotChart = TRUE,
+                                           region_STP_name='London'){
+ 
+  
+  
+   
+  if(UDAorUOA == "UDA"){
+     #include data only after 2021-04-01 and select fields needed
+    
+data <- data %>%
+      filter(region_name == region_STP_name)
+   data <- data %>%
+    mutate(month = as.Date(month))%>%
+    filter(month >= as.Date ("2021-04-01"))%>%
+      select(month, contract_number, commissioner_name, region_name, 
+             annual_contracted_UDA, UDA_delivered)
+
+ 
+  #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+ data <- get_delivery_data(data = data, UDAorUOA = "UDA", all_regions_and_STPs = TRUE)
+  data <- data%>%filter(month>"2021-03-01")
+ 
+  data <- data %>%
+    group_by(month, region_name,commissioner_name) %>%
+    summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
+              annual_contracted_UDA_UOA = sum(annual_contracted_UDA_UOA, na.rm = TRUE)) %>%
+    filter(!is.na(region_name))
+  
+   data <- data %>% left_join(working_days,by=c('month')) %>% 
+      mutate(perc_standardised_wd_int = 100*(monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`))))%>% 
+      mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
+   
+  title <- "calendar monthly percentage of usual annual contracted UDAs \nsubmitted across all contracts standardised by working days"
+  ylab <- "% of contracted UDAs submitted"
+ # captionTitle <- "*These are calendar months and data has been scaled up by 12."
+  lineCol <- "coral"
+  lineCol <- "#CC79A7"
+ # septemberTarget <- 60
+ # decemberTarget <- 65
+ # marchTarget <- 85
+ # juneTarget <- 95
+  }else{
+    data <- data %>%
+      filter(region_name == region_STP_name)
+       data <- data %>%
+    mutate(month = as.Date(month))%>%
+    filter(month >= as.Date ("2021-04-01"))%>%
+      select(month, contract_number, commissioner_name, region_name, 
+             annual_contracted_UOA, UOA_delivered)
+       
+    #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+ data <- get_delivery_data(data = data, UDAorUOA = "UOA", all_regions_and_STPs = TRUE)
+  data <- data%>%filter(month>"2021-03-01")
+ 
+  data <- data %>%
+    group_by(month, region_name,commissioner_name) %>%
+    summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
+              annual_contracted_UDA_UOA = sum(annual_contracted_UDA_UOA, na.rm = TRUE)) %>%
+    filter(!is.na(region_name))
+  
+   data <- data %>% left_join(working_days,by=c('month')) %>% 
+      mutate(perc_standardised_wd_int = 100*(monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`))))%>% 
+      mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
+   
+  title <- "calendar monthly percentage of usual annual contracted UOAs \nsubmitted across all contracts standardised by working days"
+  ylab <- "% of contracted UOAs submitted"
+ # captionTitle <- "*These are calendar months and data has been scaled up by 12."
+  lineCol <- "coral"
+  lineCol <- "#CC79A7"
+ # septemberTarget <- 60
+ # decemberTarget <- 65
+ # marchTarget <- 85
+ # juneTarget <- 95
+  }   
+    
+  if(plotChart == TRUE){
+    #plot code
+    p <- ggplot(data) +
+      theme_bw() +
+      #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+      geom_line(aes(x = month, 
+                    y = perc_standardised_wd, 
+                    colour = commissioner_name), 
+                size = 1) +
+      geom_point(aes(x = month, 
+                     y = perc_standardised_wd, 
+                     colour = commissioner_name)
+      ) +
+      
+      scale_x_date(date_breaks = "1 month", 
+                   date_labels = "%b-%y") +
+      scale_y_continuous(limits = c(0, max(c(data$perc_standardised_wd, 95), na.rm = T) + 5),
+                         breaks = seq(0, max(c(data$perc_standardised_wd, 95), na.rm = T) + 5, 10)) +
+      labs(title = title, 
+           x = "Month",
+           y = ylab, 
+           #caption = captionTitle,
+           colour = "commissioner_name") +
+      theme(axis.text.x = element_text(angle = 90, vjust=-0.0001
+      ))
+    
+    p
+    
+  }else{
+    
+    data
+  }
+  
+}
+
+```
+
 
 
 ```{r number of contract}
