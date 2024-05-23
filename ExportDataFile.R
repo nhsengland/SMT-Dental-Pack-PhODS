@@ -46,7 +46,10 @@ data_ICB_UDA <- data_ICB_UDA %>%
          `Annual contracted UDAs`,`no workdays`,`Standardised monthly percentage of contracted UDAs delivered`)%>%
   mutate(Geography='ICB')
 
-data_UDA<- rbind(data_Nat_UDA, data_reg_UDA, data_ICB_UDA)
+data_UDA<- rbind(data_Nat_UDA, data_reg_UDA, data_ICB_UDA) %>% 
+  rename("Workdays" = `no workdays`) %>% 
+  mutate(`Standardised monthly percentage of contracted UDAs delivered` = 
+           `Standardised monthly percentage of contracted UDAs delivered`/100)
 
 ###UOA
 data_Nat_UOA=plot_UDA_UOA_delivery_wd(data = UOA_calendar_data, 
@@ -79,7 +82,10 @@ data_ICB_UOA <- data_ICB_UOA %>%
          `Annual contracted UOAs`,`no workdays`,`Standardised monthly percentage of contracted UOAs delivered`)%>%
   mutate(Geography='ICB')
 
-data_UOA<- rbind(data_Nat_UOA, data_reg_UOA, data_ICB_UOA)
+data_UOA<- rbind(data_Nat_UOA, data_reg_UOA, data_ICB_UOA) %>% 
+  rename("Workdays" = `no workdays`) %>% 
+  mutate(`Standardised monthly percentage of contracted UOAs delivered` = 
+           `Standardised monthly percentage of contracted UOAs delivered`/100)
 
 data<-data_UDA%>%
   full_join(data_UOA,by=c('Calendar month','Geography Name','Geography'))
