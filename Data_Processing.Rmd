@@ -67,3 +67,34 @@ get_delivery_data <- function(data = UDA_calendar_data,
 
 ```
 
+```{r banded CoT data}
+get_banded_COTs_data <- function(data = UDA_calendar_data, 
+                                        all_regions_and_STPs = FALSE){
+#filter to start in September 2019
+data <- data %>%
+  mutate(total_UDAs = sum(UDA_band_1, UDA_band_2, UDA_band_3, UDA_other, UDA_urgent, na.rm = TRUE)) %>%
+  filter(month >= "2019-01-01") %>% 
+  rowwise() %>% 
+  mutate(UDA_band_2 = sum(UDA_band_2, uda_band_2a_delivered, uda_band_2b_delivered, uda_band_2c_delivered, na.rm = TRUE))
+
+if(all_regions_and_STPs == FALSE){
+  #group by month and sum UDAs delivered
+  new_data <- data %>%
+    group_by(month)
+  
+}else{
+  #group by month and sum UDAs delivered
+  new_data <- data %>%
+    group_by(month, region_name, commissioner_name)
+}
+
+new_data <- new_data %>%
+  summarise(band1 = sum(FP17s_band_1, na.rm = T),
+            band2 = sum(FP17s_band_2, FP17s_band_2a, FP17s_band_2b, FP17s_band_2c, na.rm = T),
+            band3 = sum(FP17s_band_3, na.rm = T),
+            other = sum(FP17s_band_other, na.rm = T),
+            urgent = sum(FP17s_band_urgent, na.rm = T)
+  )
+}
+```
+
