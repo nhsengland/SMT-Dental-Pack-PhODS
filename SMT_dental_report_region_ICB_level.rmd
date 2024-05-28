@@ -16,7 +16,6 @@ params:
   region: "London"
 ---
 
-
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(readxl)
@@ -54,6 +53,35 @@ source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
 source(knitr::purl("plotting.Rmd", output = tempfile()))
 ```
 
+```{r For ICB level report, we only want data after 2020.04, message =FALSE, include=FALSE}
+
+UDA_calendar_data <- UDA_calendar_data %>%
+    mutate(month = as.Date(month))%>%
+    filter(month >= as.Date ("2020-04-01"))
+
+UOA_calendar_data <- UOA_calendar_data %>%
+    mutate(month = as.Date(month))%>%
+    filter(month >= as.Date ("2020-04-01"))
+```
+
+
+name: contracts-table
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: 100%;
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+```
+
+
 ```{r set ICB name, include=FALSE}
 
 #get STPs for each region
@@ -61,12 +89,12 @@ if(params$region == "South West"){
   
   region <- "South West"
   
-  STP1 <- "Bristol, North Somerset and South Gloucestershire ICB"
+  STP1 <- "Bristol, North Somerset And South Gloucestershire ICB"
   STP2 <- "Dorset ICB"
-  STP3 <- "Bath and North East Somerset, Swindon and Wiltshire ICB"
+  STP3 <- "Bath And North East Somerset, Swindon And Wiltshire ICB"
   STP4 <- "Somerset ICB"
   STP5 <- "Devon ICB"
-  STP6 <- "Cornwall and The Isles Of Scilly ICB"
+  STP6 <- "Cornwall And The Isles Of Scilly ICB"
   STP7 <- "Gloucestershire ICB"
   STP8 <- NULL
   STP9 <- NULL
@@ -89,10 +117,10 @@ if(params$region == "South West"){
   region <- "South East"
   
   STP1 <- "Sussex ICB"
-  STP2 <- "Buckinghamshire, Oxfordshire and Berkshire West ICB"
+  STP2 <- "Buckinghamshire, Oxfordshire And Berkshire West ICB"
   STP3 <- "Surrey Heartlands ICB"
-  STP4 <- "Kent and Medway ICB"
-  STP5 <- "Hampshire and Isle Of Wight ICB"
+  STP4 <- "Kent And Medway ICB"
+  STP5 <- "Hampshire And Isle Of Wight ICB"
   STP6 <- "Frimley ICB"
   STP7 <- NULL
   STP8 <- NULL
@@ -116,8 +144,8 @@ if(params$region == "South West"){
   region <- "North West"
   
   STP1 <- "Greater Manchester ICB"
-  STP2 <- "Cheshire and Merseyside ICB"
-  STP3 <- "Lancashire and South Cumbria ICB"
+  STP2 <- "Cheshire And Merseyside ICB"
+  STP3 <- "Lancashire And South Cumbria ICB"
   STP4 <- NULL
   STP5 <- NULL
   STP6 <- NULL
@@ -142,9 +170,9 @@ if(params$region == "South West"){
   
   region <- "North East And Yorkshire"
   
-  STP1 <- "Humber and North Yorkshire ICB"
+  STP1 <- "Humber And North Yorkshire ICB"
   STP2 <- "South Yorkshire ICB"
-  STP3 <- "North East and North Cumbria ICB"
+  STP3 <- "North East And North Cumbria ICB"
   STP4 <- "West Yorkshire ICB"
   STP5 <- NULL
   STP6 <- NULL
@@ -196,17 +224,17 @@ if(params$region == "South West"){
   
   region <- "Midlands"
   
-  STP1 <- "Leicester, Leicestershire and Rutland ICB"
-  STP2 <- "Herefordshire and Worcestershire ICB"
-  STP3 <- "Nottingham and Nottinghamshire ICB"
+  STP1 <- "Leicester, Leicestershire And Rutland ICB"
+  STP2 <- "Herefordshire And Worcestershire ICB"
+  STP3 <- "Nottingham And Nottinghamshire ICB"
   STP4 <- "Black Country ICB"
-  STP5 <- "Staffordshire and Stoke-on-Trent ICB"
+  STP5 <- "Staffordshire And Stoke-On-Trent ICB"
   STP6 <- "Northamptonshire ICB"
-  STP7 <- "Shropshire, Telford and Wrekin ICB"
+  STP7 <- "Shropshire, Telford And Wrekin ICB"
   STP8 <- "Lincolnshire ICB"
-  STP9 <- "Birmingham and Solihull ICB"
-  STP10 <- "Coventry and Warwickshire ICB"
-  STP11 <- "Derby and Derbyshire ICB"
+  STP9 <- "Birmingham And Solihull ICB"
+  STP10 <- "Coventry And Warwickshire ICB"
+  STP11 <- "Derby And Derbyshire ICB"
   
   STPs <- c(STP1, STP2, STP3, STP4, STP5, STP6, STP7, STP8, STP9, STP10, STP11)
   
@@ -221,14 +249,14 @@ if(params$region == "South West"){
   
 }else if(params$region == "East Of England"){
   
-  region <- "East of England"
+  region <- "East Of England"
   
-  STP1 <- "Hertfordshire and West Essex ICB"
-  STP2 <- "Mid and South Essex ICB"
-  STP3 <- "Norfolk and Waveney ICB"
-  STP4 <- "Cambridgeshire and Peterborough ICB"
-  STP5 <- "Bedfordshire, Luton and Milton Keynes ICB"
-  STP6 <- "Suffolk and North East Essex ICB"
+  STP1 <- "Hertfordshire And West Essex ICB"
+  STP2 <- "Mid And South Essex ICB"
+  STP3 <- "Norfolk And Waveney ICB"
+  STP4 <- "Cambridgeshire And Peterborough ICB"
+  STP5 <- "Bedfordshire, Luton And Milton Keynes ICB"
+  STP6 <- "Suffolk And North East Essex ICB"
   STP7 <- NULL
   STP8 <- NULL
   STP9 <- NULL
@@ -252,22 +280,7 @@ if(params$region == "South West"){
 
 
 
-
-```{css, echo=F}
-    /* Table width = 100% max-width */
-
-    .remark-slide table{
-        width: 100%;
-    }
-
-    /* Change the background color to white for shaded rows (even rows) */
-
-    .remark-slide thead, .remark-slide tr:nth-child(2n) {
-        background-color: white;
-    }
-```
-
-
+<!---
 
 ### UDA Activity Data
 
@@ -459,9 +472,10 @@ plot_UDA_UOA_delivery_wd(data = UDA_calendar_data,
 * The blue line in the graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
 ]
+
 ]
 
----
+-->
 
 ### UDA activity- calendar data standardised by working days
 
@@ -479,9 +493,10 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 ]
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -491,9 +506,9 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UDAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 ]
 .panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -502,9 +517,9 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              region_STP_name = STP2)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UDAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 ]
 .panel[.panel-name[`r STP3`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -513,9 +528,10 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              region_STP_name = STP3)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval4}
@@ -523,9 +539,10 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              level = "STP",
                                              region_STP_name = STP4)
 ```
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -534,9 +551,10 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              level = "STP",
                                              region_STP_name = STP5)
 ```
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -546,9 +564,9 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              region_STP_name = STP6)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UDAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -558,9 +576,9 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              region_STP_name = STP7)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UDAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval8}
@@ -568,9 +586,10 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              level = "STP",
                                              region_STP_name = STP8)
 ```
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -580,9 +599,9 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              region_STP_name = STP9)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UDAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -592,9 +611,9 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              region_STP_name = STP10)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UDAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -604,11 +623,26 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              region_STP_name = STP11)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UDAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 ]
-]
+.panel[.panel-name[All]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+
+plot_UDA_UOA_delivery_all_ICBs(data = UDA_calendar_data, 
+                                              UDAorUOA = "UDA",
+                                              plotChart = TRUE,
+                                              region_STP_name=region)
+
+
+```
+
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+* For the previous financial year, the trend lines show the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
+ ]
+ ]
 
 
 ---
@@ -629,9 +663,10 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           region_STP_name = region, 
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
+ 
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 .panel[.panel-name[`r STP1`]
@@ -644,7 +679,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           all_regions_and_STPs = FALSE)
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 .panel[.panel-name[`r STP2``]
@@ -656,7 +691,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 .panel[.panel-name[`r STP3`]
@@ -668,7 +703,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 .panel[.panel-name[`r STP4`]
@@ -680,7 +715,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -693,7 +728,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           all_regions_and_STPs = FALSE)
 ```
 
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 ]
 .panel[.panel-name[`r STP6`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
@@ -704,7 +739,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -716,7 +751,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 .panel[.panel-name[`r STP8`]
@@ -728,7 +763,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -740,7 +775,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -752,7 +787,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -764,7 +799,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
-
+* This data excludes contracts with zero or one annual contracted UDAs.
 
 ]
 ]
@@ -789,9 +824,9 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UOAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 ]
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -801,9 +836,10 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 ]
 .panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -812,9 +848,9 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                                              region_STP_name = STP2)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UOAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 ]
 .panel[.panel-name[`r STP3`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -823,9 +859,9 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                                              region_STP_name = STP3)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UOAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval4}
@@ -833,9 +869,10 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                                              level = "STP",
                                              region_STP_name = STP4)
 ```
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -844,9 +881,10 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                                              level = "STP",
                                              region_STP_name = STP5)
 ```
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -856,9 +894,9 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                                              region_STP_name = STP6)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UOAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -868,9 +906,9 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                                              region_STP_name = STP7)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UOAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval8}
@@ -878,9 +916,10 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                                              level = "STP",
                                              region_STP_name = STP8)
 ```
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -890,9 +929,9 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                                              region_STP_name = STP9)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UOAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -902,9 +941,9 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                                              region_STP_name = STP10)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
+* This data excludes contracts with zero or one annual contracted UOAs.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -914,11 +953,28 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                                              region_STP_name = STP11)
 ```
 
-* The red trend line in the right graph shows an alternative method of calculating the denominator for contracted UDAs expected each month. Here the denominator is annual contracted UDAs * monthly working days/annual working days. The usual denominator is annual contracted UDAs/12.
 
-* The black trend line shows the average performance of GDS contracts. In current financial year scaled up by 12.
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
 ]
-]
+.panel[.panel-name[All]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+
+plot_UDA_UOA_delivery_all_ICBs(data = UOA_calendar_data, 
+                                              UDAorUOA = "UOA",
+                                              plotChart = TRUE,
+                                              region_STP_name=region)
+
+
+```
+
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+* For the previous financial year, the trend lines show the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
+ ]
+ ]
+
 
 
 ---
@@ -933,16 +989,16 @@ xaringanExtra::use_panelset()
 
 .panel[.panel-name[`r region`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-
 plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
-                                  UDAorUOA = "UOA",
-                                  plotChart = TRUE, 
-                                  all_regions_and_STPs = FALSE,
-                                  level = "Regional",
-                                  region_STP_name = Region)
+                          UDAorUOA = "UOA", 
+                          level = "Regional", 
+                          region_STP_name = region, 
+                          plotChart = TRUE, 
+                          all_regions_and_STPs = FALSE)
+
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 ]
 .panel[.panel-name[`r STP1`]
@@ -955,7 +1011,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                                   region_STP_name = STP1)
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 ]
 .panel[.panel-name[`r STP2``]
@@ -968,7 +1024,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                                   region_STP_name = STP2)
 ```
 
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 ]
 .panel[.panel-name[`r STP3`]
 ```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
@@ -981,7 +1037,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
 
 ```
 
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
@@ -993,7 +1049,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                                   region_STP_name = STP4)
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -1006,7 +1062,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                                   region_STP_name = STP5)
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -1020,7 +1076,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
 
 ```
 
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 ]
 .panel[.panel-name[`r STP7`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
@@ -1032,7 +1088,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                                   region_STP_name = STP7)
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 ]
 .panel[.panel-name[`r STP8`]
@@ -1045,7 +1101,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                                   region_STP_name = STP8)
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -1058,7 +1114,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                                   region_STP_name = STP9)
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -1071,7 +1127,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                                   region_STP_name = STP10)
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -1084,7 +1140,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                                   region_STP_name = STP11)
 
 ```
-
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 ]
 ]
