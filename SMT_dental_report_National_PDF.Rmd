@@ -25,8 +25,6 @@ library(reactable)
 library(downloadthis)
 library(lubridate)
 library(knitr)
-library(tidyverse)
-library(downloadthis)
 library(ggrepel)
 options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
 options(knitr.duplicate.label = 'allow')
@@ -102,6 +100,22 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                           all_regions_and_STPs = FALSE)
 ```
 * This data excludes contracts with zero or one annual contracted UOAs.
+
+## Time series of banded Courses of Treatment
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center"}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "National", 
+                region_STP_name = NULL, 
+                asIndex = FALSE)
+```
+
+## Banded Courses of Treatment as % of 2019 delivery
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "National", 
+                region_STP_name = NULL, 
+                asIndex = TRUE)
+```
 
 ## 111 dental related call volumes
 
