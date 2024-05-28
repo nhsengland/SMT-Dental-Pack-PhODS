@@ -59,7 +59,7 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
 #    Nweekdays(as.Date("2017-08-01"), as.Date("2017-12-31"), holidays, weekend)
     
 
-#method 2 -- to calculate working days
+#method 2 -- to calculate percentage of delivered UDA standardised by no of working days
     data <- data %>% left_join(working_days,by=c('month')) %>% 
       mutate(perc_standardised_wd_int = 100*monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`)))%>% 
       mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
@@ -78,7 +78,7 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
    # marchTarget <- 90
   #  juneTarget <- 100
     
-    #to calculate working days
+    #to calculate percentage of delivered UOA standardized by no of working days
     data <- data %>% left_join(working_days,by=c('month')) %>% 
       mutate(perc_standardised_wd_int = 100*monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`)))%>% 
       mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
@@ -175,7 +175,7 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
     p
     
   }else{
-    #what if plotChart == TRUE -- want to create a table instead of a plot
+    #what if plotChart == FALSE -- want to create a table instead of a plot
     if(UDAorUOA == "UDA"){
       new_col_names <- c(`Calendar month` = "month",
                          `Region Name` = "region_name",
@@ -196,6 +196,7 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
     
     data$`month` <- format(as.Date(data$`month`), "%Y-%m")
     
+    #rename columns
     data <- data %>%
       rename(any_of(new_col_names))
   }
@@ -213,7 +214,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
                                               all_regions_and_STPs = FALSE){
    
   if(UDAorUOA == "UDA"){
-     #include data only after 2021-04-01 and select fields needed
+     #include data only after 2020-04-01 as there is no region info before that and select fields needed
    data <- data %>%
     mutate(month = as.Date(month))%>%
     filter(month >= as.Date ("2020-04-01"))%>%
@@ -221,7 +222,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
              annual_contracted_UDA, UDA_delivered)
 
  
-  #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+  #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered (standardised by no of working days)
  data <- get_delivery_data(data = data, UDAorUOA = "UDA", all_regions_and_STPs = TRUE)
   data <- data%>%filter(month>"2020-03-01")
  
@@ -245,14 +246,14 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
  # marchTarget <- 85
  # juneTarget <- 95
   }else{
-    
+     #include data only after 2020-04-01 as there is no region info before that and select fields needed
        data <- data %>%
     mutate(month = as.Date(month))%>%
     filter(month >= as.Date ("2020-04-01"))%>%
       select(month, contract_number, commissioner_name, region_name, 
              annual_contracted_UOA, UOA_delivered)
        
-    #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+    #get data into the right format and calculate the annual contracted UOA, delivered UOA and percentage of UOA delivered (standardized by no of working days)
  data <- get_delivery_data(data = data, UDAorUOA = "UOA", all_regions_and_STPs = TRUE)
   data <- data%>%filter(month>"2020-03-01")
  
@@ -306,7 +307,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
     p
     
   }else{
-    
+   #IF WANT TO GET A DATA TABLE 
     if(UDAorUOA == "UDA"){
       new_col_names <- c(`Calendar month` = "month",
                          `Region Name` = "region_name",
@@ -346,7 +347,7 @@ plot_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
   
    
   if(UDAorUOA == "UDA"){
-     #include data only after 2021-04-01 and select fields needed
+     #include data only after 2020-04-01 and select fields needed
     
 data <- data %>%
       filter(region_name == region_STP_name)
@@ -357,7 +358,7 @@ data <- data %>%
              annual_contracted_UDA, UDA_delivered)
 
  
-  #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+  #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered (standardized by working days)
  data <- get_delivery_data(data = data, UDAorUOA = "UDA", all_regions_and_STPs = TRUE)
   data <- data%>%filter(month>"2020-03-01")
  
@@ -381,6 +382,7 @@ data <- data %>%
  # marchTarget <- 85
  # juneTarget <- 95
   }else{
+    #include data only after 2020-04-01 and select fields needed
     data <- data %>%
       filter(region_name == region_STP_name)
        data <- data %>%
@@ -389,7 +391,7 @@ data <- data %>%
       select(month, contract_number, commissioner_name, region_name, 
              annual_contracted_UOA, UOA_delivered)
        
-    #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+   #get data into the right format and calculate the annual contracted UOA, delivered UOA and percentage of UOA delivered (standardized by working days)
  data <- get_delivery_data(data = data, UDAorUOA = "UOA", all_regions_and_STPs = TRUE)
   data <- data%>%filter(month>"2020-03-01")
  
@@ -501,7 +503,7 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
    data <- data %>% left_join(working_days,by=c('month')) %>% 
       mutate(perc_standardised_wd_int = 100*(monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`))))%>% 
       mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
-   
+   #rename columns
    new_col_names <- c(`Calendar month` = "month",
                          `Commissioner Name` = "commissioner_name",
                          `Monthly UDAs delivered` = "monthly_UDA_UOAs_delivered",
@@ -515,7 +517,7 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
 
    
   }else{
-    
+    #do similar things for UOA
        data <- data %>%
     mutate(month = as.Date(month))%>%
     filter(month >= as.Date ("2020-04-01"))%>%
@@ -617,7 +619,7 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
   historic_data <- data %>%
     select(month, contract_number, commissioner_name, region_name,
            annual_contracted_UDA, UDA_delivered)
-  #create a new field as financial year and then calculate full year UDA delivered, contracted UDA and mutate a new field about percentage of UDA delivered
+  #create a new field as financial year and then calculate full year UDA delivered, contracted UDA and percentage of UDA delivered
   historic_data <- historic_data  %>%
     mutate(financial_year = case_when(month >= as.Date("2016-04-01") & month < as.Date("2017-04-01") ~ "2016/17",
                                       month >= as.Date("2017-04-01") & month < as.Date("2018-04-01") ~ "2017/18",
@@ -1066,7 +1068,7 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
     p
     
   }else{
-    
+    #if want a data table instead
     data_to_print <- data_to_print %>%
       rename(`Calendar month` = month,
              `YTD delivery` = YTD_delivery,
@@ -1098,7 +1100,7 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   data$`Calendar month` <- format(as.Date(data$`month`), "%Y-%m")
   
   if(level == "Regional"){
-    
+    #calculate YTD group by month and region
     data <- data %>%
       filter(month >= as.Date ("2020-04-01"))%>%
       group_by(`Calendar month`,region_name) %>%
@@ -1108,11 +1110,12 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
        select(`Calendar month`,YTD_delivery)
     
   }else if(level == "STP"){
-   
+   #calculate YTD group by month and ICB
     data <- data %>%
       filter(month >= as.Date ("2020-04-01"))%>%
+      group_by(`Calendar month`,commissioner_name) %>%
+      summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered))%>%
       group_by(commissioner_name) %>%
-      arrange(`Calendar month`)%>%
       dplyr::mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))%>%
        select(`Calendar month`,YTD_delivery)
    
