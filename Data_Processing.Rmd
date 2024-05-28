@@ -72,8 +72,8 @@ get_banded_COTs_data <- function(data = UDA_calendar_data,
                                         all_regions_and_STPs = FALSE){
 #filter to start in September 2019
 data <- data %>%
-  mutate(total_UDAs = sum(UDA_band_1, UDA_band_2, UDA_band_3, UDA_other, UDA_urgent, na.rm = TRUE)) %>%
-  filter(month >= "2019-01-01") %>% 
+  mutate(total_UDAs = sum(UDA_band_1, UDA_band_2, uda_band_2a_delivered, uda_band_2b_delivered, uda_band_2c_delivered, UDA_band_3, UDA_other, UDA_urgent, na.rm = TRUE)) %>%
+  filter(month >= "2019-09-01") %>% 
   rowwise() %>% 
   mutate(UDA_band_2 = sum(UDA_band_2, uda_band_2a_delivered, uda_band_2b_delivered, uda_band_2c_delivered, na.rm = TRUE))
 
