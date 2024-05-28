@@ -68,7 +68,7 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
 #    Nweekdays(as.Date("2017-08-01"), as.Date("2017-12-31"), holidays, weekend)
     
 
-#method 2 -- to calculate working days
+#method 2 -- to calculate percentage of delivered UDA standardised by no of working days
     data <- data %>% left_join(working_days,by=c('month')) %>% 
       mutate(perc_standardised_wd_int = 100*monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`)))%>% 
       mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
@@ -87,7 +87,7 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
    # marchTarget <- 90
   #  juneTarget <- 100
     
-    #to calculate working days
+    #to calculate percentage of delivered UOA standardized by no of working days
     data <- data %>% left_join(working_days,by=c('month')) %>% 
       mutate(perc_standardised_wd_int = 100*monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`)))%>% 
       mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
@@ -184,7 +184,7 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
     p
     
   }else{
-    #what if plotChart == TRUE -- want to create a table instead of a plot
+    #what if plotChart == FALSE -- want to create a table instead of a plot
     if(UDAorUOA == "UDA"){
       new_col_names <- c(`Calendar month` = "month",
                          `Region Name` = "region_name",
@@ -203,7 +203,9 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
                          `Standardised monthly percentage of contracted UOAs delivered` = "perc_standardised_wd")
     }
     
+    data$`month` <- format(as.Date(data$`month`), "%Y-%m")
     
+    #rename columns
     data <- data %>%
       rename(any_of(new_col_names))
   }
@@ -221,7 +223,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
                                               all_regions_and_STPs = FALSE){
    
   if(UDAorUOA == "UDA"){
-     #include data only after 2021-04-01 and select fields needed
+     #include data only after 2020-04-01 as there is no region info before that and select fields needed
    data <- data %>%
     mutate(month = as.Date(month))%>%
     filter(month >= as.Date ("2020-04-01"))%>%
@@ -229,7 +231,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
              annual_contracted_UDA, UDA_delivered)
 
  
-  #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+  #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered (standardised by no of working days)
  data <- get_delivery_data(data = data, UDAorUOA = "UDA", all_regions_and_STPs = TRUE)
   data <- data%>%filter(month>"2020-03-01")
  
@@ -253,14 +255,14 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
  # marchTarget <- 85
  # juneTarget <- 95
   }else{
-    
+     #include data only after 2020-04-01 as there is no region info before that and select fields needed
        data <- data %>%
     mutate(month = as.Date(month))%>%
     filter(month >= as.Date ("2020-04-01"))%>%
       select(month, contract_number, commissioner_name, region_name, 
              annual_contracted_UOA, UOA_delivered)
        
-    #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+    #get data into the right format and calculate the annual contracted UOA, delivered UOA and percentage of UOA delivered (standardized by no of working days)
  data <- get_delivery_data(data = data, UDAorUOA = "UOA", all_regions_and_STPs = TRUE)
   data <- data%>%filter(month>"2020-03-01")
  
@@ -314,7 +316,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
     p
     
   }else{
-    
+   #IF WANT TO GET A DATA TABLE 
     if(UDAorUOA == "UDA"){
       new_col_names <- c(`Calendar month` = "month",
                          `Region Name` = "region_name",
@@ -332,7 +334,10 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
                          #`Scaled monthly UOAs delivered` = "scaled_monthly_UDA_UOAs_delivered",
                          `Standardised monthly percentage of contracted UOAs delivered` = "perc_standardised_wd")
     }
-    data <- data %>%
+   
+    data$`month` <- format(as.Date(data$`month`), "%Y-%m")
+    
+     data <- data %>%
       rename(any_of(new_col_names))
      
   }
@@ -351,7 +356,7 @@ plot_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
   
    
   if(UDAorUOA == "UDA"){
-     #include data only after 2021-04-01 and select fields needed
+     #include data only after 2020-04-01 and select fields needed
     
 data <- data %>%
       filter(region_name == region_STP_name)
@@ -362,7 +367,7 @@ data <- data %>%
              annual_contracted_UDA, UDA_delivered)
 
  
-  #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+  #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered (standardized by working days)
  data <- get_delivery_data(data = data, UDAorUOA = "UDA", all_regions_and_STPs = TRUE)
   data <- data%>%filter(month>"2020-03-01")
  
@@ -386,6 +391,7 @@ data <- data %>%
  # marchTarget <- 85
  # juneTarget <- 95
   }else{
+    #include data only after 2020-04-01 and select fields needed
     data <- data %>%
       filter(region_name == region_STP_name)
        data <- data %>%
@@ -394,7 +400,7 @@ data <- data %>%
       select(month, contract_number, commissioner_name, region_name, 
              annual_contracted_UOA, UOA_delivered)
        
-    #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
+   #get data into the right format and calculate the annual contracted UOA, delivered UOA and percentage of UOA delivered (standardized by working days)
  data <- get_delivery_data(data = data, UDAorUOA = "UOA", all_regions_and_STPs = TRUE)
   data <- data%>%filter(month>"2020-03-01")
  
@@ -466,6 +472,8 @@ data <- data %>%
                          #`Scaled monthly UOAs delivered` = "scaled_monthly_UDA_UOAs_delivered",
                          `Standardised monthly percentage of contracted UOAs delivered` = "perc_standardised_wd")
     }
+    
+    data$`month` <- format(as.Date(data$`month`), "%Y-%m")
     data <- data %>%
       rename(any_of(new_col_names))
   }
@@ -504,7 +512,7 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
    data <- data %>% left_join(working_days,by=c('month')) %>% 
       mutate(perc_standardised_wd_int = 100*(monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`))))%>% 
       mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
-   
+   #rename columns
    new_col_names <- c(`Calendar month` = "month",
                          `Commissioner Name` = "commissioner_name",
                          `Monthly UDAs delivered` = "monthly_UDA_UOAs_delivered",
@@ -512,12 +520,13 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
                          #`Scaled monthly UDAs delivered` = "scaled_monthly_UDA_UOAs_delivered",
                          `Standardised monthly percentage of contracted UDAs delivered` = "perc_standardised_wd")
    
+  data$`month` <- format(as.Date(data$`month`), "%Y-%m")
    data <- data %>%
       rename(any_of(new_col_names))
 
    
   }else{
-    
+    #do similar things for UOA
        data <- data %>%
     mutate(month = as.Date(month))%>%
     filter(month >= as.Date ("2020-04-01"))%>%
@@ -545,6 +554,7 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
                          #`Scaled monthly UOAs delivered` = "scaled_monthly_UDA_UOAs_delivered",
                          `Standardised monthly percentage of contracted UOAs delivered` = "perc_standardised_wd")
       
+      data$`month` <- format(as.Date(data$`month`), "%Y-%m")
       data <- data %>%
       rename(any_of(new_col_names))
 
@@ -618,7 +628,7 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
   historic_data <- data %>%
     select(month, contract_number, commissioner_name, region_name,
            annual_contracted_UDA, UDA_delivered)
-  #create a new field as financial year and then calculate full year UDA delivered, contracted UDA and mutate a new field about percentage of UDA delivered
+  #create a new field as financial year and then calculate full year UDA delivered, contracted UDA and percentage of UDA delivered
   historic_data <- historic_data  %>%
     mutate(financial_year = case_when(month >= as.Date("2016-04-01") & month < as.Date("2017-04-01") ~ "2016/17",
                                       month >= as.Date("2017-04-01") & month < as.Date("2018-04-01") ~ "2017/18",
@@ -865,54 +875,6 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
 ```
 
 
-
-```{r 111 dental}
-
-plot_111_referrals <- function(data = dental_data_111,
-                               plotChart = TRUE){
-  #calculate case volume for each month
-  data <- data %>% 
-    mutate(month = as.Date(month)) %>%
-    group_by(month) %>%
-    summarise(monthly_case_volume = sum(monthly_case_volume))
-  
-  #plot code
-  p <- ggplot(data) +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle = 90)) +
-    geom_line(aes(x = month, 
-                  y = monthly_case_volume), 
-              colour = "steelblue", 
-              size = 1) +
-    scale_x_date(date_breaks = "1 month", 
-                 date_labels = "%b-%y") +
-    scale_y_continuous(breaks = seq(0, 
-                                    max(data$monthly_case_volume, na.rm = T) + 10000,
-                                    10000),
-                       limits = c(0, max(data$monthly_case_volume))) +
-    labs(title = "111 call volume recommended towards dental services", 
-         x = "Month",
-         y = "Call volume", 
-         subtitle = "England"#,
-         #caption = "*services include: "
-    ) #+
-  # annotate(geom = "text", 
-  #          x = data$month, 
-  #          y = data$monthly_case_volume + 1, 
-  #          label = data$monthly_case_volume, 
-  #          size = 3) 
-  
-  if(plotChart == TRUE){
-    p
-  }else{
-    data
-  }
-  
-}
-
-
-```
-
 ``` {r YTD UDA/UDA delivered}
 plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data, 
                                       UDAorUOA = "UDA",
@@ -1115,13 +1077,69 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
     p
     
   }else{
-    
+    #if want a data table instead
     data_to_print <- data_to_print %>%
-      rename(Month = month,
+      rename(`Calendar month` = month,
              `YTD delivery` = YTD_delivery,
              `Required YTD delivery in order to meet contracted UDAs` = expected_delivery)
+    
+    data_to_print$`Calendar month` <- format(as.Date(data_to_print$`Calendar month`), "%Y-%m")
   }
 }
+```
+
+```{r}
+Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data, 
+                                      UDAorUOA = "UDA",
+                                      level = "National",
+                                      all_regions_and_STPs = FALSE){
+
+  
+
+  if(UDAorUOA == "UDA"){
+    #get data into the right format for UDA
+    data <- get_delivery_data(data, UDAorUOA = "UDA", all_regions_and_STPs = all_regions_and_STPs)
+    
+  }else{
+    #get data into the right format for UOA
+    data <- get_delivery_data(data, UDAorUOA = "UOA", all_regions_and_STPs = all_regions_and_STPs)
+   
+  }
+  
+  data$`Calendar month` <- format(as.Date(data$`month`), "%Y-%m")
+  
+  if(level == "Regional"){
+    #calculate YTD group by month and region
+    data <- data %>%
+      filter(month >= as.Date ("2020-04-01"))%>%
+      group_by(`Calendar month`,region_name) %>%
+      summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered))%>%
+      group_by(region_name) %>%
+      dplyr::mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))%>%
+       select(`Calendar month`,YTD_delivery)
+    
+  }else if(level == "STP"){
+   #calculate YTD group by month and ICB
+    data <- data %>%
+      filter(month >= as.Date ("2020-04-01"))%>%
+      group_by(`Calendar month`,commissioner_name) %>%
+      summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered))%>%
+      group_by(commissioner_name) %>%
+      dplyr::mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))%>%
+       select(`Calendar month`,YTD_delivery)
+   
+  }else{
+     data <- data %>%
+       arrange(`Calendar month`)%>%
+    dplyr::mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))%>%
+       select(`Calendar month`,YTD_delivery)
+  }
+  
+
+  
+  
+}
+  
 ```
 
 ```{r banded_CoT}
@@ -1232,6 +1250,53 @@ plot_banded_CoT <- function(data = UDA_calendar_data,
              `Urgent` = urgent)
   }
 }
+```
+
+```{r 111 dental}
+
+plot_111_referrals <- function(data = dental_data_111,
+                               plotChart = TRUE){
+  #calculate case volume for each month
+  data <- data %>% 
+    mutate(month = as.Date(month)) %>%
+    group_by(month) %>%
+    summarise(monthly_case_volume = sum(monthly_case_volume))
+  
+  #plot code
+  p <- ggplot(data) +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90)) +
+    geom_line(aes(x = month, 
+                  y = monthly_case_volume), 
+              colour = "steelblue", 
+              size = 1) +
+    scale_x_date(date_breaks = "1 month", 
+                 date_labels = "%b-%y") +
+    scale_y_continuous(breaks = seq(0, 
+                                    max(data$monthly_case_volume, na.rm = T) + 10000,
+                                    10000),
+                       limits = c(0, max(data$monthly_case_volume))) +
+    labs(title = "111 call volume recommended towards dental services", 
+         x = "Month",
+         y = "Call volume", 
+         subtitle = "England"#,
+         #caption = "*services include: "
+    ) #+
+  # annotate(geom = "text", 
+  #          x = data$month, 
+  #          y = data$monthly_case_volume + 1, 
+  #          label = data$monthly_case_volume, 
+  #          size = 3) 
+  
+  if(plotChart == TRUE){
+    p
+  }else{
+    data
+  }
+  
+}
+
+
 ```
 
 ```{r  breakdown_111_referrals}
