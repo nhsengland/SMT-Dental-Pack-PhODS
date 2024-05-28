@@ -1145,4 +1145,314 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
 ]
 ]
 
+---
 
+### Time series of banded Courses of Treatment
+
+```{r xaringan-panelset-YTD_UOA_delivery, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = region, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP1, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP2``]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP2, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+
+* This data excludes contracts with zero or one annual contracted UOAs.
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP3, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+
+* This data excludes contracts with zero or one annual contracted UOAs.
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP4, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP5, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP6, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+
+* This data excludes contracts with zero or one annual contracted UOAs.
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP7, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP8, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP9, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP10, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP11, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+]
+
+---
+
+### Banded Courses of Treatment as % of 2019 delivery
+
+```{r xaringan-panelset-YTD_UOA_delivery, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = region, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP1, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP2``]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP2, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+
+* This data excludes contracts with zero or one annual contracted UOAs.
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP3, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+
+* This data excludes contracts with zero or one annual contracted UOAs.
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP4, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP5, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP6, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+
+* This data excludes contracts with zero or one annual contracted UOAs.
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP7, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP8, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP9, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP10, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "STP", 
+                region_STP_name = STP11, 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UOAs.
+
+]
+]
