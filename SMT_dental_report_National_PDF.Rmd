@@ -64,6 +64,24 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
 ```
 * This data excludes contracts with zero or one annual contracted UDAs.
 
+## Time series of banded Courses of Treatment
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center"}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "National", 
+                region_STP_name = NULL, 
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+## Banded Courses of Treatment as % of February 2020 delivery
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "National", 
+                region_STP_name = NULL, 
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
 # UOA Information
 ## UOA activity- treatment data standardised by working days
 
@@ -85,23 +103,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                           region_STP_name = NULL, 
                           all_regions_and_STPs = FALSE)
 ```
-* This data excludes contracts with zero or one annual contracted UDAs.
-
-## Time series of banded Courses of Treatment
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center"}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "National", 
-                region_STP_name = NULL, 
-                asIndex = FALSE)
-```
-
-## Banded Courses of Treatment as % of 2019 delivery
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "National", 
-                region_STP_name = NULL, 
-                asIndex = TRUE)
-```
+* This data excludes contracts with zero or one annual contracted UOAs.
 
 # 111 Information
 

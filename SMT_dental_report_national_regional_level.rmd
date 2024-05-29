@@ -453,6 +453,222 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
 ]
 
 ---
+
+### Time series of banded Courses of Treatment
+
+```{r xaringan-panelset-banded_CoT, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[National]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "National", 
+                region_STP_name = NULL, 
+                plotChart = TRUE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[South East]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "South East", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[South West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "South West", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[North West]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "North West", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[North East and Yorkshire]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "North East and Yorkshire", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[London]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "London", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[Midlands]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "Midlands", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[East of England]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "East of England", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = FALSE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+
+]
+
+---
+
+### Banded Courses of Treatment as % of February 2020 delivery
+
+```{r xaringan-panelset-CoT_average_2020_delivery, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[National]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "National", 
+                region_STP_name = NULL, 
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[South East]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "South East", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[South West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "South West", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[North West]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "North West", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[North East and Yorkshire]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "North East and Yorkshire", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[London]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "London", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[Midlands]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "Midlands", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+.panel[.panel-name[East of England]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data, 
+                level = "Regional", 
+                region_STP_name = "East of England", 
+                plotChart = TRUE,
+                all_regions_and_STPs = FALSE,
+                asIndex = TRUE)
+```
+* This data excludes contracts with zero or one annual contracted UDAs.
+
+]
+
+]
+
+---
+
 ### UOA activity- treatment data standardised by working days
 
 ```{r xaringan-panelset-historic_UOA_delivery_wd, echo=FALSE}
@@ -685,218 +901,8 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
 
 ---
 
-### Time series of banded Courses of Treatment
 
-```{r xaringan-panelset-YTD_UOA_delivery, echo=FALSE}
-xaringanExtra::use_panelset()
-```
- <font size="2">
-.panelset[
 
-.panel[.panel-name[National]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "National", 
-                region_STP_name = NULL, 
-                plotChart = TRUE
-                asIndex = FALSE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[South East]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "South East", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = FALSE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[South West]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "South West", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = FALSE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[North West]
-```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "North West", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = FALSE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[North East and Yorkshire]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "North East and Yorkshire", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = FALSE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[London]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "London", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = FALSE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[Midlands]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "Midlands", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = FALSE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[East of England]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "East of England", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = FALSE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-
-]
-
----
-
-### Banded Courses of Treatment as % of 2019 delivery
-
-```{r xaringan-panelset-YTD_UOA_delivery, echo=FALSE}
-xaringanExtra::use_panelset()
-```
- <font size="2">
-.panelset[
-
-.panel[.panel-name[National]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "National", 
-                region_STP_name = NULL, 
-                asIndex = TRUE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[South East]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "South East", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = TRUE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[South West]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "South West", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = TRUE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[North West]
-```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "North West", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = TRUE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[North East and Yorkshire]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "North East and Yorkshire", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = TRUE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[London]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "London", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = TRUE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[Midlands]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "Midlands", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = TRUE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-.panel[.panel-name[East of England]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_banded_CoT(data = UDA_calendar_data, 
-                level = "Regional", 
-                region_STP_name = "East of England", 
-                plotChart = TRUE,
-                all_regions_and_STPs = FALSE,
-                asIndex = TRUE)
-```
-* This data excludes contracts with zero or one annual contracted UOAs.
-
-]
-
-]
 
 ---
 
