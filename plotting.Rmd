@@ -1169,7 +1169,8 @@ plot_banded_CoT <- function(data = UDA_calendar_data,
     subtitle <- region_STP_name
   }else{
     subtitle <- "England"
-    data <- data
+    data <- data %>% 
+      filter(month >= "2019-09-01") # start national chart at Sept 2019
   }
   
   #get data into the right format
