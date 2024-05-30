@@ -78,10 +78,53 @@ data_icb_YTD_UDA <- data_icb_YTD_UDA %>%
 
 data_UDA_YTD<- rbind(data_Nat_YTD_UDA, data_reg_YTD_UDA, data_icb_YTD_UDA)
 
+#### Banded CoTs
+data_Nat_CoT <- table_banded_CoT(data = UDA_calendar_data, 
+                                 level = "National", 
+                                 all_regions_and_STPs = FALSE)
+
+data_Nat_CoT <- data_Nat_CoT %>% 
+  mutate(`Geography Level`='National',`Geography Name`='England') %>% 
+  rename(`Calendar month` = month, 
+         `Band 1 FP17s` = band1, 
+         `Band 2 FP17s` = band2, 
+         `Band 3 FP17s` = band3, 
+         `Other FP17s` = other, 
+         `Urgent FP17s` = urgent)
+
+data_reg_CoT <- table_banded_CoT(data = UDA_calendar_data, 
+                                 level = "Regional", 
+                                 all_regions_and_STPs = TRUE)
+
+data_reg_CoT <- data_reg_CoT %>% 
+  mutate(`Geography Level` = "Regional") %>% 
+  rename(`Geography Name` = region_name, 
+         `Calendar month` = month, 
+         `Band 1 FP17s` = band1, 
+         `Band 2 FP17s` = band2, 
+         `Band 3 FP17s` = band3, 
+         `Other FP17s` = other, 
+         `Urgent FP17s` = urgent)
+
+data_icb_CoT <- table_banded_CoT(data = UDA_calendar_data,
+                                 level = "STP", 
+                                 all_regions_and_STPs = TRUE)
+
+data_icb_CoT <- data_icb_CoT %>% 
+  mutate(`Geography Level` = "ICB") %>% 
+  rename(`Geography Name` = commissioner_name, 
+         `Calendar month` = month, 
+         `Band 1 FP17s` = band1, 
+         `Band 2 FP17s` = band2, 
+         `Band 3 FP17s` = band3, 
+         `Other FP17s` = other, 
+         `Urgent FP17s` = urgent)
+
+data_CoT <- rbind(data_Nat_CoT, data_reg_CoT, data_icb_CoT)
+
 data_UDA<-data_UDA_de_co%>%
-    full_join(data_UDA_YTD,by=c('Calendar month','Geography Name','Geography Level'))
-
-
+    full_join(data_UDA_YTD,by=c('Calendar month','Geography Name','Geography Level')) %>% 
+  left_join(data_CoT, by = c('Calendar month', 'Geography Name', 'Geography Level'))
 
 ######UOA
 #### No UDA delivered, contracted & percentage

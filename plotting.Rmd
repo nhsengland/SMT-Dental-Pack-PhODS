@@ -1155,13 +1155,17 @@ plot_banded_CoT <- function(data = UDA_calendar_data,
   #toggle subtitle
   if(level == "Regional"){
     #filter for region or STP
+    # start from 2020-04-01 as region information not available before then
     data <- data %>% 
-      filter(region_name == region_STP_name )
+      filter(region_name == region_STP_name, 
+            month >= "2020-04-01")
     subtitle <- region_STP_name 
   }else if(level == "STP"){
     #filter for region or STP
+    # start from 2020-04-01 as region information not available before then
     data <- data %>% 
-      filter(commissioner_name == region_STP_name )
+      filter(commissioner_name == region_STP_name, 
+            month >= "2020-04-01")
     subtitle <- region_STP_name
   }else{
     subtitle <- "England"
@@ -1173,7 +1177,8 @@ plot_banded_CoT <- function(data = UDA_calendar_data,
   data <- reshape2::melt(data_to_print, id.vars = "month")
   data <- data %>%
     mutate(month = as.Date(month)) %>%
-    rename(band = variable, CoTs = value)
+    rename(band = variable, CoTs = value)  %>% 
+    filter(band != "region_name")
   
   #set everything as index of Feb 2020 and standardise for working days
   # or standardise for working days only
@@ -1196,7 +1201,7 @@ plot_banded_CoT <- function(data = UDA_calendar_data,
       mutate(CoTs = CoTs * 100 / CoTs_feb2020)
     
     title <- "Banded Courses of Treatment as a Percentage of February 2020 Delivery"
-    ylab <- "Percentage of 2019 FP17* forms submitted"
+    ylab <- "Percentage of February 2020 FP17* forms submitted"
     
     }else{
       data <- data %>% left_join(working_days,by=c('month')) %>% 
@@ -1238,17 +1243,54 @@ plot_banded_CoT <- function(data = UDA_calendar_data,
            subtitle = subtitle)
     
   }else{
-    data_to_print %>%
-      mutate(month = as.Date(month)) %>%
-      rename(Month = month,
-             `Region Name` = region_name,
-             `Commissioner Name` = commissioner_name,
-             `Band 1` = band1,
-             `Band 2` = band2,
-             `Band 3` = band3,
-             `Other` = other,
-             `Urgent` = urgent)
+  data <- data_to_print %>%
+    mutate(month = format(as.Date(month), "%Y-%m"))
   }
+}
+```
+
+```{r table_banded_CoT}
+table_banded_CoT <- function(data = UDA_calendar_data, 
+                             level = "National", 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE){
+  data_to_print <- get_banded_COTs_data(data, all_regions_and_STPs = all_regions_and_STPs)
+  
+  if(level == "Regional"){
+    #filter for region or STP
+    # start from 2020-04-01 as region information not available before then
+    data <- data_to_print %>% 
+      filter(month >= "2020-04-01") %>% 
+      mutate(month = format(as.Date(month), "%Y-%m")) %>% 
+      group_by(month, region_name) %>% 
+      summarise(band1 = sum(band1, na.rm=TRUE), 
+                band2 = sum(band2, na.rm=TRUE), 
+                band3 = sum(band3, na.rm=TRUE), 
+                other = sum(other, na.rm=TRUE), 
+                urgent = sum(urgent, na.rm=TRUE))
+
+    }else if(level == "STP"){
+      #filter for region or STP
+      # start from 2020-04-01 as region information not available before then
+      data <- data_to_print %>% 
+        filter(month >= "2020-04-01") %>% 
+        mutate(month = format(as.Date(month), "%Y-%m")) %>% 
+        group_by(month, commissioner_name) %>% 
+        summarise(band1 = sum(band1, na.rm=TRUE), 
+                  band2 = sum(band2, na.rm=TRUE), 
+                  band3 = sum(band3, na.rm=TRUE), 
+                  other = sum(other, na.rm=TRUE), 
+                  urgent = sum(urgent, na.rm=TRUE))
+      }else{
+        data <- data_to_print %>% 
+          mutate(month = format(as.Date(month), "%Y-%m")) %>% 
+          group_by(month) %>% 
+          summarise(band1 = sum(band1, na.rm=TRUE), 
+                    band2 = sum(band2, na.rm=TRUE), 
+                    band3 = sum(band3, na.rm=TRUE), 
+                    other = sum(other, na.rm=TRUE), 
+                    urgent = sum(urgent, na.rm=TRUE))
+        }
 }
 ```
 
