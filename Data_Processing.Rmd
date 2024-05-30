@@ -84,8 +84,10 @@ if(all_regions_and_STPs == FALSE){
   
 }else{
   #group by month and sum UDAs delivered
+  # start from 2020-04-01 as region/ICB information not available before then
   new_data <- data %>%
-    group_by(month, region_name, commissioner_name)
+    group_by(month, region_name, commissioner_name) %>% 
+    filter(month >= "2020-04-01")
 }
 
 new_data <- new_data %>%
