@@ -98,3 +98,27 @@ new_data <- new_data %>%
 }
 ```
 
+```{r unique patients seen}
+get_unique_patients <- function(data = unique_patients_rolling, 
+                                all_regions_and_STPs = FALSE){
+  data <- unique_patients_rolling
+  
+  if(all_regions_and_STPs == FALSE){
+    # group by month and sum unique patients seen
+    new_data <- data %>% 
+      group_by(month)
+  } else {
+    new_data <- data %>% 
+      group_by(month, region_name, commissioner_name)
+  }
+  
+  new_data <- new_data %>% 
+    summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE), 
+              child_12m_count = sum(child_12m_count, na.rm = TRUE), 
+              adult_24m_count = sum(adult_24m_count, na.rm = TRUE))
+}
+```
+
+
+
+
