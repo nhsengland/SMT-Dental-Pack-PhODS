@@ -180,6 +180,26 @@ UOA_calendar_data$commissioner_name<- paste0(UOA_calendar_data$commissioner_name
 ```
 
 
+```{r unique patients}
+pull_unique_patients <- function(){
+  con <- dbConnect(odbc::odbc(), "NCDR")
+  
+  sql <- "SELECT *
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Unique_rolling]"
+  result <- dbSendQuery(con, sql)
+  unique_patients <- dbFetch(result)
+  dbClearResult(result)
+  
+  unique_patients_rolling
+  
+  names(unique_patients_rolling) <- base::tolower(names(unique_patients_rolling))
+  
+  unique_patients_rolling <- unique_patients_rolling %>% 
+    rename(month=year_month,commissioner_ods_code_icb=commissioner_code)
+}
+```
+
+
 
 ```{r dental 111 data}
 #get dental 111 data from local file
