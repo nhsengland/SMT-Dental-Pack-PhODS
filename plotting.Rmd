@@ -1507,6 +1507,11 @@ ggplot(data) +
 }
 }
 
+
+
+```
+
+
 ```{r DCP1}
 plot_DCP_analysis <- function(data = UDA_calendar_data,
                               dcp_data = DCP_data,
@@ -1658,6 +1663,7 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
     
   }
 }
+
 
 
 
