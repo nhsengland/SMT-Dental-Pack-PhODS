@@ -187,7 +187,7 @@ pull_unique_patients <- function(){
   sql <- "SELECT *
   FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Unique_rolling]"
   result <- dbSendQuery(con, sql)
-  unique_patients <- dbFetch(result)
+  unique_patients_rolling <- dbFetch(result)
   dbClearResult(result)
   
   unique_patients_rolling
