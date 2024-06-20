@@ -113,6 +113,25 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
 plot_111_referrals()
 ```
 
+# Unique patients
+
+## Unique dental patients seen
+
+```{r unique patients, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "National", 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+## Unique dental patients seen as a percentage of February 2020 figures
+
+```{r unique patients percentage, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "National", 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
 
 # Dental Care Practitioners (DCPs) Information
 ## Percentage of CoTs assisted by Dental Care Practitioners (DCPs)

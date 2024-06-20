@@ -1406,6 +1406,107 @@ plot_breakdown_111_referrals <- function(data = dental_data_111,
 ```
 
 
+```{r unique patients rolling}
+plot_unique_patients_rolling <- function(data = unique_patients_rolling, 
+                                         level = "National", 
+                                         region_STP_name = NULL, 
+                                         plotChart = TRUE, 
+                                         all_regions_and_STPs = FALSE, 
+                                         asIndex = FALSE){
+  
+  data <- get_unique_patients()
+  
+  options(scipen = 5)
+
+chartCaption <- "*N.B. this analysis uses unique patients per contract and does not take \ninto account patients who have been seen at more than one dental practice."
+
+#filter for region or STP
+if(level == "Regional"){
+  data <- data %>%
+    filter(region_name == region_STP_name)
+  subtitle <- region_STP_name
+}else if(level == "STP"){
+  data <- data %>%
+    filter(commissioner_name == region_STP_name)
+  subtitle <- region_STP_name
+}else{
+  subtitle <- "England"
+}
+
+if(plotChart == TRUE & asIndex == FALSE){
+  data <- data %>% 
+  rename(`All (12 month rolling period)` = all_12m_count, 
+         `Children (12 month rolling period)` = child_12m_count, 
+         `Adults (24 month rolling period)` = adult_24m_count) %>% 
+  pivot_longer(!month) %>% 
+  rename(total_unique_patients = value)
+  
+  title <- "Total number of unique patients seen over a rolling 12 (24) month period"
+  ylab <- "Unique patients"
+  #plot code
+  ggplot(data) +
+    theme_bw() +
+    geom_line(aes(x = month,
+                  y = total_unique_patients,
+                  colour = name)) +
+    geom_point(aes(x = month,
+                   y = total_unique_patients,
+                   colour = name)) +
+    scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
+    scale_colour_manual(values = get_colour_palette()) +
+    labs(title = title,
+         x = "12 month rolling period end date",
+         y = ylab,
+         subtitle = subtitle,
+         caption = chartCaption
+    ) +
+    scale_x_date(date_breaks = "1 month", 
+                 date_labels = "%b-%y") +
+    theme(axis.text.x = element_text(angle = 90))
+} else if(plotChart == TRUE & asIndex == TRUE){
+  data <- data %>% 
+  rename(`All (12 month rolling period)` = all_12m_count, 
+         `Children (12 month rolling period)` = child_12m_count, 
+         `Adults (24 month rolling period)` = adult_24m_count)
+
+data <- reshape2::melt(data, id.vars = "month")
+
+dataFeb2020 <- data %>% 
+  filter(month == "2020-02-01") %>% 
+  rename(value_Feb2020 = value)
+
+data <- data %>% 
+  left_join(dataFeb2020, by = c("variable")) %>% 
+  mutate(value = value * 100 / value_Feb2020) %>% 
+  select(-month.y) %>% 
+  rename(month = month.x)
+
+title <- "Total number of unique patients seen over a rolling 12 (24) month period as a percentage of February 2020 figures"
+ylab <- "Percentage of February 2020 unique patients"
+
+#plot code
+ggplot(data) +
+  theme_bw() +
+  geom_line(aes(x = month,
+                y = value,
+                colour = variable)) +
+  geom_point(aes(x = month,
+                 y = value,
+                 colour = variable)) +
+  scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
+  scale_colour_manual(values = get_colour_palette()) +
+  labs(title = title,
+       x = "12 month rolling period end date",
+       y = ylab,
+       subtitle = subtitle,
+       caption = chartCaption
+  ) +
+  scale_x_date(date_breaks = "1 month", 
+               date_labels = "%b-%y") +
+  theme(axis.text.x = element_text(angle = 90))
+}
+}
+
 ```{r DCP1}
 plot_DCP_analysis <- function(data = UDA_calendar_data,
                               dcp_data = DCP_data,
