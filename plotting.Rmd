@@ -1144,7 +1144,7 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
 ```
 
 ```{r banded_CoT}
-plot_banded_CoT <- function(data = UDA_calendar_data, 
+plot_banded_CoT <- function(data = UDA_calendar_data_FD, 
                             level = "National", 
                             region_STP_name = NULL, 
                             plotChart = TRUE, 
@@ -1202,14 +1202,14 @@ plot_banded_CoT <- function(data = UDA_calendar_data,
       left_join(dataFeb2020, by = c("band")) %>% 
       mutate(CoTs = CoTs * 100 / CoTs_feb2020)
     
-    title <- "Banded Courses of Treatment as a Percentage of February 2020 Delivery"
+    title <- "Banded Courses of Treatment as a Percentage of February 2020 Delivery Including Foundation Dentists"
     ylab <- "Percentage of February 2020 FP17* forms submitted"
     
     }else{
       data <- data %>% left_join(working_days,by=c('month')) %>% 
         mutate(standardised_CoTs = CoTs *(`no workdays`/`total workdays`))
       
-      title <- "Banded Courses of Treatment"
+      title <- "Banded Courses of Treatment Including Foundation Dentists"
       ylab <- "Number of FP17* forms submitted"
     }
   
