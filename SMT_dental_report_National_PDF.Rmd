@@ -74,7 +74,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 * This data excludes contracts with zero or one annual contracted UDAs.
 
 ## Banded Courses of Treatment as % of February 2020 delivery
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center}
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_banded_CoT(data = UDA_calendar_data, 
                 level = "National", 
                 region_STP_name = NULL, 
@@ -86,9 +86,9 @@ plot_banded_CoT(data = UDA_calendar_data,
 ## UOA activity- treatment data standardised by working days
 
 ```{r UOA_activity_Calendar1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
-                                             level = "National",
-                                             region_STP_name = NULL)
+# plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+#                                              level = "National",
+#                                              region_STP_name = NULL)
 ```
 
 * This data excludes contracts with zero or one annual contracted UOAs.
@@ -97,11 +97,11 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 
 ## YTD UOA delivery
 ```{r YTD UOA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
-                          UDAorUOA = "UOA", 
-                          level = "National", 
-                          region_STP_name = NULL, 
-                          all_regions_and_STPs = FALSE)
+# plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+#                           UDAorUOA = "UOA", 
+#                           level = "National", 
+#                           region_STP_name = NULL, 
+#                           all_regions_and_STPs = FALSE)
 ```
 * This data excludes contracts with zero or one annual contracted UOAs.
 

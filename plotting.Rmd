@@ -673,7 +673,7 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
     mutate(perc_UDA_delivered = if_else(!is.na(perc_UDA_deliverd.x), perc_UDA_deliverd.x, perc_UDA_deliverd.y)) 
   
   data <- data_try %>%
-    mutate(year_type = if_else(financial_year == "2023/24", "Current Financial Year", 
+    mutate(year_type = if_else(financial_year == "2024/25", "Current Financial Year", 
                                "Previous Financial Years (Averages)")) %>% 
     # mutate(year_type = if_else(financial_year == max(data$financial_year), "Current Financial Year", 
     #                            "Previous Financial Years (Averages)")) %>%
@@ -812,7 +812,7 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     mutate(perc_UOA_delivered = if_else(!is.na(perc_UOA_delivered.x), perc_UOA_delivered.x, perc_UOA_delivered.y)) 
   
   data <- data_try %>%
-    mutate(year_type = if_else(financial_year == "2023/24", "Current Financial Year", 
+    mutate(year_type = if_else(financial_year == "2024/25", "Current Financial Year", 
                                "Previous Financial Years (Averages)")) %>% 
     # mutate(year_type = if_else(financial_year == max(data$financial_year), "Current Financial Year", 
     #                            "Previous Financial Years (Averages)")) %>%
@@ -922,11 +922,11 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   
   # extract previous financial year
   historic_data <- data %>% 
-    filter(month >= as.Date("2022-04-01") & month <= as.Date("2023-03-01")) %>% ##must be updated each financial year
+    filter(month >= as.Date("2023-04-01") & month <= as.Date("2024-03-01")) %>% ##must be updated each financial year
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
   
   data <- data %>%
-    filter(month > as.Date("2023-03-01")) %>% ##must be updated each financial year
+    filter(month > as.Date("2024-03-01")) %>% ##must be updated each financial year
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
   
   #get the mean annual contracted UDAs across the months
@@ -944,53 +944,53 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   #add in blanks for the rest of the year
   if(all_regions_and_STPs == FALSE & nrow(data) < 12){
   
-    if(!(as.Date("2023-05-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-05-01"), 
+    if(!(as.Date("2024-05-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-05-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-06-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-06-01"), 
+    if(!(as.Date("2024-06-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-06-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-07-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-07-01"), 
+    if(!(as.Date("2024-07-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-07-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-08-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-08-01"), 
+    if(!(as.Date("2024-08-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-08-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-09-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-09-01"), 
+    if(!(as.Date("2024-09-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-09-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-10-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-10-01"), 
+    if(!(as.Date("2024-10-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-10-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-11-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-11-01"), 
+    if(!(as.Date("2024-11-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-11-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-12-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-12-01"), 
+    if(!(as.Date("2024-12-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-12-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-01-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2024-01-01"), 
+    if(!(as.Date("2025-01-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2025-01-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-02-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2024-02-01"), 
+    if(!(as.Date("2025-02-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2025-02-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
