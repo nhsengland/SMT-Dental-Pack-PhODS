@@ -101,7 +101,7 @@ new_data <- new_data %>%
 ```{r unique patients seen}
 get_unique_patients <- function(data = unique_patients_rolling, 
                                 all_regions_and_STPs = FALSE){
-  data <- unique_patients_rolling
+  data <- pull_unique_patients()
   
   if(all_regions_and_STPs == FALSE){
     # group by month and sum unique patients seen
