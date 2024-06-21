@@ -158,33 +158,33 @@ UDA_calendar_data_FD <- UDA_calendar_data%>%
 
 ```{r UOA}
 
-pull_UOA_calendar_data <- function(){
-  
-  con <- dbConnect(odbc::odbc(), "NCDR")
-  
-  sql <- "SELECT *
-  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[orthodontic_activity]
-  where [Year_Month] > '2016-03-01'"
-  result <- dbSendQuery(con, sql)
-  UOA_calendar_data <- dbFetch(result)
-  dbClearResult(result)
-  
-  UOA_calendar_data
-}
-
-UOA_calendar_data<-pull_UOA_calendar_data()
-#only include contractors in contractual_dataset and exclude those with UOA target less than 1 - rename fields
-UOA_calendar_data = dplyr::filter(UOA_calendar_data, as.numeric(UOA_PERF_TAR) > 100)
-UOA_calendar_data<-UOA_calendar_data%>%
-  inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
-names(UOA_calendar_data) <- base::tolower(names(UOA_calendar_data))
-UOA_calendar_data<-UOA_calendar_data%>%
-  rename(month=year_month,commissioner_ods_code_icb=commissioner_code,name_or_company_name=provider_name,annual_contracted_UOA=uoa_perf_tar,UOA_delivered=uoa_delivered,orthodontic_starts=ortho_trt_started,orthodontic_completions=ortho_trt_completed)
-
-UOA_calendar_data$region_name<- str_to_title(UOA_calendar_data$region_name)
-UOA_calendar_data$commissioner_name<- str_to_title(UOA_calendar_data$commissioner_name)
-UOA_calendar_data$commissioner_name = substr(UOA_calendar_data$commissioner_name,1,nchar(UOA_calendar_data$commissioner_name)-3)
-UOA_calendar_data$commissioner_name<- paste0(UOA_calendar_data$commissioner_name, rep("ICB", nrow(UOA_calendar_data)))
+# pull_UOA_calendar_data <- function(){
+#   
+#   con <- dbConnect(odbc::odbc(), "NCDR")
+#   
+#   sql <- "SELECT *
+#   FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[orthodontic_activity]
+#   where [Year_Month] > '2016-03-01'"
+#   result <- dbSendQuery(con, sql)
+#   UOA_calendar_data <- dbFetch(result)
+#   dbClearResult(result)
+#   
+#   UOA_calendar_data
+# }
+# 
+# UOA_calendar_data<-pull_UOA_calendar_data()
+# #only include contractors in contractual_dataset and exclude those with UOA target less than 1 - rename fields
+# UOA_calendar_data = dplyr::filter(UOA_calendar_data, as.numeric(UOA_PERF_TAR) > 100)
+# UOA_calendar_data<-UOA_calendar_data%>%
+#   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
+# names(UOA_calendar_data) <- base::tolower(names(UOA_calendar_data))
+# UOA_calendar_data<-UOA_calendar_data%>%
+#   rename(month=year_month,commissioner_ods_code_icb=commissioner_code,name_or_company_name=provider_name,annual_contracted_UOA=uoa_perf_tar,UOA_delivered=uoa_delivered,orthodontic_starts=ortho_trt_started,orthodontic_completions=ortho_trt_completed)
+# 
+# UOA_calendar_data$region_name<- str_to_title(UOA_calendar_data$region_name)
+# UOA_calendar_data$commissioner_name<- str_to_title(UOA_calendar_data$commissioner_name)
+# UOA_calendar_data$commissioner_name = substr(UOA_calendar_data$commissioner_name,1,nchar(UOA_calendar_data$commissioner_name)-3)
+# UOA_calendar_data$commissioner_name<- paste0(UOA_calendar_data$commissioner_name, rep("ICB", nrow(UOA_calendar_data)))
 
 ```
 
@@ -247,7 +247,7 @@ pull_dcp_data <- function(){
 DCP_data<-pull_dcp_data()%>%
   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
 
-#exclude those with UDA target less than 1 - rename fields
+#exclude those with UDA target less than 100 - rename fields
 contractors=UDA_calendar_data%>%
   select(month,contract_number)
 DCP_data = DCP_data%>%

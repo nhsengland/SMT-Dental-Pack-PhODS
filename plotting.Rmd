@@ -673,7 +673,7 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
     mutate(perc_UDA_delivered = if_else(!is.na(perc_UDA_deliverd.x), perc_UDA_deliverd.x, perc_UDA_deliverd.y)) 
   
   data <- data_try %>%
-    mutate(year_type = if_else(financial_year == "2023/24", "Current Financial Year", 
+    mutate(year_type = if_else(financial_year == "2024/25", "Current Financial Year", 
                                "Previous Financial Years (Averages)")) %>% 
     # mutate(year_type = if_else(financial_year == max(data$financial_year), "Current Financial Year", 
     #                            "Previous Financial Years (Averages)")) %>%
@@ -812,7 +812,7 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     mutate(perc_UOA_delivered = if_else(!is.na(perc_UOA_delivered.x), perc_UOA_delivered.x, perc_UOA_delivered.y)) 
   
   data <- data_try %>%
-    mutate(year_type = if_else(financial_year == "2023/24", "Current Financial Year", 
+    mutate(year_type = if_else(financial_year == "2024/25", "Current Financial Year", 
                                "Previous Financial Years (Averages)")) %>% 
     # mutate(year_type = if_else(financial_year == max(data$financial_year), "Current Financial Year", 
     #                            "Previous Financial Years (Averages)")) %>%
@@ -922,11 +922,11 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   
   # extract previous financial year
   historic_data <- data %>% 
-    filter(month >= as.Date("2022-04-01") & month <= as.Date("2023-03-01")) %>% ##must be updated each financial year
+    filter(month >= as.Date("2023-04-01") & month <= as.Date("2024-03-01")) %>% ##must be updated each financial year
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
   
   data <- data %>%
-    filter(month > as.Date("2023-03-01")) %>% ##must be updated each financial year
+    filter(month > as.Date("2024-03-01")) %>% ##must be updated each financial year
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
   
   #get the mean annual contracted UDAs across the months
@@ -944,53 +944,53 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   #add in blanks for the rest of the year
   if(all_regions_and_STPs == FALSE & nrow(data) < 12){
   
-    if(!(as.Date("2023-05-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-05-01"), 
+    if(!(as.Date("2024-05-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-05-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-06-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-06-01"), 
+    if(!(as.Date("2024-06-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-06-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-07-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-07-01"), 
+    if(!(as.Date("2024-07-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-07-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-08-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-08-01"), 
+    if(!(as.Date("2024-08-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-08-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-09-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-09-01"), 
+    if(!(as.Date("2024-09-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-09-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-10-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-10-01"), 
+    if(!(as.Date("2024-10-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-10-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-11-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-11-01"), 
+    if(!(as.Date("2024-11-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-11-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2023-12-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-12-01"), 
+    if(!(as.Date("2024-12-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2024-12-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-01-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2024-01-01"), 
+    if(!(as.Date("2025-01-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2025-01-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-02-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2024-02-01"), 
+    if(!(as.Date("2025-02-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2025-02-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
@@ -1510,10 +1510,6 @@ ggplot(data) +
 
 
 
-
-```
-
-
 ```{r DCP1}
 plot_DCP_analysis <- function(data = UDA_calendar_data,
                               dcp_data = DCP_data,
@@ -1554,11 +1550,14 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
                       total_B3 = sum(UDA_band_3, na.rm = TRUE),
                       total_urgent = sum(UDA_urgent, na.rm = TRUE)) %>%
     mutate (DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
-    select (month, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
+    select (month, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent) %>% 
+    rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
 
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Technician') %>%
-    mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"))
+    mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"), 
+          DCP_description = replace(DCP_description, DCP_description=="Dental Hygienist", "Hygienist"), 
+          DCP_description = replace(DCP_description, DCP_description=="Dental Therapist", "Therapist"))
   
   dcp_summary <- dcp_main_new %>% 
     # mutate(DCP_description = as.factor(DCP_description) %>%
@@ -1714,8 +1713,10 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
     select (month, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
 
   dcp_main_new <- dcp_data %>% 
-    filter(DCP_description != 'Clinical Technician') %>%
-    mutate(DCP_description = replace(DCP_description, DCP_description== "Dental Nurse", "Dental_Nurse_assisted"))
+    filter(DCP_description != 'Technician') %>%
+    mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"), 
+          DCP_description = replace(DCP_description, DCP_description=="Dental Hygienist", "Hygienist"), 
+          DCP_description = replace(DCP_description, DCP_description=="Dental Therapist", "Therapist"))
 
   dcp_summary <- dcp_main_new %>% 
     # mutate(DCP_description = as.factor(DCP_description) %>%
@@ -1746,11 +1747,15 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
   all_lookup <- left_join(dcp_summary_longer, delivery_total_longer, by = 
                             c("month", "Bands"))
   total <- all_lookup %>% 
-    mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))
+    mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2), 
+            Bands = replace(Bands, Bands=="total_B1", "Band 1"),
+            Bands = replace(Bands, Bands=="total_B2", "Band 2"),
+            Bands = replace(Bands, Bands=="total_B3", "Band 3"),
+            Bands = replace(Bands, Bands=="total_urgent", "Urgent"))
 
   if(UDA_or_FP17 == "UDA"){
 
-    filtered_data_UDA = filter(total, Bands %in% c("total_B1",	"total_B2",	"total_B3", "total_urgent")) %>%
+    filtered_data_UDA = filter(total, Bands %in% c("Band 1",	"Band 2",	"Band 3", "Urgent")) %>%
       select(month, "DCP_description.x", "Bands", "asissted_percent") %>%
       rename (DCP_description = DCP_description.x) %>%
       mutate(month = as.Date(month)) %>%
