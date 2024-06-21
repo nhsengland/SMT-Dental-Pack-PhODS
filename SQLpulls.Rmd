@@ -247,7 +247,7 @@ pull_dcp_data <- function(){
 DCP_data<-pull_dcp_data()%>%
   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
 
-#exclude those with UDA target less than 1 - rename fields
+#exclude those with UDA target less than 100 - rename fields
 contractors=UDA_calendar_data%>%
   select(month,contract_number)
 DCP_data = DCP_data%>%

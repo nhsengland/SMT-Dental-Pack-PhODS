@@ -113,6 +113,29 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
 plot_111_referrals()
 ```
 
+# Dental Care Practitioners (DCPs) Information
+
+## Percentage of CoTs assisted by Dental Care Practitioners (DCPs)
+
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis(data = UDA_calendar_data,
+                              dcp_data = DCP_data, 
+                              UDA_or_FP17 = "FP17",
+                              level = "National",
+                              region_STP_name = NULL)
+```
+
+## Percentage of UDAs assisted by Dental Care Practitioners (DCPs)
+
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "UDA",
+                              level = "National",
+                              region_STP_name = NULL)
+
+```
+
 # Unique patients
 
 ## Unique dental patients seen
@@ -132,27 +155,3 @@ plot_unique_patients_rolling(level = "National",
                              all_regions_and_STPs = FALSE, 
                              asIndex = TRUE)
 ```
-
-# Dental Care Practitioners (DCPs) Information
-## Percentage of CoTs assisted by Dental Care Practitioners (DCPs)
-
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
-plot_DCP_analysis(data = UDA_calendar_data,
-                              dcp_data = DCP_data, 
-                              UDA_or_FP17 = "FP17",
-                              level = "National",
-                              region_STP_name = NULL)
-```
-
-## Percentage of UDAs assisted by Dental Care Practitioners (DCPs)
-
-```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
-
-plot_DCP_analysis_band(data = UDA_calendar_data,
-                              dcp_data = DCP_data,
-                              UDA_or_FP17 = "UDA",
-                              level = "National",
-                              region_STP_name = NULL)
-
-```
-
