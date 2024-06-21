@@ -903,9 +903,6 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
 
 
 
-
----
-
 name: 111-call-volumes
 
 ### 111 dental related call volumes
@@ -934,4 +931,210 @@ plot_breakdown_111_referrals()
  ]
 
 
+---
+
+name: dcp-fp17
+
+### Percentage of CoTs assisted by Dental Care Practitioners (DCPs)
+
+```{r xaringan-panelset-UDA-activity-dcp-fp17, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[National]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis(data = UDA_calendar_data,
+                              dcp_data = DCP_data, 
+                              UDA_or_FP17 = "FP17",
+                              level = "National",
+                              region_STP_name = NULL)
+```
+
+]
+.panel[.panel-name[South East]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_regional_check(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "FP17",
+                                  level = "Regional",
+                                  region_STP_name = "South East")
+```
+
+
+]
+.panel[.panel-name[South West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_regional_check(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "FP17",
+                                  level = "Regional",
+                                  region_STP_name = "South West")
+```
+
+
+]
+.panel[.panel-name[North West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_regional_check(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "FP17",
+                                  level = "Regional",
+                                  region_STP_name = "North West")
+```
+
+
+]
+.panel[.panel-name[North East and Yorkshire]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_regional_check(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "FP17",
+                                  level = "Regional",
+                                  region_STP_name = "North East And Yorkshire")
+```
+
+
+]
+.panel[.panel-name[London]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_regional_check(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "FP17",
+                                  level = "Regional",
+                                  region_STP_name = "London")
+```
+
+
+]
+.panel[.panel-name[Midlands]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_regional_check(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "FP17",
+                                  level = "Regional",
+                                  region_STP_name = "Midlands")
+```
+
+
+]
+.panel[.panel-name[East of England]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_regional_check(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "FP17",
+                                  level = "Regional",
+                                  region_STP_name = "East Of England")
+```
+
+
+] 
+]
+
+
+---
+
+name: dcp-uda
+
+### Percentage of UDAs assisted by Dental Care Practitioners (DCPs)
+
+```{r xaringan-panelset-UDA-activity-dcp-uda, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[National]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "UDA",
+                              level = "National",
+                              region_STP_name = NULL)
+
+```
+
+]
+.panel[.panel-name[South East]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "UDA",
+                                  level = "Regional",
+                                  region_STP_name = "South East")
+```
+
+
+]
+.panel[.panel-name[South West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "UDA",
+                                  level = "Regional",
+                                  region_STP_name = "South West")
+```
+
+
+]
+.panel[.panel-name[North West]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "UDA",
+                                  level = "Regional",
+                                  region_STP_name = "North West")
+```
+
+
+]
+.panel[.panel-name[North East and Yorkshire]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "UDA",
+                                  level = "Regional",
+                                  region_STP_name = "North East And Yorkshire")
+```
+
+
+]
+.panel[.panel-name[London]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "UDA",
+                                  level = "Regional",
+                                  region_STP_name = "London")
+```
+
+
+]
+.panel[.panel-name[Midlands]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "UDA",
+                                  level = "Regional",
+                                  region_STP_name = "Midlands")
+```
+
+
+]
+.panel[.panel-name[East of England]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "UDA",
+                                  level = "Regional",
+                                  region_STP_name = "East Of England")
+```
+
+
+]
+]
+
+
+---
 
