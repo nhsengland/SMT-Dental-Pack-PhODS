@@ -1506,6 +1506,8 @@ ggplot(data) +
   theme(axis.text.x = element_text(angle = 90))
 }
 }
+```
+
 
 ```{r DCP1}
 plot_DCP_analysis <- function(data = UDA_calendar_data,
