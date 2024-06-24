@@ -667,6 +667,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 
 ]
 
+
 ---
 
 ### UOA activity- treatment data standardised by working days
@@ -899,9 +900,9 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
 
 ]
 
+
+
 ---
-
-
 
 name: 111-call-volumes
 

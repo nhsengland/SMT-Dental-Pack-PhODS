@@ -1554,6 +1554,7 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
     rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
 
   dcp_main_new <- dcp_data %>% 
+    filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
     mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"), 
           DCP_description = replace(DCP_description, DCP_description=="Dental Hygienist", "Hygienist"), 
@@ -1697,9 +1698,9 @@ plot_DCP_analysis_regional_check <- function(data = UDA_calendar_data,
     subtitle <- "England"
   }
   
-  colnames(UDA_scheduled_data)
+  colnames(UDA_calendar_data)
   
-  delivery_total <-  UDA_scheduled_data %>% 
+  delivery_total <-  UDA_calendar_data %>% 
     rename(Region = region_name) %>%
     group_by(month, Region) %>%
     dplyr::summarise( total_FP17 = sum(general_FP17s, na.rm = TRUE),
@@ -1710,8 +1711,9 @@ plot_DCP_analysis_regional_check <- function(data = UDA_calendar_data,
     mutate (DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
     select (month, Region, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
   
-  dcp_main_new <- dcp_data# %>% 
-   filter(DCP_description != 'Technician') %>%
+  dcp_main_new <- dcp_data %>% 
+    filter(DCP_description != 'Clinical Technician') %>%
+    filter(DCP_description != 'Technician') %>%
  mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"), 
           DCP_description = replace(DCP_description, DCP_description=="Dental Hygienist", "Hygienist"), 
           DCP_description = replace(DCP_description, DCP_description=="Dental Therapist", "Therapist"))
@@ -1855,12 +1857,12 @@ plot_DCP_analysis_ICB_check <- function(data = UDA_calendar_data,
     subtitle <- "England"
   }
   
-  colnames(UDA_scheduled_data)
+  colnames(UDA_calendar_data)
   colnames(dcp_data)
   ### commissioner_name
   ### commissioner_name
   
-  delivery_total <-  UDA_scheduled_data %>% 
+  delivery_total <-  UDA_calendar_data %>% 
     rename(Region = region_name) %>%
     group_by(month, commissioner_name) %>%
     dplyr::summarise( total_FP17 = sum(general_FP17s, na.rm = TRUE),
@@ -1872,7 +1874,8 @@ plot_DCP_analysis_ICB_check <- function(data = UDA_calendar_data,
     select (month, commissioner_name, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
   
   dcp_main_new <- dcp_data %>% 
-   filter(DCP_description != 'Technician') %>%
+    filter(DCP_description != 'Clinical Technician') %>%
+    filter(DCP_description != 'Technician') %>%
    mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"), 
           DCP_description = replace(DCP_description, DCP_description=="Dental Hygienist", "Hygienist"), 
           DCP_description = replace(DCP_description, DCP_description=="Dental Therapist", "Therapist"))
@@ -2031,8 +2034,9 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
 
 
   dcp_main_new <- dcp_data %>% 
+    filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
-    mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"), 
+   mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"), 
           DCP_description = replace(DCP_description, DCP_description=="Dental Hygienist", "Hygienist"), 
           DCP_description = replace(DCP_description, DCP_description=="Dental Therapist", "Therapist"))
 
