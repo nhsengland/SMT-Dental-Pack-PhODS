@@ -245,9 +245,11 @@ DCP_data<-pull_dcp_data()%>%
 #exclude those with UDA target less than 100 - rename fields
 contractors=UDA_calendar_data%>%
   select(month,contract_number)
+
 DCP_data = DCP_data%>%
   inner_join(contractors,by=c('YEAR_MONTH'='month','CONTRACT_NUMBER'='contract_number'))%>%
-  filter(!is.na(DCP_DESC)&DCP_DESC!="")
+  filter(DCP_DESC!="")%>%
+  filter(!is.na(DCP_DESC))
 
 DCP_data <- DCP_data %>%
     dplyr::rename(Month=YEAR_MONTH,
@@ -268,7 +270,7 @@ DCP_data <- DCP_data %>%
            FP17_Current_Year_urgent = `BAND_URGENT_DELIVERED`,
            FP17_Current_Year_other= `BAND_OTHER_DELIVERED`)
 
-#DCP_data$region_name<- str_to_title(DCP_data$region_name)
+DCP_data$Region<- str_to_title(DCP_data$Region_Name)
 
 DCP_data$commissioner_name<- str_to_title(DCP_data$commissioner_name)
 DCP_data$commissioner_name = substr(DCP_data$commissioner_name,1,nchar(DCP_data$commissioner_name)-3)
