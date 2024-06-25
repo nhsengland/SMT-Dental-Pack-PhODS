@@ -196,7 +196,7 @@ data_UDA<-data_UDA_de_co%>%
 data<- list('UDA' = data_UDA#, 'UOA' = data_UOA
              )
 
-openxlsx::write.xlsx(data, file = paste0('Data_', as.character(as.Date(Sys.Date()), '%B%Y'), '.xlsx')) 
+openxlsx::write.xlsx(data, file = paste0('Data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
 
 
 ######################################DCP
@@ -350,5 +350,5 @@ openxlsx::write.xlsx(data, file = paste0('Data_', as.character(as.Date(Sys.Date(
   
   total<- rbind(total_national, total_regional, total_icb)
   
-  openxlsx::write.xlsx(total, file = paste0('DCP_Data_', as.character(as.Date(Sys.Date()), '%B%Y'), '.xlsx')) 
+  openxlsx::write.xlsx(total, file = paste0('DCP_Data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
 
