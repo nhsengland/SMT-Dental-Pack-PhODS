@@ -26,6 +26,7 @@ library(downloadthis)
 library(lubridate)
 library(knitr)
 library(ggrepel)
+library(ggpubr)
 options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
 options(knitr.duplicate.label = 'allow')
 
