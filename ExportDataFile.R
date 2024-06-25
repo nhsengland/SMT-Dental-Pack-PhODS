@@ -126,6 +126,7 @@ data_UDA<-data_UDA_de_co%>%
     full_join(data_UDA_YTD,by=c('Calendar month','Geography Name','Geography Level')) %>% 
   left_join(data_CoT, by = c('Calendar month', 'Geography Name', 'Geography Level'))
 
+
 ######UOA
 #### No UDA delivered, contracted & percentage
 #data_Nat_UOA=plot_UDA_UOA_delivery_wd(data = UOA_calendar_data, 
@@ -352,3 +353,46 @@ openxlsx::write.xlsx(data, file = paste0('Data_', format(Sys.Date(), '%B%Y'), '.
   
   openxlsx::write.xlsx(total, file = paste0('DCP_Data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
 
+
+### Unique patients seen ###
+  # Unique patients rolling
+  data_Nat_unique <- get_unique_patients() %>% 
+    mutate(month = format(as.Date(month), "%Y-%m"), 
+           `Geography Level`='National',`Geography Name`='England') %>% 
+    rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
+           `Children seen in 12 month rolling period` = child_12m_count, 
+           `Adults seen in 24 month rolling period` = adult_24m_count, 
+           `Calendar month` = month)
+  
+  data_reg_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
+    group_by(month, region_name) %>% 
+    summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
+              child_12m_count = sum(child_12m_count, na.rm = TRUE), 
+              adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
+    mutate(month = format(as.Date(month), "%Y-%m"), 
+           region_name = str_to_title(region_name), 
+           `Geography Level` = "Regional") %>% 
+    rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
+           `Children seen in 12 month rolling period` = child_12m_count, 
+           `Adults seen in 24 month rolling period` = adult_24m_count, 
+           `Geography Name` = region_name, 
+           `Calendar month` = month)
+  
+  data_icb_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
+    group_by(month, commissioner_name) %>% 
+    summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
+              child_12m_count = sum(child_12m_count, na.rm = TRUE), 
+              adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
+    mutate(month = format(as.Date(month), "%Y-%m"), 
+           commissioner_name = str_to_title(commissioner_name), 
+           `Geography Level` = "ICB") %>% 
+    rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
+           `Children seen in 12 month rolling period` = child_12m_count, 
+           `Adults seen in 24 month rolling period` = adult_24m_count, 
+           `Geography Name` = commissioner_name, 
+           `Calendar month` = month)
+  
+  data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique) 
+
+  openxlsx::write.xlsx(data_unique, file = paste0('Unique_patients_seen_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
+  
