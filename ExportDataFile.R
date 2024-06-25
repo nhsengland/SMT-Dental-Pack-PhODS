@@ -193,10 +193,10 @@ data_UDA<-data_UDA_de_co%>%
 #  full_join(data_UOA_YTD,by=c('Calendar month','Geography Name','Geography Level'))
 
 
-data<- list('UDA' = data_UDA, #'UOA' = data_UOA
+data<- list('UDA' = data_UDA#, 'UOA' = data_UOA
              )
 
-openxlsx::write.xlsx(UDA_UOA_data, file = paste0('Data_', as.character(as.Date(Sys.Date()), '%B%Y'), '.xlsx')) 
+openxlsx::write.xlsx(data, file = paste0('Data_', as.character(as.Date(Sys.Date()), '%B%Y'), '.xlsx')) 
 
 
 ######################################DCP
