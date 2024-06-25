@@ -901,7 +901,7 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   if(UDAorUOA == "UDA"){
     #get data into the right format for UDA
     data <- get_delivery_data(data, UDAorUOA = "UDA", all_regions_and_STPs = all_regions_and_STPs)
-    title <- "YTD UDA delivery across all contracts* against annual contracted UDAs (millions)"
+    title <- "YTD UDA delivery across all contracts against annual contracted UDAs (millions)"
     ylab <- "YTD UDA delivery (millions)"
     #captionTitle <- "*These are treatment months..."
     lineCol <- "#CC79A7"
@@ -911,7 +911,7 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   }else{
     #get data into the right format for UOA
     data <- get_delivery_data(data, UDAorUOA = "UOA", all_regions_and_STPs = all_regions_and_STPs)
-    title <- "YTD UOA delivery across all contracts* against annual contracted UOAs (millions)"
+    title <- "YTD UOA delivery across all contracts against annual contracted UOAs (millions)"
     ylab <- "YTD UOA delivery (millions)"
     #captionTitle <- "*These are treatment months..."
     lineCol <- "steelblue"
@@ -994,8 +994,8 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-03-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2024-03-01"), 
+    if(!(as.Date("2025-03-01") %in% data$month)){
+      data <- data %>% add_row(month = as.Date("2025-03-01"), 
                               latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   }
@@ -1028,21 +1028,30 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   data$year_type <- factor(data$year_type, levels = c("Previous Financial Year",
                                                       "Current Financial Year"))  
   
+  prev_yr_latest_data <- max(historic_data$month)
+  
+  current_yr_latest_data <- data %>% 
+    filter(measure == "YTD_delivery" & value > 0)
+  
+  current_yr_latest_data <- max(current_yr_latest_data$month)
+  
+  data_labels <- data %>% 
+    filter(month %in% c(prev_yr_latest_data, current_yr_latest_data) 
+           & measure == "YTD_delivery")
+  
   if(plotChart == TRUE){
     #plot code
-    p <- ggplot(data) +
+    p <- ggplot(data, aes(x = month, 
+                          y = value/1000000, 
+                          colour = measure)) +
         theme_bw() +
-        geom_line(aes(x = month,
-                      y = value/1000000,
-                      colour = measure,
-                      linetype = measure),
+        geom_line(aes(linetype = measure),
                   size = 1) +
-        geom_point(aes(x = month,
-                      y = value/1000000,
-                      colour = measure#,
-                      #shape = measure
-        )
-        ) +
+        geom_point() +
+      geom_text_repel(aes(label = prettyNum(value, big.mark=",")), 
+                      data = data_labels, 
+                      colour = "black", 
+                      position = "dodge") + 
         #geom_hline(yintercept = latest_annual_contracted_UDA_UOAs/1000000,
         #           linetype = "dashed") +
         scale_x_date(date_breaks = "1 month",
@@ -1170,8 +1179,7 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
     subtitle <- region_STP_name
   }else{
     subtitle <- "England"
-    data <- data %>% 
-      filter(month >= "2019-09-01") # start national chart at Sept 2019
+    data <- data
   }
   
   #get data into the right format
@@ -1203,30 +1211,36 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
       mutate(CoTs = CoTs * 100 / CoTs_feb2020)
     
     title <- "Banded Courses of Treatment as a Percentage of February 2020 Delivery Including Foundation Dentists"
-    ylab <- "Percentage of February 2020 FP17* forms submitted"
+    ylab <- "Percentage of February 2020 FP17 forms submitted"
     
     }else{
       data <- data %>% left_join(working_days,by=c('month')) %>% 
-        mutate(standardised_CoTs = CoTs *(`no workdays`/`total workdays`))
+        mutate(standardised_CoTs = CoTs *(`no workdays`/`total workdays`)) %>% 
+        select(-CoTs) %>% 
+        rename(CoTs = standardised_CoTs)
       
       title <- "Banded Courses of Treatment Including Foundation Dentists"
-      ylab <- "Number of FP17* forms submitted"
+      ylab <- "Number of FP17 forms submitted"
     }
+  
+  data_labels <- data %>% 
+    filter(month == max(month)) %>% 
+    mutate(CoTs = round(CoTs))
   
   if(plotChart == TRUE){
     
     #plot code
-    ggplot(data) +
+    ggplot(data, aes(x = month, 
+                     y = CoTs, 
+                     colour = band)) +
       theme_bw() +
       theme(axis.text.x = element_text(angle = 90)) +
-      geom_line(aes(x = month,
-                    y = CoTs,
-                    colour = band),
-                size = 1) +
-      geom_point(aes(x = month,
-                     y = CoTs,
-                     colour = band),
-                 size = 1) +
+      geom_line(size = 1) +
+      geom_point(size = 1) +
+      geom_text_repel(aes(label = prettyNum(CoTs, big.mark=",")), 
+                      data = data_labels, 
+                      colour = "black", 
+                      position = "dodge") +
       scale_x_date(date_breaks = "1 month",
                    date_labels = "%b-%y") +
       scale_colour_manual(labels = c("Band 1", "Band 2", "Band 3", "Other", "Urgent"),
@@ -1306,14 +1320,19 @@ plot_111_referrals <- function(data = dental_data_111,
     group_by(month) %>%
     summarise(monthly_case_volume = sum(monthly_case_volume))
   
+  data_labels <- data %>% 
+    filter(month == max(month))
+  
   #plot code
-  p <- ggplot(data) +
+  p <- ggplot(data, aes(x = month, y = monthly_case_volume)) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 90)) +
-    geom_line(aes(x = month, 
-                  y = monthly_case_volume), 
-              colour = "steelblue", 
+    geom_line(colour = "steelblue", 
               size = 1) +
+    geom_text_repel(aes(label = prettyNum(monthly_case_volume, big.mark = ",")), 
+                    data = data_labels, 
+                    colour = "black", 
+                    position = "dodge") +
     scale_x_date(date_breaks = "1 month", 
                  date_labels = "%b-%y") +
     scale_y_continuous(breaks = seq(0, 
@@ -1443,15 +1462,23 @@ if(plotChart == TRUE & asIndex == FALSE){
   
   title <- "Total number of unique patients seen over a rolling 12 (24) month period"
   ylab <- "Unique patients"
+  
+  data_labels <- data %>% 
+    filter(month == max(month))
+  
+  data$name <- factor(data$name, levels = c("Adults (24 month rolling period)", "Children (12 month rolling period)", "All (12 month rolling period)"))
+  
   #plot code
-  ggplot(data) +
-    theme_bw() +
-    geom_line(aes(x = month,
-                  y = total_unique_patients,
-                  colour = name)) +
-    geom_point(aes(x = month,
-                   y = total_unique_patients,
+  ggplot(data, aes(x = month, 
+                   y = total_unique_patients, 
                    colour = name)) +
+    theme_bw() +
+    geom_line() +
+    geom_point() +
+    geom_text_repel(aes(label = prettyNum(total_unique_patients, big.mark=",")), 
+                    data = data_labels, 
+                    colour = "black", 
+                    position = "dodge") + 
     scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
     scale_colour_manual(values = get_colour_palette()) +
     labs(title = title,
@@ -1484,15 +1511,22 @@ data <- data %>%
 title <- "Total number of unique patients seen over a rolling 12 (24) month period as a percentage of February 2020 figures"
 ylab <- "Percentage of February 2020 unique patients"
 
+data_labels <- data %>% 
+    filter(month == max(month))
+  
+data$variable <- factor(data$variable, levels = c("Adults (24 month rolling period)", "Children (12 month rolling period)", "All (12 month rolling period)"))
+
 #plot code
-ggplot(data) +
-  theme_bw() +
-  geom_line(aes(x = month,
-                y = value,
-                colour = variable)) +
-  geom_point(aes(x = month,
-                 y = value,
+ggplot(data, aes(x = month, 
+                 y = value, 
                  colour = variable)) +
+  theme_bw() +
+  geom_line() +
+  geom_point() +
+    geom_text_repel(aes(label = round(value)), 
+                    data = data_labels, 
+                    colour = "black", 
+                    position = "dodge") + 
   scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
   scale_colour_manual(values = get_colour_palette()) +
   labs(title = title,
@@ -2083,6 +2117,11 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
       rename (DCP_description = DCP_description.x) %>%
       mutate(month = as.Date(month)) %>%
       mutate(DCP_description = str_replace_all(DCP_description, "_", " "))
+    
+    max_month <- max(filtered_data_UDA$month)
+    
+    data_labels <- filtered_data_UDA %>% 
+      filter(month == max_month)
 
 
     UDA_plot <- 
@@ -2095,8 +2134,10 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
       facet_grid(cols = vars(DCP_description)) +
       geom_line(aes(colour = Bands),
                 size = 1) +
-      #geom_text(aes(label= asissted_percent),hjust=0.5, 
-                #size=3.5,check_overlap = TRUE) +
+      geom_text_repel(aes(label = asissted_percent), 
+                      data = data_labels, 
+                      colour = "black", 
+                      position = "dodge") +
       scale_fill_manual(values = c("#009E73", "#F0E442", "#D55E00"),
                         labels = c("Dental Nurse assisted", "Hygienist", "Therapist")) +
       scale_x_date(date_breaks = "1 month",
