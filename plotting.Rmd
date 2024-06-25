@@ -1041,12 +1041,17 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   
   if(plotChart == TRUE){
     #plot code
-    p <- ggplot(data, aes(x = month, y = value/1000000, colour = measure)) +
+    p <- ggplot(data, aes(x = month, 
+                          y = value/1000000, 
+                          colour = measure)) +
         theme_bw() +
         geom_line(aes(linetype = measure),
                   size = 1) +
         geom_point() +
-      geom_text_repel(aes(label = prettyNum(value, big.mark=",")), data = data_labels, colour = "black", position = "dodge") + 
+      geom_text_repel(aes(label = prettyNum(value, big.mark=",")), 
+                      data = data_labels, 
+                      colour = "black", 
+                      position = "dodge") + 
         #geom_hline(yintercept = latest_annual_contracted_UDA_UOAs/1000000,
         #           linetype = "dashed") +
         scale_x_date(date_breaks = "1 month",
@@ -1225,12 +1230,17 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
   if(plotChart == TRUE){
     
     #plot code
-    ggplot(data, aes(x = month, y = CoTs, colour = band)) +
+    ggplot(data, aes(x = month, 
+                     y = CoTs, 
+                     colour = band)) +
       theme_bw() +
       theme(axis.text.x = element_text(angle = 90)) +
       geom_line(size = 1) +
       geom_point(size = 1) +
-      geom_text_repel(aes(label = prettyNum(CoTs, big.mark=",")), data = data_labels, colour = "black", position = "dodge") +
+      geom_text_repel(aes(label = prettyNum(CoTs, big.mark=",")), 
+                      data = data_labels, 
+                      colour = "black", 
+                      position = "dodge") +
       scale_x_date(date_breaks = "1 month",
                    date_labels = "%b-%y") +
       scale_colour_manual(labels = c("Band 1", "Band 2", "Band 3", "Other", "Urgent"),
@@ -1310,14 +1320,19 @@ plot_111_referrals <- function(data = dental_data_111,
     group_by(month) %>%
     summarise(monthly_case_volume = sum(monthly_case_volume))
   
+  data_labels <- data %>% 
+    filter(month == max(month))
+  
   #plot code
-  p <- ggplot(data) +
+  p <- ggplot(data, aes(x = month, y = monthly_case_volume)) +
     theme_bw() +
     theme(axis.text.x = element_text(angle = 90)) +
-    geom_line(aes(x = month, 
-                  y = monthly_case_volume), 
-              colour = "steelblue", 
+    geom_line(colour = "steelblue", 
               size = 1) +
+    geom_text_repel(aes(label = prettyNum(monthly_case_volume, big.mark = ",")), 
+                    data = data_labels, 
+                    colour = "black", 
+                    position = "dodge") +
     scale_x_date(date_breaks = "1 month", 
                  date_labels = "%b-%y") +
     scale_y_continuous(breaks = seq(0, 
@@ -1454,11 +1469,16 @@ if(plotChart == TRUE & asIndex == FALSE){
   data$name <- factor(data$name, levels = c("Adults (24 month rolling period)", "Children (12 month rolling period)", "All (12 month rolling period)"))
   
   #plot code
-  ggplot(data, aes(x = month, y = total_unique_patients, colour = name)) +
+  ggplot(data, aes(x = month, 
+                   y = total_unique_patients, 
+                   colour = name)) +
     theme_bw() +
     geom_line() +
     geom_point() +
-    geom_text_repel(aes(label = prettyNum(total_unique_patients, big.mark=",")), data = data_labels, colour = "black", position = "dodge") + 
+    geom_text_repel(aes(label = prettyNum(total_unique_patients, big.mark=",")), 
+                    data = data_labels, 
+                    colour = "black", 
+                    position = "dodge") + 
     scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
     scale_colour_manual(values = get_colour_palette()) +
     labs(title = title,
@@ -1497,12 +1517,16 @@ data_labels <- data %>%
 data$variable <- factor(data$variable, levels = c("Adults (24 month rolling period)", "Children (12 month rolling period)", "All (12 month rolling period)"))
 
 #plot code
-ggplot(data, aes(x = month, y = value, colour = variable)) +
+ggplot(data, aes(x = month, 
+                 y = value, 
+                 colour = variable)) +
   theme_bw() +
   geom_line() +
   geom_point() +
-    geom_text_repel(aes(label = paste0(round(value), "%", sep = "")), 
-                    data = data_labels, colour = "black", position = "dodge") + 
+    geom_text_repel(aes(label = round(value)), 
+                    data = data_labels, 
+                    colour = "black", 
+                    position = "dodge") + 
   scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
   scale_colour_manual(values = get_colour_palette()) +
   labs(title = title,
@@ -2089,6 +2113,11 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
       rename (DCP_description = DCP_description.x) %>%
       mutate(month = as.Date(month)) %>%
       mutate(DCP_description = str_replace_all(DCP_description, "_", " "))
+    
+    max_month <- max(filtered_data_UDA$month)
+    
+    data_labels <- filtered_data_UDA %>% 
+      filter(month == max_month)
 
 
     UDA_plot <- 
@@ -2101,8 +2130,10 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
       facet_grid(cols = vars(DCP_description)) +
       geom_line(aes(colour = Bands),
                 size = 1) +
-      #geom_text(aes(label= asissted_percent),hjust=0.5, 
-                #size=3.5,check_overlap = TRUE) +
+      geom_text_repel(aes(label = asissted_percent), 
+                      data = data_labels, 
+                      colour = "black", 
+                      position = "dodge") +
       scale_fill_manual(values = c("#009E73", "#F0E442", "#D55E00"),
                         labels = c("Dental Nurse assisted", "Hygienist", "Therapist")) +
       scale_x_date(date_breaks = "1 month",
