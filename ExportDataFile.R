@@ -194,10 +194,9 @@ data_UDA<-data_UDA_de_co%>%
 #  full_join(data_UOA_YTD,by=c('Calendar month','Geography Name','Geography Level'))
 
 
-data<- list('UDA' = data_UDA#, 'UOA' = data_UOA
-             )
-
-openxlsx::write.xlsx(data, file = paste0('Data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
+# data<- list('UDA' = data_UDA, 'UOA' = data_UOA)
+# 
+# openxlsx::write.xlsx(data, file = paste0('Data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
 
 
 ######################################DCP
@@ -350,8 +349,6 @@ openxlsx::write.xlsx(data, file = paste0('Data_', format(Sys.Date(), '%B%Y'), '.
     mutate(`Geography Level`='ICB')
   
   total<- rbind(total_national, total_regional, total_icb)
-  
-  openxlsx::write.xlsx(total, file = paste0('DCP_Data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
 
 
 ### Unique patients seen ###
@@ -392,7 +389,13 @@ openxlsx::write.xlsx(data, file = paste0('Data_', format(Sys.Date(), '%B%Y'), '.
            `Geography Name` = commissioner_name, 
            `Calendar month` = month)
   
-  data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique) 
+  data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique)
+  
+# create Excel file
+# specify tabs
+data<- list('UDA' = data_UDA, 
+            'DCP' = total, 
+            'Unique patients' = data_unique)
 
-  openxlsx::write.xlsx(data_unique, file = paste0('Unique_patients_seen_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
+openxlsx::write.xlsx(data, file = paste0('SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
   
