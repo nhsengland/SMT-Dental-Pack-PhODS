@@ -33,4 +33,6 @@ docs/
 po/*~
 # RStudio Connect folder
 rsconnect/
+# Output files
 *.pdf
+*.xlsx
