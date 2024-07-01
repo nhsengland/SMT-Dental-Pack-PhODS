@@ -631,10 +631,7 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
            annual_contracted_UDA, UDA_delivered)
   #create a new field as financial year and then calculate full year UDA delivered, contracted UDA and percentage of UDA delivered
   historic_data <- historic_data  %>%
-    mutate(financial_year = case_when(month >= as.Date("2016-04-01") & month < as.Date("2017-04-01") ~ "2016/17",
-                                      month >= as.Date("2017-04-01") & month < as.Date("2018-04-01") ~ "2017/18",
-                                      month >= as.Date("2018-04-01") & month < as.Date("2019-04-01") ~ "2018/19",
-                                      month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
+    mutate(financial_year = case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
                                       month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
                                       month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
                                       month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
@@ -658,11 +655,8 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
     #mutate(scaled_UDA_delivery = UDA_delivery * 12) %>%
     mutate(perc_UDA_deliverd =100* (UDA_delivery /(contracted_UDAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UDA_deliverd = round(perc_UDA_deliverd, digits = 0)) %>% 
-    add_row(month = seq(as.Date("2016-04-01"), as.Date("2023-03-01"), lubridate::month(1))) %>% # need to add every FY
-    mutate(financial_year = case_when(month >= as.Date("2016-04-01") & month < as.Date("2017-04-01") ~ "2016/17",
-                                      month >= as.Date("2017-04-01") & month < as.Date("2018-04-01") ~ "2017/18",
-                                      month >= as.Date("2018-04-01") & month < as.Date("2019-04-01") ~ "2018/19",
-                                      month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
+    add_row(month = seq(as.Date("2019-04-01"), as.Date("2023-03-01"), lubridate::month(1))) %>% # need to add every FY
+    mutate(financial_year = case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
                                       month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
                                       month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
                                       month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
@@ -709,6 +703,8 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
       aes(x = month,
           y = perc_UDA_delivered),
       colour = "steelblue") +
+     ylab("Percentage of contracted UDAs delivered") +
+     xlab(NULL) + 
     geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
               aes(x = month + 120,
                   y = perc_UDA_delivered + 4,
@@ -737,12 +733,14 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
       aes(x = month,
           y = perc_UDA_delivered),
       colour = "steelblue")  +
+      ylab(NULL) + 
+      xlab(NULL) + 
           geom_text(data = filter(data2, year_type == "Current Financial Year"),
               aes(x = month,
                   y = perc_UDA_delivered + 4,
                   label = paste0(round(perc_UDA_delivered), "%")),
               size = 3) +
-      scale_x_date(breaks = "1 month",date_labels = "%b/%Y") +
+      scale_x_date(breaks = "1 month",date_labels = "%b %Y") +
       #scale_x_date(breaks = scales::breaks_width(1)) +
       scale_y_continuous(limits = c(0, max(c(data2$perc_UDA_delivered, 95), na.rm = T) + 5),
                          breaks = seq(0, max(c(data2$perc_UDA_delivered, 95), na.rm = T) + 5, 10)#,
@@ -751,7 +749,22 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001
       ),legend.position="none") 
     
-    ggarrange(p1, p2, nrow = 1)
+    title <- "Monthly percentage of usual annual contracted UDAs standardised by working days"
+    
+    figure <- ggarrange(p1, p2, nrow = 1)
+    
+    annotate_figure(
+      annotate_figure(figure, 
+                      top = text_grob(subtitle, 
+                                      hjust = 0, 
+                                      x = unit(40, "pt"), 
+                                      size = 11), 
+                      ), 
+      top = text_grob(title, 
+                      hjust = 0, 
+                      x = unit(40, "pt")), 
+      bottom = text_grob("Time period")
+    )
 }
 ```
 
@@ -788,10 +801,7 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
 
   ##create a new field as financial year and then calculate full year UDA delivered, contracted UDA and percentage of UDA delivered
   historic_data <- historic_data  %>%
-    mutate(financial_year = case_when(month >= as.Date("2016-04-01") & month < as.Date("2017-04-01") ~ "2016/17",
-                                      month >= as.Date("2017-04-01") & month < as.Date("2018-04-01") ~ "2017/18",
-                                      month >= as.Date("2018-04-01") & month < as.Date("2019-04-01") ~ "2018/19",
-                                      month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
+    mutate(financial_year = case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
                                       month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
                                       month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
                                       month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
@@ -814,11 +824,8 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
    # mutate(scaled_UOA_delivery = UOA_delivery * 12) %>%
     mutate(perc_UOA_delivered =100* (UOA_delivery / (contracted_UOAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UOA_delivered = round(perc_UOA_delivered, digits = 0))%>% 
-    add_row(month = seq(as.Date("2016-04-01"), as.Date("2023-03-01"), lubridate::month(1))) %>%
-    mutate(financial_year = case_when(month >= as.Date("2016-04-01") & month < as.Date("2017-04-01") ~ "2016/17",
-                                      month >= as.Date("2017-04-01") & month < as.Date("2018-04-01") ~ "2017/18",
-                                      month >= as.Date("2018-04-01") & month < as.Date("2019-04-01") ~ "2018/19",
-                                      month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
+    add_row(month = seq(as.Date("2019-04-01"), as.Date("2023-03-01"), lubridate::month(1))) %>%
+    mutate(financial_year = case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
                                       month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
                                       month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
                                       month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
@@ -1135,13 +1142,21 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   
   data$`Calendar month` <- format(as.Date(data$`month`), "%Y-%m")
   
+  data <- data %>% 
+    mutate(financial_year= case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
+                                      month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
+                                      month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
+                                      month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
+                                      month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
+                                      month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"))
+  
   if(level == "Regional"){
     #calculate YTD group by month and region
     data <- data %>%
       filter(month >= as.Date ("2020-04-01"))%>%
-      group_by(`Calendar month`,region_name) %>%
+      group_by(`Calendar month`,region_name, financial_year) %>%
       summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered))%>%
-      group_by(region_name) %>%
+      group_by(region_name, financial_year) %>%
       dplyr::mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))%>%
        select(`Calendar month`,YTD_delivery)
     
@@ -1149,15 +1164,16 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
    #calculate YTD group by month and ICB
     data <- data %>%
       filter(month >= as.Date ("2020-04-01"))%>%
-      group_by(`Calendar month`,commissioner_name) %>%
+      group_by(`Calendar month`,commissioner_name, financial_year) %>%
       summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered))%>%
-      group_by(commissioner_name) %>%
+      group_by(commissioner_name, financial_year) %>%
       dplyr::mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))%>%
        select(`Calendar month`,YTD_delivery)
    
   }else{
      data <- data %>%
        arrange(`Calendar month`)%>%
+       group_by(financial_year) %>% 
     dplyr::mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))%>%
        select(`Calendar month`,YTD_delivery)
   }
