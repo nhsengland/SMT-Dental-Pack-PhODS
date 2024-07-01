@@ -146,7 +146,6 @@ UDA_calendar_data_FD_only<-UDA_calendar_data_FD_only %>%
 
 UDA_calendar_data_FD <- UDA_calendar_data %>%
   left_join(UDA_calendar_data_FD_only, by=c("month","commissioner_ods_code_icb","commissioner_name","contract_number" )) %>%
-  rowwise() %>% 
   mutate(UDA_delivered = rowSums(select(., UDA_delivered.x, UDA_delivered.y), na.rm = TRUE),
     FP17s_band_1 = rowSums(select(., FP17s_band_1.x, FP17s_band_1.y), na.rm = TRUE),
     FP17s_band_2 = rowSums(select(., FP17s_band_2.x, FP17s_band_2.y), na.rm = TRUE),
