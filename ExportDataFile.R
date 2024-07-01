@@ -250,7 +250,7 @@ data_UDA<-data_UDA_de_co%>%
   
   dcp_summary_national <- dcp_main_new%>% 
     group_by(month, DCP_description) %>%
-    summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
+    dplyr::summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
                total_B1 = sum(Band_1._UDA, na.rm = TRUE),
                total_B2 = sum(Band_2._UDA, na.rm = TRUE),
                total_B3 = sum(Band_3._UDA, na.rm = TRUE),
@@ -258,7 +258,7 @@ data_UDA<-data_UDA_de_co%>%
   
   dcp_summary_regional <- dcp_main_new%>% 
     group_by(month, Region, DCP_description) %>%
-    summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
+    dplyr::summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
                total_B1 = sum(Band_1._UDA, na.rm = TRUE),
                total_B2 = sum(Band_2._UDA, na.rm = TRUE),
                total_B3 = sum(Band_3._UDA, na.rm = TRUE),
@@ -267,7 +267,7 @@ data_UDA<-data_UDA_de_co%>%
   
     dcp_summary_icb <- dcp_main_new%>% 
     group_by(month, commissioner_name, DCP_description) %>%
-    summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
+      dplyr::summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
                total_B1 = sum(Band_1._UDA, na.rm = TRUE),
                total_B2 = sum(Band_2._UDA, na.rm = TRUE),
                total_B3 = sum(Band_3._UDA, na.rm = TRUE),
@@ -363,7 +363,7 @@ data_UDA<-data_UDA_de_co%>%
   
   data_reg_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
     group_by(month, region_name) %>% 
-    summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
+    dplyr::summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
               child_12m_count = sum(child_12m_count, na.rm = TRUE), 
               adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
     mutate(month = format(as.Date(month), "%Y-%m"), 
@@ -377,7 +377,7 @@ data_UDA<-data_UDA_de_co%>%
   
   data_icb_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
     group_by(month, commissioner_name) %>% 
-    summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
+    dplyr::summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
               child_12m_count = sum(child_12m_count, na.rm = TRUE), 
               adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
     mutate(month = format(as.Date(month), "%Y-%m"), 
