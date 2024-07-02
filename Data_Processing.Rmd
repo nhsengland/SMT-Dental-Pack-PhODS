@@ -29,7 +29,7 @@ get_delivery_data <- function(data = UDA_calendar_data,
       group_by(month)
   }
   
-  #group by month/ICB/Region (depends on the previous step) and sum UDAs delivered and contracted UDA
+  #group by month/ICB/Region (depends on the previous step) and calculate total no UDAs delivered and contracted UDA
   UDA_UOAs_delivered <- data %>%
     summarise(monthly_UDA_UOAs_delivered = ifelse(UDAorUOA == "UDA", 
                                                   sum(UDA_delivered, na.rm = T),
@@ -71,6 +71,7 @@ get_delivery_data <- function(data = UDA_calendar_data,
 get_banded_COTs_data <- function(data = UDA_calendar_data_FD, 
                                         all_regions_and_STPs = FALSE){
 
+#group data for further calculation is needed
 if(all_regions_and_STPs == FALSE){
   #group by month and sum UDAs delivered
   new_data <- data %>%
@@ -84,6 +85,7 @@ if(all_regions_and_STPs == FALSE){
     filter(month >= "2020-04-01")
 }
 
+#calculate total no of FP17s in each band
 new_data <- new_data %>%
   summarise(band1 = sum(FP17s_band_1, na.rm = T),
             band2 = sum(FP17s_band_2, na.rm = T),
@@ -99,6 +101,7 @@ get_unique_patients <- function(data = unique_patients_rolling,
                                 all_regions_and_STPs = FALSE){
   data <- pull_unique_patients()
   
+#group data for further calculation is needed
   if(all_regions_and_STPs == FALSE){
     # group by month and sum unique patients seen
     new_data <- data %>% 
@@ -107,7 +110,8 @@ get_unique_patients <- function(data = unique_patients_rolling,
     new_data <- data %>% 
       group_by(month, region_name, commissioner_name)
   }
-  
+
+#calculate no or unique patient seen for general/adult/child  
   new_data <- new_data %>% 
     summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE), 
               child_12m_count = sum(child_12m_count, na.rm = TRUE), 
