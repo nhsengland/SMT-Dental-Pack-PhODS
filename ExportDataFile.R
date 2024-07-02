@@ -197,6 +197,7 @@ data_CoT <- rbind(data_Nat_CoT, data_reg_CoT, data_icb_CoT)
 
 ### Unique patients seen ###
 # Unique patients rolling
+# get the right data -- sum unique patient seen for general population/adult/child 
 data_Nat_unique <- get_unique_patients() %>% 
   mutate(month = format(as.Date(month), "%Y-%m"), 
          `Geography Level`='National',`Geography Name`='England') %>% 
@@ -204,6 +205,7 @@ data_Nat_unique <- get_unique_patients() %>%
          `Children seen in 12 month rolling period` = child_12m_count, 
          `Adults seen in 24 month rolling period` = adult_24m_count, 
          `Calendar month` = month)
+
 
 data_reg_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
   group_by(month, region_name) %>% 
@@ -240,13 +242,14 @@ data_dental_activity<-data_UDA_de_co%>%
   left_join(data_CoT, by = c('Calendar month', 'Geography Name', 'Geography Level')) %>% 
   left_join(data_unique, by = c('Calendar month', 'Geography Name', 'Geography Level'))
 
-######################################DCP
+#######DCP
 
   data = UDA_calendar_data
   dcp_data = DCP_data
   dcp_data <- dcp_data %>%
     rename(month = Month)
-
+  
+  #calculate total FP19, UDA_B1, B2, B3 and urgent by month for "Total_dentist_only_and_DCP_assisted' by using UDA Calendar data
   delivery_total_national <-  UDA_calendar_data %>% 
     rename(Region = region_name) %>%
     group_by(month) %>%
@@ -257,7 +260,6 @@ data_dental_activity<-data_UDA_de_co%>%
                       total_urgent = sum(UDA_urgent, na.rm = TRUE)) %>%
     mutate (DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
     select (month, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
-  
   
   delivery_total_regional <-  UDA_calendar_data %>% 
     rename(Region = region_name) %>%
@@ -281,7 +283,8 @@ data_dental_activity<-data_UDA_de_co%>%
                       total_urgent = sum(UDA_urgent, na.rm = TRUE)) %>%
     mutate (DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
     select (month, commissioner_name, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
-  
+ 
+    #calculate total FP19, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data 
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
@@ -314,6 +317,8 @@ data_dental_activity<-data_UDA_de_co%>%
                total_B3 = sum(Band_3._UDA, na.rm = TRUE),
                total_urgent = sum(Urgent_UDA, na.rm = TRUE))
     
+    #change the format of total delivery and separate dcp and then get full data ready for plotting 
+    # then calculate the percentage of each dcp description/total delivery 
     dcp_summary_national_longer <- dcp_summary_national %>% pivot_longer ( ##where does dcp summary come from?
       cols = starts_with("total"),
       names_to = "Bands",

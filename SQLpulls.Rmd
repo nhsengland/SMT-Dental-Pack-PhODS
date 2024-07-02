@@ -70,7 +70,7 @@ pull_UDA_calendar_data <- function(){
 #only include contractors in contractual_dataset
 UDA_calendar_data<-pull_UDA_calendar_data()%>%
   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
-#exclude those with UDA target less than 1 - rename fields
+#exclude those with UDA target less than 100 -- calculate  total no FP17s - rename fields
 UDA_calendar_data = dplyr::filter(UDA_calendar_data, as.numeric(UDA_PERF_TARGET) > 100)
 names(UDA_calendar_data) <- base::tolower(names(UDA_calendar_data))
 UDA_calendar_data<-UDA_calendar_data%>%
@@ -97,7 +97,7 @@ UDA_calendar_data$commissioner_name<- paste0(UDA_calendar_data$commissioner_name
 
 ```{r UDA WITH FD}
 
-#extract UDA calendar data
+#extract UDA calendar data with FD only
 pull_UDA_calendar_data_FD_only <- function(){
   
   con <- dbConnect(odbc::odbc(), "NCDR")
@@ -120,7 +120,7 @@ pull_UDA_calendar_data_FD_only <- function(){
 #only include contractors in contractual_dataset
 UDA_calendar_data_FD_only<-pull_UDA_calendar_data_FD_only()%>%
   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
-#exclude those with UDA target less than 1 - rename fields
+#exclude those with UDA target less than 100 - rename fields
 UDA_calendar_data_FD_only = dplyr::filter(UDA_calendar_data_FD_only, as.numeric(UDA_PERF_TARGET) > 100)
 names(UDA_calendar_data_FD_only) <- base::tolower(names(UDA_calendar_data_FD_only))
 UDA_calendar_data_FD_only<-UDA_calendar_data_FD_only%>%
@@ -138,15 +138,23 @@ UDA_calendar_data_FD_only$commissioner_name =
   substr(UDA_calendar_data_FD_only$commissioner_name,1,nchar(UDA_calendar_data_FD_only$commissioner_name)-3)
 UDA_calendar_data_FD_only$commissioner_name<- paste0(UDA_calendar_data_FD_only$commissioner_name, 
                                                      rep("ICB", nrow(UDA_calendar_data_FD_only)))
+
+#calculate  total no FP17s 
 UDA_calendar_data_FD_only<-UDA_calendar_data_FD_only %>%
+  mutate(general_FP17s=rowSums(
+    select(., FP17s_band_1, FP17s_band_2, FP17s_band_3, FP17s_band_urgent, FP17s_band_other), 
+    na.rm = TRUE))%>%
   select("month","commissioner_ods_code_icb" ,"commissioner_name","contract_number","child_12m_count" ,
-         "adult_24m_count","FP17s_band_1","FP17s_band_2","FP17s_band_2a","FP17s_band_2b","FP17s_band_2c",
+         "adult_24m_count","general_FP17s","FP17s_band_1","FP17s_band_2","FP17s_band_2a","FP17s_band_2b","FP17s_band_2c",
          "FP17s_band_3","FP17s_band_urgent","FP17s_band_other","UDA_delivered","UDA_band_1","UDA_band_2",
          "uda_band_2a_delivered","uda_band_2b_delivered","uda_band_2c_delivered","UDA_band_3","UDA_urgent","UDA_other")
 
+
+#calculate UDA_calendar_data with FD = UDA_calendar_data + UDA_calendar_data_FD_only
 UDA_calendar_data_FD <- UDA_calendar_data %>%
   left_join(UDA_calendar_data_FD_only, by=c("month","commissioner_ods_code_icb","commissioner_name","contract_number" )) %>%
   mutate(UDA_delivered = rowSums(select(., UDA_delivered.x, UDA_delivered.y), na.rm = TRUE),
+    FP17s_general = rowSums(select(., general_FP17s.x, general_FP17s.y), na.rm = TRUE),
     FP17s_band_1 = rowSums(select(., FP17s_band_1.x, FP17s_band_1.y), na.rm = TRUE),
     FP17s_band_2 = rowSums(select(., FP17s_band_2.x, FP17s_band_2.y), na.rm = TRUE),
     FP17s_band_3 = rowSums(select(., FP17s_band_3.x, FP17s_band_3.y), na.rm = TRUE),
@@ -167,7 +175,7 @@ UDA_calendar_data_FD <- UDA_calendar_data %>%
     UDA_other = rowSums(select(., UDA_other.x, UDA_other.y), na.rm = TRUE)) %>% 
   select(final_yn, month, commissioner_ods_code_icb, commissioner_name, contract_number, name_or_company_name, 
          contract_type, ppc_address_postcode, lsoa11_code, annual_contracted_UDA, uda_fin_val, 
-         general_dental_fin_value, UDA_delivered, FP17s_band_1, FP17s_band_2, FP17s_band_3, FP17s_band_urgent, 
+         general_dental_fin_value, UDA_delivered, FP17s_general, FP17s_band_1, FP17s_band_2, FP17s_band_3, FP17s_band_urgent, 
          FP17s_band_other, child_12m_count, adult_24m_count, FP17s_band_2a, FP17s_band_2b, FP17s_band_2c, 
          UDA_band_1, UDA_band_2, uda_band_2a_delivered, uda_band_2b_delivered, uda_band_2c_delivered, UDA_band_3, 
          UDA_urgent, UDA_other)
@@ -209,6 +217,8 @@ UDA_calendar_data_FD <- UDA_calendar_data %>%
 
 
 ```{r unique patients}
+
+#extract unique patient data
 pull_unique_patients <- function(){
   con <- dbConnect(odbc::odbc(), "NCDR")
   
@@ -225,7 +235,8 @@ pull_unique_patients <- function(){
   dbClearResult(result)
   
   unique_patients_rolling
-  
+
+#rename variables  
   names(unique_patients_rolling) <- base::tolower(names(unique_patients_rolling))
   
   unique_patients_rolling <- unique_patients_rolling %>% 
@@ -239,6 +250,7 @@ pull_unique_patients <- function(){
 #get dental 111 data from local file
 dental_data_111 <- read_excel(
   "N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/111_pathways_data/dental_data_111.xlsx")
+
 ```
 
 
@@ -264,10 +276,11 @@ pull_dcp_data <- function(){
   DCP_data
 }
 
+#include contractors only in contractual_dataset
 DCP_data<-pull_dcp_data()%>%
   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
 
-#exclude those with UDA target less than 100 - rename fields
+#exclude those with UDA target less than 100 - exclude NA or blanks in DCP_DESC
 contractors=UDA_calendar_data%>%
   select(month,contract_number)
 
@@ -276,6 +289,7 @@ DCP_data = DCP_data%>%
   filter(DCP_DESC!="")%>%
   filter(!is.na(DCP_DESC))
 
+#calculate  total no FP17s -- rename
 DCP_data <- DCP_data %>%
   mutate(FP17_Current_Year_total =rowSums(
     select(., BAND_1_DELIVERED, BAND_2_DELIVERED, BAND_3_DELIVERED, BAND_URGENT_DELIVERED, BAND_OTHER_DELIVERED), 
