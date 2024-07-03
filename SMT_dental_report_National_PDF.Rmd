@@ -15,7 +15,6 @@ classoption: aspectratio = 169
 ##always_allow_html: true
 ---
 
-
 ```{r libraries, include = FALSE}
 library(tidyverse)
 library(readxl)
@@ -30,7 +29,7 @@ library(ggpubr)
 options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
 options(knitr.duplicate.label = 'allow')
 
-#source in all file 
+#source in all files
 source(knitr::purl("SQLpulls.Rmd", output = tempfile()))
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()), local = TRUE)
 source(knitr::purl("plotting.Rmd", output = tempfile()), local = TRUE)
@@ -46,8 +45,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r UDA_activity_Calendar2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
-                                             level = "National",
-                                             region_STP_name = NULL)
+                              level = "National",
+                              region_STP_name = NULL)
 ```
 
 * This data excludes contracts with less than 100 annual contracted UDAs.
@@ -64,29 +63,38 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 * This data excludes contracts with less than 100 annual contracted UDAs.
 
 ## Time series of banded Courses of Treatment
+
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center"}
 plot_banded_CoT(data = UDA_calendar_data_FD, 
                 level = "National", 
                 region_STP_name = NULL, 
                 asIndex = FALSE)
 ```
+
 * This data excludes contracts with less than 100 annual contracted UDAs.
 
 ## Banded Courses of Treatment as % of February 2020 delivery
+
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_banded_CoT(data = UDA_calendar_data_FD, 
                 level = "National", 
                 region_STP_name = NULL, 
                 asIndex = TRUE)
 ```
+
 * This data excludes contracts with less than 100 annual contracted UDAs.
 
 # UOA Information
 
-## UOA activity - treatment data standardised by working days
+## UOA Activity
+
+UOA calendar data is currently unavailable so is not included in this pack. It will be added in as soon as possible.
+
+<!-- ## UOA activity - treatment data standardised by working days -->
 
 ```{r UOA_activity_Calendar1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 # plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
@@ -94,11 +102,12 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 #                                              region_STP_name = NULL)
 ```
 
-* This data excludes contracts with less than 100 annual contracted UOAs.
+<!-- * This data excludes contracts with less than 100 annual contracted UOAs. -->
 
-* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days). 
+<!-- * For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days).  -->
 
-## YTD UOA delivery
+<!-- ## YTD UOA delivery -->
+
 ```{r YTD UOA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 # plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
 #                           UDAorUOA = "UOA", 
@@ -106,7 +115,8 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 #                           region_STP_name = NULL, 
 #                           all_regions_and_STPs = FALSE)
 ```
-* This data excludes contracts with less than 100 annual contracted UOAs.
+
+<!-- * This data excludes contracts with less than 100 annual contracted UOAs. -->
 
 # 111 Information
 
@@ -122,11 +132,12 @@ plot_111_referrals()
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
 plot_DCP_analysis(data = UDA_calendar_data,
-                              dcp_data = DCP_data, 
-                              UDA_or_FP17 = "FP17",
-                              level = "National",
-                              region_STP_name = NULL)
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "National",
+                  region_STP_name = NULL)
 ```
+
 * This data excludes contracts with less than 100 annual contracted UDAs.
 
 ## Percentage of UDAs assisted by Dental Care Practitioners (DCPs)
@@ -137,8 +148,8 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                               UDA_or_FP17 = "UDA",
                               level = "National",
                               region_STP_name = NULL)
-
 ```
+
 * This data excludes contracts with less than 100 annual contracted UDAs.
 
 # Unique patients
