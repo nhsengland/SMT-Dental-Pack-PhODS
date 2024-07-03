@@ -1162,7 +1162,7 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
                       data = data_labels, 
                       colour = "black", 
                       position = "dodge") +
-      scale_x_date(date_breaks = "1 month",
+      scale_x_date(breaks = function(x) seq.Date(from = min(data$month), to = max(data$month), by = "1 month"), 
                    date_labels = "%b-%y") +
       scale_colour_manual(labels = c("Band 1", "Band 2", "Band 3", "Other", "Urgent"),
                           values = get_colour_palette()) +

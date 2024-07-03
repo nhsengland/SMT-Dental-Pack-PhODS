@@ -92,9 +92,9 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 
 ## UOA Activity
 
-UOA calendar data is currently unavailable so is not included in this pack. It will be added in as soon as possible.
+## UOA activity - treatment data standardised by working days
 
-<!-- ## UOA activity - treatment data standardised by working days -->
+* Data not yet available in calendar format
 
 ```{r UOA_activity_Calendar1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 # plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
@@ -106,7 +106,9 @@ UOA calendar data is currently unavailable so is not included in this pack. It w
 
 <!-- * For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days).  -->
 
-<!-- ## YTD UOA delivery -->
+## YTD UOA delivery
+
+* Data not yet available in calendar format
 
 ```{r YTD UOA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 # plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
