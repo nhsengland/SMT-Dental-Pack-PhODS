@@ -11,7 +11,6 @@ get_delivery_data <- function(data = UDA_calendar_data,
                               contractor_level = F,
                               renameColumns = F){
   
-  
   #show different levels of information in output data if specified
   if(all_regions_and_STPs == TRUE){
     
@@ -25,6 +24,7 @@ get_delivery_data <- function(data = UDA_calendar_data,
       group_by(month, contract_number, commissioner_name)
     
   }else{
+    
     data <- data %>%
       group_by(month)
   }
@@ -36,13 +36,7 @@ get_delivery_data <- function(data = UDA_calendar_data,
                                                   sum(UOA_delivered, na.rm = T)),
               annual_contracted_UDA_UOA = ifelse(UDAorUOA == "UDA",
                                                  sum(annual_contracted_UDA, na.rm = T),
-                                                 sum(annual_contracted_UOA, na.rm = T))
-    )
-  
-  #new_data <- UDA_UOAs_delivered %>%
-    #scale data up *12 and then calculate percentage of UDA delivered
-  #  mutate(scaled_monthly_UDA_UOAs_delivered = monthly_UDA_UOAs_delivered * 12) %>%
-   # mutate(perc_UDA_UOA_delivered = round(scaled_monthly_UDA_UOAs_delivered * 100 / annual_contracted_UDA_UOA)) 
+                                                 sum(annual_contracted_UOA, na.rm = T)))
   
   #for PCOR and SOF table
   if(renameColumns){
@@ -52,18 +46,12 @@ get_delivery_data <- function(data = UDA_calendar_data,
              commissioner_name,
              region_name,
              monthly_UDAs_delivered = monthly_UDA_UOAs_delivered,
-             annual_contracted_UDAs = annual_contracted_UDA_UOA)# %>%
-      #mutate(threshold_perc = case_when(treatment_month >= as.Date("2021-04-01") & treatment_month < as.Date("2021-10-01") ~ "60",
-      #                                  treatment_month >= as.Date("2021-10-01") & treatment_month < as.Date("2022-01-01") ~ "65",
-      #                                  treatment_month >= as.Date("2022-01-01") & treatment_month < as.Date("2022-04-01") ~ "85",
-      #                                  treatment_month >= as.Date("2022-04-01") & treatment_month < as.Date("2022-07-01") ~ "95"))
+             annual_contracted_UDAs = annual_contracted_UDA_UOA)
   }
   
   new_data <- UDA_UOAs_delivered
   
 }
-
-
 
 ```
 
@@ -71,19 +59,20 @@ get_delivery_data <- function(data = UDA_calendar_data,
 get_banded_COTs_data <- function(data = UDA_calendar_data_FD, 
                                         all_regions_and_STPs = FALSE){
 
-#group data for further calculation is needed
-if(all_regions_and_STPs == FALSE){
-  #group by month and sum UDAs delivered
-  new_data <- data %>%
-    group_by(month)
-  
-}else{
-  #group by month and sum UDAs delivered
-  # start from 2020-04-01 as region/ICB information not available before then
-  new_data <- data %>%
-    group_by(month, region_name, commissioner_name) %>% 
-    filter(month >= "2020-04-01")
-}
+  if(all_regions_and_STPs == FALSE){
+    
+    #group by month and sum UDAs delivered
+    new_data <- data %>%
+      group_by(month)
+    
+    }else{
+      
+      #group by month and sum UDAs delivered
+      # start from 2020-04-01 as region/ICB information not available before then
+      new_data <- data %>%
+        group_by(month, region_name, commissioner_name) %>% 
+        filter(month >= "2020-04-01")
+      }
 
 #calculate total no of FP17s in each band
 new_data <- new_data %>%
@@ -91,22 +80,26 @@ new_data <- new_data %>%
             band2 = sum(FP17s_band_2, na.rm = T),
             band3 = sum(FP17s_band_3, na.rm = T),
             other = sum(FP17s_band_other, na.rm = T),
-            urgent = sum(FP17s_band_urgent, na.rm = T)
-  )
+            urgent = sum(FP17s_band_urgent, na.rm = T))
 }
 ```
 
 ```{r unique patients seen}
 get_unique_patients <- function(data = unique_patients_rolling, 
                                 all_regions_and_STPs = FALSE){
+  
   data <- pull_unique_patients()
   
 #group data for further calculation is needed
   if(all_regions_and_STPs == FALSE){
+    
     # group by month and sum unique patients seen
     new_data <- data %>% 
       group_by(month)
+    
   } else {
+    
+    # group by month, region name, and commissioner name and sum unique patients seen
     new_data <- data %>% 
       group_by(month, region_name, commissioner_name)
   }
@@ -118,7 +111,3 @@ get_unique_patients <- function(data = unique_patients_rolling,
               adult_24m_count = sum(adult_24m_count, na.rm = TRUE))
 }
 ```
-
-
-
-
