@@ -176,6 +176,8 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
               annual_contracted_UDA_UOA = sum(annual_contracted_UDA_UOA, na.rm = TRUE)) %>%
     filter(!is.na(region_name))
   
+
+   #percentage of UDA delivered (standardised by no of working days)
    data <- data %>% 
      left_join(working_days,by=c('month')) %>% 
       mutate(perc_standardised_wd_int = 
@@ -245,8 +247,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
     p
     
   }else{
-    
-   #IF WANT TO GET A DATA TABLE 
+   #IF WANT TO GET A DATA TABLE -- rename
     if(UDAorUOA == "UDA"){
       new_col_names <- c(`Calendar month` = "month",
                          `Region Name` = "region_name",
@@ -314,7 +315,7 @@ plot_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
     
   }else{
     
-    #include data only after 2020-04-01 and select fields needed
+    #include only the region/ICB needed -- include data only after 2020-04-01 and select fields needed   
     data <- data %>%
       filter(region_name == region_STP_name)
     
@@ -346,6 +347,7 @@ plot_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
     # captionTitle <- "*These are calendar months and data has been scaled up by 12."
     lineCol <- "coral"
     lineCol <- "#CC79A7"
+
   }   
     
   if(plotChart == TRUE){
@@ -373,6 +375,7 @@ plot_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
     
   }else{
     
+    #if we only need a table instead of a plot -- rename
     if(UDAorUOA == "UDA"){
       new_col_names <- c(`Calendar month` = "month",
                          `Region Name` = "region_name",
@@ -548,14 +551,17 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
   
   #get current FY data ready
   # way to calculate percentage of UDA delivered which is standardized by no of working days 
+  #calculate UDA_delivery & contracted_UDAs
   data_try <- data %>%
     group_by(month) %>%
     summarise(UDA_delivery = sum(UDA_delivered, na.rm = TRUE),
               contracted_UDAs = sum(annual_contracted_UDA, na.rm = TRUE)) %>%
+    # only include current FY data -- calculate percentage of UDA delivered -- standardized by no of working days 
     filter(month >= as.Date ("2023-04-01")) %>% ## this needs to be updated every FY
     left_join(working_days,by=c('month')) %>% 
     mutate(perc_UDA_deliverd = 100* (UDA_delivery /(contracted_UDAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UDA_deliverd = round(perc_UDA_deliverd, digits = 0)) %>% 
+    #add month for previous FY and create a new variable called financial_year which can be used to join with historical data
     add_row(month = seq(as.Date("2019-04-01"), as.Date("2023-03-01"), lubridate::month(1))) %>% # need to add every FY
     mutate(financial_year = case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
                                       month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
@@ -566,6 +572,7 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
     left_join(historic_data, by = "financial_year") %>% #join this FY data with historical data
     mutate(perc_UDA_delivered = if_else(!is.na(perc_UDA_deliverd.x), perc_UDA_deliverd.x, perc_UDA_deliverd.y)) 
   
+  #divide data in to "Previous Financial Years (Averages)", "Current Financial Year"
   data <- data_try %>%
     mutate(year_type = if_else(financial_year == "2024/25", "Current Financial Year", ##need to be changed every FY
                                "Previous Financial Years (Averages)")) %>%
@@ -702,10 +709,12 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     group_by(month) %>%
     summarise(UOA_delivery = sum(UOA_delivered, na.rm = TRUE),
               contracted_UOAs = sum(annual_contracted_UOA, na.rm = TRUE)) %>%
+    # only include current FY data -- calculate percentage of UDA delivered -- standardized by no of working days
     filter(month >= as.Date ("2023-04-01")) %>% ## this needs to be updated every FY
     left_join(working_days,by=c('month')) %>% 
     mutate(perc_UOA_delivered =100* (UOA_delivery / (contracted_UOAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UOA_delivered = round(perc_UOA_delivered, digits = 0))%>% 
+    #add month for previous FY and create a new variable called financial_year which can be used to join with historical data
     add_row(month = seq(as.Date("2019-04-01"), as.Date("2023-03-01"), lubridate::month(1))) %>%
     mutate(financial_year = case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
                                       month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
@@ -713,9 +722,11 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
                                       month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
                                       month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
                                       month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25")) %>%
+
     left_join(historic_data, by = "financial_year") %>% #join this FY data with historical data 
     mutate(perc_UOA_delivered = if_else(!is.na(perc_UOA_delivered.x), perc_UOA_delivered.x, perc_UOA_delivered.y))
   
+  #divide data in to "Previous Financial Years (Averages)", "Current Financial Year"
   data <- data_try %>%
     mutate(year_type = if_else(financial_year == "2024/25", "Current Financial Year", 
                                "Previous Financial Years (Averages)")) %>% 
@@ -725,7 +736,8 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
   data$year_type <- factor(data$year_type, levels = c("Previous Financial Years (Averages)",
                                                       "Current Financial Year"))
   
-  data <- data %>% 
+  #add a target line
+  data<- data %>% 
     mutate(line_for_100 = 100)
   
   ggplot() +
@@ -816,11 +828,12 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
                 "Actual YTD delivery")
   }
   
-  # extract previous financial year
+  # extract previous financial year data -- calculate cumulative sum of monthly_UDA_UOAs_delivered
   historic_data <- data %>% 
     filter(month >= as.Date("2023-04-01") & month <= as.Date("2024-03-01")) %>% ##must be updated each financial year
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
   
+  # extract current financial year data -- calculate cumulative sum of monthly_UDA_UOAs_delivered
   data <- data %>%
     filter(month > as.Date("2024-03-01")) %>% ##must be updated each financial year
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
@@ -904,7 +917,7 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
     }
   }
   
-  #add column for expected delivery
+  #add column for expected YTD delivery
   data_to_print <- data %>%
     mutate(expected_delivery = 
              seq(mean_annual_contracted_UDA_UOAs/12, mean_annual_contracted_UDA_UOAs, mean_annual_contracted_UDA_UOAs/12)) %>%
@@ -1009,6 +1022,7 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   
   data$`Calendar month` <- format(as.Date(data$`month`), "%Y-%m")
   
+  #create a new variable 'financial_year'
   # NEEDS UPDATING EACH FINANCIAL YEAR
   data <- data %>% 
     mutate(financial_year= case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
@@ -1019,7 +1033,9 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
                                      month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"))
   
   if(level == "Regional"){
-    #calculate YTD group by month and region
+    
+    #calculate monthly_UDA_UOAs_delivered by `Calendar month`,region_name, financial_year
+    #then cumulative sum of YT delivery by financial_year and region
     data <- data %>%
       filter(month >= as.Date ("2020-04-01")) %>%
       group_by(`Calendar month`,region_name, financial_year) %>%
@@ -1029,7 +1045,9 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
       select(`Calendar month`,YTD_delivery)
     
   }else if(level == "STP"){
-   #calculate YTD group by month and ICB
+   
+    #calculate monthly_UDA_UOAs_delivered by `Calendar month`,commissioner_name, financial_year
+    #then cumulative sum of YT delivery by financial_year and commissioner_name
     data <- data %>%
       filter(month >= as.Date ("2020-04-01")) %>%
       group_by(`Calendar month`,commissioner_name, financial_year) %>%
@@ -1039,6 +1057,8 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
       select(`Calendar month`,YTD_delivery)
    
   }else{
+
+#calculate cumulative sum of YTD delivery by financial_year
     data <- data %>%
       arrange(`Calendar month`) %>%
       group_by(financial_year) %>% 
@@ -1092,10 +1112,10 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
     rename(band = variable, CoTs = value)  %>% 
     filter(band != "region_name")
   
-  #set everything as index of Feb 2020 and standardise for working days
-  # or standardise for working days only
+  
   if(asIndex == TRUE){
     
+    #set everything as index of Feb 2020 and standardise for working days
     data <- data %>%
       left_join(working_days,by=c('month')) %>% 
       mutate(standardised_CoTs = CoTs *(`no workdays`/`total workdays`), 
@@ -1114,7 +1134,7 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
     title <- "Banded Courses of Treatment as a Percentage of February 2020 Delivery Including Foundation Dentists"
     ylab <- "Percentage of February 2020 FP17 forms submitted"
     
-  }else{
+  }else{ # or standardise for working days only
     data <- data %>% left_join(working_days,by=c('month')) %>% 
       mutate(standardised_CoTs = CoTs *(`no workdays`/`total workdays`)) %>%
       select(-CoTs) %>% 
@@ -1167,11 +1187,13 @@ table_banded_CoT <- function(data = UDA_calendar_data,
                              all_regions_and_STPs = FALSE, 
                              asIndex = FALSE){
   
+  #get data into the right format for banded_CoT
   data_to_print <- get_banded_COTs_data(data, all_regions_and_STPs = all_regions_and_STPs)
   
   if(level == "Regional"){
     # filter for region or STP
-    # start from 2020-04-01 as region information not available before then
+    # start from 2020-04-01 as geographic information not available before then
+    #calculate in each band
     data <- data_to_print %>% 
       filter(month >= "2020-04-01") %>% 
       mutate(month = format(as.Date(month), "%Y-%m")) %>% 
@@ -1185,7 +1207,8 @@ table_banded_CoT <- function(data = UDA_calendar_data,
     }else if(level == "STP"){
       
       #filter for region or STP
-      # start from 2020-04-01 as region information not available before then
+      # start from 2020-04-01 as geographic information not available before then
+      #calculate in each band
       data <- data_to_print %>% 
         filter(month >= "2020-04-01") %>% 
         mutate(month = format(as.Date(month), "%Y-%m")) %>% 
@@ -1197,7 +1220,8 @@ table_banded_CoT <- function(data = UDA_calendar_data,
                   urgent = sum(urgent, na.rm=TRUE))
       
       }else{
-        
+        #at national level
+        #calculate in each band
         data <- data_to_print %>% 
           mutate(month = format(as.Date(month), "%Y-%m")) %>% 
           group_by(month) %>% 
@@ -1263,16 +1287,18 @@ plot_111_referrals <- function(data = dental_data_111,
 ```
 
 ```{r  breakdown_111_referrals}
+
 plot_breakdown_111_referrals <- function(data = dental_data_111,
                                          plotChart = TRUE){
   
+  #replace disposition_text == "Attend Emergency Dental Treatment Centre within 4" to "Attend Emergency Dental Treatment Centre within 4hrs"
   data <- data %>% 
     mutate(disposition_text = if_else(disposition_text == "Attend Emergency Dental Treatment Centre within 4",
                                       "Attend Emergency Dental Treatment Centre within 4hrs",
                                       disposition_text)) %>%
     mutate(month = as.Date(month)) 
   
-  #get lines in the right order
+  #get disposition_text lines in the right order
   data$disposition_text <- factor(data$disposition_text,
                                   levels = c("Refer to Dental Treatment Centre within 1 hour",
                                              "Refer to Dental Treatment Centre within 4 hours",
@@ -1319,6 +1345,7 @@ plot_breakdown_111_referrals <- function(data = dental_data_111,
 
 
 ```{r unique patients rolling}
+
 plot_unique_patients_rolling <- function(data = unique_patients_rolling, 
                                          level = "National", 
                                          region_STP_name = NULL, 
@@ -1326,85 +1353,79 @@ plot_unique_patients_rolling <- function(data = unique_patients_rolling,
                                          all_regions_and_STPs = FALSE, 
                                          asIndex = FALSE){
   
+  #get data in the right format for unique_patients
   data <- get_unique_patients()
   
   options(scipen = 5)
+
+chartCaption <- "*N.B. this analysis uses unique patients per contract and does not take \ninto account patients who have been seen at more than one dental practice."
+
+#filter for region or STP
+if(level == "Regional"){
+  data <- data %>%
+    filter(region_name == region_STP_name)
+  subtitle <- region_STP_name
+}else if(level == "STP"){
+  data <- data %>%
+    filter(commissioner_name == region_STP_name)
+  subtitle <- region_STP_name
+}else{
+  subtitle <- "England"
+}
+
+if(plotChart == TRUE & asIndex == FALSE){
+  #rename -- pivot to get the right format
+  data <- data %>% 
+  rename(`All (12 month rolling period)` = all_12m_count, 
+         `Children (12 month rolling period)` = child_12m_count, 
+         `Adults (24 month rolling period)` = adult_24m_count) %>% 
+  pivot_longer(!month) %>% 
+  rename(total_unique_patients = value)
   
-  chartCaption <- "*N.B. this analysis uses unique patients per contract and does not take \ninto account patients who have been seen at more than one dental practice."
+  title <- "Total number of unique patients seen over a rolling 12 (24) month period"
+  ylab <- "Unique patients"
   
-  #filter for region or STP
-
-  if(level == "Regional"){
-    data <- data %>%
-      filter(region_name == region_STP_name)
-    subtitle <- region_STP_name
-
-  }else if(level == "STP"){
-    data <- data %>%
-      filter(commissioner_name == region_STP_name)
-     subtitle <- region_STP_name
-     
-
-  }else{
-    subtitle <- "England"
-
-  }
+  data_labels <- data %>% 
+    filter(month == max(month))
   
-  if(plotChart == TRUE & asIndex == FALSE){
-    
-    data <- data %>% 
-      rename(`All (12 month rolling period)` = all_12m_count,
-             `Children (12 month rolling period)` = child_12m_count, 
-             `Adults (24 month rolling period)` = adult_24m_count) %>% 
-      pivot_longer(!month) %>% 
-      rename(total_unique_patients = value)
-
-    title <- "Total number of unique patients seen over a rolling 12 (24) month period"
-    ylab <- "Unique patients"
-
-    data_labels <- data %>% 
-      filter(month == max(month))
-
-    data$name <- factor(data$name, 
-                        levels = c("Adults (24 month rolling period)", 
-                                   "Children (12 month rolling period)", 
-                                   "All (12 month rolling period)"))
-    
-    #plot code
-    ggplot(data, 
-           aes(x = month,
-               y = total_unique_patients,
-               colour = name)) +
-      theme_bw() +
-      geom_line() +
-      geom_point() +
-      geom_text_repel(aes(label = prettyNum(total_unique_patients, big.mark=",")), 
-                      data = data_labels, 
-                      colour = "black", 
-                      position = "dodge") + 
-      scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
-      scale_colour_manual(values = get_colour_palette()) +
-      labs(title = title,
-           x = "12 month rolling period end date",
-           y = ylab,
-           subtitle = subtitle,
-           caption = chartCaption) +
-      scale_x_date(date_breaks = "1 month",
-                   date_labels = "%b-%y") +
-      theme(axis.text.x = element_text(angle = 90))
+  #plot code
+  ggplot(data, aes(x = month, 
+                   y = total_unique_patients, 
+                   colour = name)) +
+    theme_bw() +
+    geom_line() +
+    geom_point() +
+    geom_text_repel(aes(label = prettyNum(total_unique_patients, big.mark=",")), 
+                    data = data_labels, 
+                    colour = "black", 
+                    position = "dodge") + 
+    scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
+    scale_colour_manual(values = get_colour_palette()) +
+    labs(title = title,
+         x = "12 month rolling period end date",
+         y = ylab,
+         subtitle = subtitle,
+         caption = chartCaption
+    ) +
+    scale_x_date(date_breaks = "1 month", 
+                 date_labels = "%b-%y") +
+    theme(axis.text.x = element_text(angle = 90))
+} else if(plotChart == TRUE & asIndex == TRUE){
   
-  }else if(plotChart == TRUE & asIndex == TRUE){
-    data <- data %>% 
-      rename(`All (12 month rolling period)` = all_12m_count,
-             `Children (12 month rolling period)` = child_12m_count,
-             `Adults (24 month rolling period)` = adult_24m_count)
-    
-    data <- reshape2::melt(data, id.vars = "month")
-    
-    dataFeb2020 <- data %>% 
+  #rename
+  data <- data %>% 
+  rename(`All (12 month rolling period)` = all_12m_count, 
+         `Children (12 month rolling period)` = child_12m_count, 
+         `Adults (24 month rolling period)` = adult_24m_count)
+  
+  #reshape to the right format
+  data <- reshape2::melt(data, id.vars = "month")
+
+  #Feb 202 has been used as an reference
+  dataFeb2020 <- data %>% 
       filter(month == "2020-02-01") %>% 
       rename(value_Feb2020 = value)
-    
+  
     data <- data %>% 
       left_join(dataFeb2020, by = c("variable")) %>% 
       mutate(value = value * 100 / value_Feb2020) %>% 
@@ -1449,6 +1470,7 @@ plot_unique_patients_rolling <- function(data = unique_patients_rolling,
 ```
 
 ```{r DCP1}
+
 plot_DCP_analysis <- function(data = UDA_calendar_data,
                               dcp_data = DCP_data,
                               UDA_or_FP17 = "FP17",
@@ -1483,6 +1505,7 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
     subtitle <- "England"
   }
   
+  #calculate total FP19, UDA_B1, B2, B3 and urgent by month for "Total_dentist_only_and_DCP_assisted' by using UDA Calendar data
   delivery_total <-  data %>% 
     group_by(month) %>%
     dplyr::summarise( total_FP17 = sum(general_FP17s, na.rm = TRUE),
@@ -1493,7 +1516,8 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
     mutate(DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
     select(month, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent) %>% 
     rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
-
+  
+  #calculate total FP19, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
@@ -1511,6 +1535,7 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
                total_urgent = sum(Urgent_UDA, na.rm = TRUE)) %>% 
     rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
 
+#pivot delivery total and seperate dcp into long format
   dcp_summary_longer <- dcp_summary %>% 
     pivot_longer(cols = starts_with("total"),
                  names_to = "Bands",
@@ -1525,14 +1550,17 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
                  values_to = "all_numbers",
                  values_drop_na = TRUE)
   
+  #join total and separate dcp to get the full data ready for plot
   all_lookup <- left_join(dcp_summary_longer, delivery_total_longer, 
                           by = c("month", "Bands"))
   
+  #calculate the percentage of each dcp description/total delivery 
   total <- all_lookup %>% 
     mutate(asissted_percent = formattable::percent (numbers / all_numbers, digits=2))
   
   if(UDA_or_FP17 == "UDA"){
     
+    #UDA is only for those with 'band'
     filtered_data_UDA = filter(total, Bands %in% c("Band 1",	"Band 2",	"Band 3", "Urgent")) %>%
       select(month, "DCP_description.x", "Bands", "asissted_percent") %>%
       rename (DCP_description = DCP_description.x) %>%
@@ -1572,6 +1600,7 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
 
   }else{
     
+    #UDA is only for those with 'total_FP17'
     filtered_data_FP17 <- total %>%
       filter( Bands %in% c("total_FP17")) %>% 
       select("month", "DCP_description.x", "Bands", "asissted_percent") %>%
@@ -1636,6 +1665,7 @@ plot_DCP_analysis_regional_check <- function(data = UDA_calendar_data,
   
   colnames(UDA_calendar_data)
   
+   #calculate total FP19, UDA_B1, B2, B3 and urgent by month for "Total_dentist_only_and_DCP_assisted' by using UDA Calendar data
   delivery_total <-  data %>% 
     rename(Region = region_name) %>%
     group_by(month, Region) %>%
@@ -1647,6 +1677,7 @@ plot_DCP_analysis_regional_check <- function(data = UDA_calendar_data,
     mutate (DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
     select (month, Region, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
   
+   #calculate total FP19, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
@@ -1662,7 +1693,8 @@ plot_DCP_analysis_regional_check <- function(data = UDA_calendar_data,
                total_B3 = sum(Band_3._UDA, na.rm = TRUE),
                total_urgent = sum(Urgent_UDA, na.rm = TRUE))%>% 
     rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
-  
+
+  #change the format of total delivery and separate dcp and then get full data ready for plot
   dcp_summary_longer <- dcp_summary %>% 
     pivot_longer(cols = starts_with("total"),
                  names_to = "Bands",
@@ -1680,12 +1712,14 @@ plot_DCP_analysis_regional_check <- function(data = UDA_calendar_data,
   all_lookup <- left_join(dcp_summary_longer, delivery_total_longer, 
                           by = c("month", "Bands", "Region")) %>% 
     select (month, DCP_description.x, Bands, numbers, DCP_description.y, all_numbers)
-    
+  
+  #calculate the percentage of each dcp description/total delivery 
   total <- all_lookup %>% 
     mutate(asissted_percent = formattable::percent (numbers / all_numbers, digits=2))
   
   if(UDA_or_FP17 == "UDA"){
     
+    #UDA is only for those with 'band'
     filtered_data_UDA = filter(total, Bands %in% c("Band 1",	"Band 2",	"Band 3", "Urgent")) %>%
       select(month, "DCP_description.x", "Bands", "asissted_percent") %>%
       rename (DCP_description = DCP_description.x) %>%
@@ -1725,6 +1759,7 @@ plot_DCP_analysis_regional_check <- function(data = UDA_calendar_data,
 
   }else{
     
+    #fp17 is for those with 'total_FP17'
     filtered_data_FP17 <- total %>%
       filter( Bands %in% c("total_FP17")) %>% 
       select("month", "DCP_description.x", "Bands", "asissted_percent") %>%
@@ -1790,6 +1825,7 @@ plot_DCP_analysis_ICB_check <- function(data = UDA_calendar_data,
   colnames(UDA_calendar_data)
   colnames(dcp_data)
   
+#calculate total FP19, UDA_B1, B2, B3 and urgent by month for "Total_dentist_only_and_DCP_assisted' by using UDA Calendar data
   delivery_total <-  data %>% 
     rename(Region = region_name) %>%
     group_by(month, commissioner_name) %>%
@@ -1801,6 +1837,7 @@ plot_DCP_analysis_ICB_check <- function(data = UDA_calendar_data,
     mutate(DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
     select(month, commissioner_name, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
   
+  #calculate total FP19, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
@@ -1816,7 +1853,8 @@ plot_DCP_analysis_ICB_check <- function(data = UDA_calendar_data,
               total_B3 = sum(Band_3._UDA, na.rm = TRUE),
               total_urgent = sum(Urgent_UDA, na.rm = TRUE)) %>% 
     rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
-  
+
+  #change the format of total delivery and separate dcp and then get full data ready for plotting
   dcp_summary_longer <- dcp_summary %>% 
     pivot_longer(cols = starts_with("total"),
                  names_to = "Bands",
@@ -1835,11 +1873,12 @@ plot_DCP_analysis_ICB_check <- function(data = UDA_calendar_data,
                           by = c("month", "Bands", "commissioner_name")) %>% 
     select(month, DCP_description.x, Bands, numbers, DCP_description.y, all_numbers)
   
+   #calculate the percentage of each dcp description/total delivery 
   total <- all_lookup %>% 
     mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))
   
   if(UDA_or_FP17 == "UDA"){
-    
+    #UDA is only for those with 'band'
     filtered_data_UDA = filter(total, Bands %in% c("Band 1",	"Band 2",	"Band 3", "Urgent")) %>%
       select(month, "DCP_description.x", "Bands", "asissted_percent") %>%
       rename(DCP_description = DCP_description.x) %>%
@@ -1877,7 +1916,7 @@ plot_DCP_analysis_ICB_check <- function(data = UDA_calendar_data,
     UDA_plot
 
   }else{
-    
+    #fp17 is for those with 'total_FP17'
     filtered_data_FP17 <- total %>%
       filter(Bands %in% c("total_FP17")) %>% 
       select("month", "DCP_description.x", "Bands", "asissted_percent") %>%
@@ -1910,7 +1949,7 @@ plot_DCP_analysis_ICB_check <- function(data = UDA_calendar_data,
 }
 ```
 
-```{r DCP band}
+```{r DCP plot by band}
 plot_DCP_analysis_band <- function(data = UDA_calendar_data,
                                    dcp_data = DCP_data,
                                    UDA_or_FP17 = "UDA",
@@ -1940,7 +1979,7 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
   }else{
     subtitle <- "England"
   }
-
+ #calculate total FP19, UDA_B1, B2, B3 and urgent by month for "Total_dentist_only_and_DCP_assisted' by using UDA Calendar data
   delivery_total <-  data %>% 
     group_by(month) %>%
     dplyr::summarise(total_FP17 = sum(general_FP17s, na.rm = TRUE),
@@ -1951,7 +1990,7 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
     mutate(DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
     select(month, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
 
-
+#calculate total FP19, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
@@ -1968,6 +2007,7 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
               total_B3 = sum(Band_3._UDA, na.rm = TRUE),
               total_urgent = sum(Urgent_UDA, na.rm = TRUE))
 
+  #change the format of total delivery and separate dcp and then get full data ready for plotting
   dcp_summary_longer <- dcp_summary %>%
     pivot_longer(cols = starts_with("total"),
                  names_to = "Bands",
@@ -1984,7 +2024,8 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
 
   all_lookup <- left_join(dcp_summary_longer, delivery_total_longer, 
                           by = c("month", "Bands"))
-  
+                          
+  #calculate the percentage of each dcp description/total delivery 
   total <- all_lookup %>% 
     mutate(asissted_percent = formattable::percent (numbers / all_numbers, digits=2),
            Bands = replace(Bands, Bands=="total_B1", "Band 1"),
@@ -1993,7 +2034,7 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
            Bands = replace(Bands, Bands=="total_urgent", "Urgent"))
 
   if(UDA_or_FP17 == "UDA"){
-
+   #UDA is only for those with 'band'
     filtered_data_UDA = filter(total, Bands %in% c("Band 1",	"Band 2",	"Band 3", "Urgent")) %>%
       select(month, "DCP_description.x", "Bands", "asissted_percent") %>%
       rename(DCP_description = DCP_description.x) %>%
@@ -2031,7 +2072,7 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
     UDA_plot
 
   }else{
-
+#UDA is only for those with 'total_FP17'
     filtered_data_FP17 <- total %>%
       filter( Bands %in% c("total_FP17")) %>% 
       select("month", "DCP_description.x", "Bands", "asissted_percent") %>%
