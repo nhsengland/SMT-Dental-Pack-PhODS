@@ -13,6 +13,7 @@ options(scipen = 999)
 ```
 
 ```{r pull scheduled data}
+# extract scheduled data from NCDR
 pull_scheduled_data <- function(){
   
   con <- dbConnect(odbc::odbc(), "NCDR")
@@ -43,6 +44,7 @@ UDA_scheduled_data <- pull_scheduled_data()
 ```
 
 ```{r pull unfiltered calendar data}
+# extract calendar data from NCDR
 pull_unfiltered_calendar_data <- function(){
   con <- dbConnect(odbc::odbc(), "NCDR")
   
@@ -69,6 +71,7 @@ UDA_calendar_data <- pull_unfiltered_calendar_data()
 
 ```{r contract differences}
 # compare n contracts each month for January 2024
+# save out as a variable to be used in slides
 scheduled_contracts <- UDA_scheduled_data %>% 
   filter(month == "2024-01-01") %>% 
   group_by(month) %>% 
@@ -84,6 +87,7 @@ calendar_contracts <- UDA_calendar_data %>%
 n_calendar_contracts <- prettyNum(calendar_contracts$contracts, big.mark = ",")
 
 # find contracts not in calendar data
+# save number not in calendar data as a variable to use in slides
 calendar_list <- UDA_calendar_data %>% 
   filter(month == "2024-01-01")
 
@@ -96,6 +100,7 @@ not_in_calendar <- UDA_scheduled_data %>%
 n_not_in_calendar <- n_distinct(not_in_calendar$contract_number)
 
 # count contracts not in calendar data with contracted UDA < 100
+# save number and percent with contracted UDA < 100 as a variable to use in slides
 low_contracted_uda <- not_in_calendar %>% 
   filter(annual_contracted_UDA < 100 | is.na(annual_contracted_UDA))
 
@@ -104,6 +109,7 @@ n_low_contracted_uda <- prettyNum(n_distinct(low_contracted_uda$contract_number)
 pct_low_contracted_uda <-  round((n_distinct(low_contracted_uda$contract_number)/ n_not_in_calendar)*100)
 
 # count contracts not in calendar data which submitted no UDA delivered
+# save number and percent with no contracted UDA as a variable to use in slides
 no_uda_delivered <- not_in_calendar %>% 
   filter(annual_contracted_UDA >=100 & !is.na(annual_contracted_UDA) 
          & (is.na(UDA_delivered) | UDA_delivered == 0.0))
@@ -113,7 +119,7 @@ n_no_uda_delivered <- prettyNum(n_distinct(no_uda_delivered$contract_number), bi
 pct_no_uda_delivered <- round((n_distinct(no_uda_delivered$contract_number) / n_not_in_calendar)*100)
 
 # count remaining contracts
-n_remaining = n_not_in_calendar - n_distinct(low_contracted_uda$contract_number) - n_distinct(no_uda_delivered$contract_number)
+n_remaining <- n_not_in_calendar - n_distinct(low_contracted_uda$contract_number) - n_distinct(no_uda_delivered$contract_number)
 ```
 
 ```{r format data}
@@ -121,6 +127,7 @@ get_YTD_source_comparison <- function(data = UDA_scheduled_data,
                                       source = "scheduled", 
                                       scheduled_or_calendar = "scheduled"){
   
+  # rename columns if using calendar data
   if (scheduled_or_calendar == "scheduled"){
     data <- get_delivery_data(data)
   } else if (scheduled_or_calendar == "calendar"){
@@ -131,62 +138,77 @@ get_YTD_source_comparison <- function(data = UDA_scheduled_data,
     data <- get_delivery_data(data)
   }
   
+  # calculate cumulative sum for historic data
   historic_data <- data %>% 
-  filter(month >= as.Date("2022-04-01") & month <= as.Date("2023-03-01")) %>% ##must be updated each financial year
-  mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
+    filter(month >= as.Date("2022-04-01") & month <= as.Date("2023-03-01")) %>% ##must be updated each financial year
+    mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
 
+  # calculate cumulative sum for latest financial year
   data <- data %>%
     filter(month > as.Date("2023-03-01")) %>% ##must be updated each financial year
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
 
-  mean_annual_contracted_UDA_UOAs<- dplyr::last(data$annual_contracted_UDA_UOA)
-  mean_annual_contracted_UDA_UOAs_historic<- dplyr::last(historic_data$annual_contracted_UDA_UOA)
+  # save out latest contracted UDA or UOAs
+  mean_annual_contracted_UDA_UOAs <- dplyr::last(data$annual_contracted_UDA_UOA)
+  mean_annual_contracted_UDA_UOAs_historic <- dplyr::last(historic_data$annual_contracted_UDA_UOA)
 
   #add in blanks for the rest of the year
+  # NEEDS UPDATING EACH FINANCIAL YEAR
   if(nrow(data) < 12){
   
     if(!(as.Date("2023-05-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-05-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2023-05-01"))
     }
   
     if(!(as.Date("2023-06-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-06-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2023-06-01"))
     }
     
     if(!(as.Date("2023-07-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-07-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2023-07-01"))
     }
   
     if(!(as.Date("2023-08-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-08-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2023-08-01"))
     }
   
     if(!(as.Date("2023-09-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-09-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2023-09-01"))
     }
   
     if(!(as.Date("2023-10-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-10-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2023-10-01"))
     }
   
     if(!(as.Date("2023-11-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-11-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2023-11-01"))
     }
   
     if(!(as.Date("2023-12-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2023-12-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2023-12-01"))
     }
   
     if(!(as.Date("2024-01-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2024-01-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2024-01-01"))
     }
   
     if(!(as.Date("2024-02-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2024-02-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2024-02-01"))
     }
   
     if(!(as.Date("2024-03-01") %in% data$month)){
-      data <- data %>% add_row(month = as.Date("2024-03-01"))
+      data <- data %>% 
+        add_row(month = as.Date("2024-03-01"))
     }
   }
   
@@ -228,24 +250,25 @@ calendar_YTD <- get_YTD_source_comparison(data = UDA_calendar_data,
 ```{r plot YTD comparison}
 plot_YTD_comparison <- function(){
 
+  # combine calendar and scheduled data for plot
   YTD_comparison <- rbind(scheduled_YTD, calendar_YTD) %>% 
     mutate(month = as.Date(month), 
           year_type = factor(year_type, levels = c("Previous Financial Year", "Current Financial Year")))
   
+  # plot chart
   p <- ggplot(YTD_comparison) + 
     theme_bw() + 
     geom_line(aes(x = month, 
                   y = value/1000000,
                   colour = source), 
               size = 1) + 
-    facet_wrap(vars(year_type), 
-              scales = "free_x") + 
+    facet_wrap(vars(year_type),
+               scales = "free_x") + 
     scale_x_date(date_breaks = "1 month", 
-                date_labels = "%b-%y") + 
+                 date_labels = "%b-%y") + 
     labs(title = "YTD UDA delivery across all contracts in either data source",
-        x = "Month",
-        y = "YTD UDA delivery (millions)",
-        colour = "") + 
+         y = "YTD UDA delivery (millions)",
+         colour = "") + 
     theme(axis.text.x = element_text(angle = 90, vjust=-0.0001), 
           legend.position = "bottom") + 
     scale_color_manual(labels = c("Calendar data", "Scheduled data"), 
@@ -257,6 +280,8 @@ plot_YTD_comparison <- function(){
 
 ```{r plot time series comparison}
 plot_time_series_comparison <- function(){
+  
+  # group by month and calculate sum of UDA delivered for scheduled and calendar data
   scheduled_delivered <- UDA_scheduled_data %>% 
     filter(month <= max(UDA_calendar_data$month) & month >= min(UDA_calendar_data$month)) %>% 
     group_by(month) %>% 
@@ -269,18 +294,25 @@ plot_time_series_comparison <- function(){
     summarise(delivered = sum(UDA_DELIVERED, na.rm = TRUE)) %>% 
     mutate(source = "Calendar data")
 
+  # combine to use in plot
   total_delivered <- rbind(calendar_delivered, scheduled_delivered)
 
-  p <- ggplot(total_delivered, aes(x = month, y = delivered, colour = source)) + 
-        geom_line(size = 1) + 
-        theme_bw() + 
-        expand_limits(y = 0) + 
-        scale_x_date(date_breaks = "3 months", 
-                    date_labels = "%b-%y") +
-        scale_y_continuous(label = scales::comma) + 
-        theme(axis.text.x = element_text(angle = 90, vjust=-0.0001)) +
-        labs(x = "Month", y = "UDAs delivered", colour = "Data source") + 
-        ggtitle("UDA delivered by month for contracts in either data source") + 
+  # plot chart
+  p <- ggplot(total_delivered, 
+              aes(x = month, 
+                  y = delivered, 
+                  colour = source)) + 
+    geom_line(size = 1) + 
+    theme_bw() + 
+    expand_limits(y = 0) + 
+    scale_x_date(date_breaks = "3 months",
+                 date_labels = "%b-%y") +
+    scale_y_continuous(label = scales::comma) + 
+    theme(axis.text.x = element_text(angle = 90, vjust=-0.0001)) +
+    labs(x = "Month", 
+         y = "UDAs delivered", 
+         colour = "Data source") + 
+    ggtitle("UDA delivered by month for contracts in either data source") + 
     scale_color_manual(values = c("#E69F00", "#56B4E9"))
 
   p
@@ -289,6 +321,8 @@ plot_time_series_comparison <- function(){
 
 ```{r time series comparison table}
 table_time_series_comparison <- function(){
+  
+  # group by month and calculate sum of UDA delivered for scheduled and calendar data
   scheduled_delivered <- UDA_scheduled_data %>% 
     filter(month <= max(UDA_calendar_data$month) & month >= min(UDA_calendar_data$month)) %>% 
     group_by(month) %>% 
@@ -301,8 +335,10 @@ table_time_series_comparison <- function(){
     summarise(delivered = sum(UDA_DELIVERED, na.rm = TRUE)) %>% 
     mutate(source = "Calendar data")
   
+  # combine to use in table
   total_delivered <- rbind(calendar_delivered, scheduled_delivered)
 
+  # create table for latest 12 months of data
   comparison_table <- total_delivered %>% 
     arrange(desc(month)) %>% 
     slice_head(n=24) %>% 
@@ -313,6 +349,7 @@ table_time_series_comparison <- function(){
            `Calendar data` = prettyNum(`Calendar data`, big.mark = ",")) %>% 
     rename(Month = month)
   
+  # convert table into graphical object to use in slides
   table_to_print <- tableGrob(comparison_table, rows = NULL)
 
   table_to_print

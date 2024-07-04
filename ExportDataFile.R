@@ -57,6 +57,7 @@ data_Nat_YTD_UDA<- Table_YTD_UDA_UOA_delivery (data = UDA_calendar_data,
                                        UDAorUOA = "UDA",
                                        level = "National",
                                        all_regions_and_STPs = FALSE)
+
 data_Nat_YTD_UDA<- data_Nat_YTD_UDA %>% 
   mutate(`Geography Level`='National',`Geography Name`='England')
 
@@ -121,11 +122,6 @@ data_icb_CoT <- data_icb_CoT %>%
          `Urgent FP17s` = urgent)
 
 data_CoT <- rbind(data_Nat_CoT, data_reg_CoT, data_icb_CoT)
-
-data_UDA<-data_UDA_de_co%>%
-    full_join(data_UDA_YTD,by=c('Calendar month','Geography Name','Geography Level')) %>% 
-  left_join(data_CoT, by = c('Calendar month', 'Geography Name', 'Geography Level'))
-
 
 ######UOA
 #### No UDA delivered, contracted & percentage
@@ -199,13 +195,61 @@ data_UDA<-data_UDA_de_co%>%
 # openxlsx::write.xlsx(data, file = paste0('Data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
 
 
-######################################DCP
+### Unique patients seen ###
+# Unique patients rolling
+# get the right data -- sum unique patient seen for general population/adult/child 
+data_Nat_unique <- get_unique_patients() %>% 
+  mutate(month = format(as.Date(month), "%Y-%m"), 
+         `Geography Level`='National',`Geography Name`='England') %>% 
+  rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
+         `Children seen in 12 month rolling period` = child_12m_count, 
+         `Adults seen in 24 month rolling period` = adult_24m_count, 
+         `Calendar month` = month)
+
+
+data_reg_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
+  group_by(month, region_name) %>% 
+  dplyr::summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
+                   child_12m_count = sum(child_12m_count, na.rm = TRUE), 
+                   adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
+  mutate(month = format(as.Date(month), "%Y-%m"), 
+         region_name = str_to_title(region_name), 
+         `Geography Level` = "Regional") %>% 
+  rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
+         `Children seen in 12 month rolling period` = child_12m_count, 
+         `Adults seen in 24 month rolling period` = adult_24m_count, 
+         `Geography Name` = region_name, 
+         `Calendar month` = month)
+
+data_icb_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
+  group_by(month, commissioner_name) %>% 
+  dplyr::summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
+                   child_12m_count = sum(child_12m_count, na.rm = TRUE), 
+                   adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
+  mutate(month = format(as.Date(month), "%Y-%m"), 
+         commissioner_name = str_to_title(commissioner_name), 
+         `Geography Level` = "ICB") %>% 
+  rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
+         `Children seen in 12 month rolling period` = child_12m_count, 
+         `Adults seen in 24 month rolling period` = adult_24m_count, 
+         `Geography Name` = commissioner_name, 
+         `Calendar month` = month)
+
+data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique)
+
+data_dental_activity<-data_UDA_de_co%>%
+  full_join(data_UDA_YTD,by=c('Calendar month','Geography Name','Geography Level')) %>% 
+  left_join(data_CoT, by = c('Calendar month', 'Geography Name', 'Geography Level')) %>% 
+  left_join(data_unique, by = c('Calendar month', 'Geography Name', 'Geography Level'))
+
+#######DCP
 
   data = UDA_calendar_data
   dcp_data = DCP_data
   dcp_data <- dcp_data %>%
     rename(month = Month)
-
+  
+  #calculate total FP19, UDA_B1, B2, B3 and urgent by month for "Total_dentist_only_and_DCP_assisted' by using UDA Calendar data
   delivery_total_national <-  UDA_calendar_data %>% 
     rename(Region = region_name) %>%
     group_by(month) %>%
@@ -216,7 +260,6 @@ data_UDA<-data_UDA_de_co%>%
                       total_urgent = sum(UDA_urgent, na.rm = TRUE)) %>%
     mutate (DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
     select (month, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
-  
   
   delivery_total_regional <-  UDA_calendar_data %>% 
     rename(Region = region_name) %>%
@@ -240,7 +283,8 @@ data_UDA<-data_UDA_de_co%>%
                       total_urgent = sum(UDA_urgent, na.rm = TRUE)) %>%
     mutate (DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
     select (month, commissioner_name, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
-  
+ 
+    #calculate total FP19, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data 
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
@@ -250,7 +294,7 @@ data_UDA<-data_UDA_de_co%>%
   
   dcp_summary_national <- dcp_main_new%>% 
     group_by(month, DCP_description) %>%
-    summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
+    dplyr::summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
                total_B1 = sum(Band_1._UDA, na.rm = TRUE),
                total_B2 = sum(Band_2._UDA, na.rm = TRUE),
                total_B3 = sum(Band_3._UDA, na.rm = TRUE),
@@ -258,7 +302,7 @@ data_UDA<-data_UDA_de_co%>%
   
   dcp_summary_regional <- dcp_main_new%>% 
     group_by(month, Region, DCP_description) %>%
-    summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
+    dplyr::summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
                total_B1 = sum(Band_1._UDA, na.rm = TRUE),
                total_B2 = sum(Band_2._UDA, na.rm = TRUE),
                total_B3 = sum(Band_3._UDA, na.rm = TRUE),
@@ -267,12 +311,14 @@ data_UDA<-data_UDA_de_co%>%
   
     dcp_summary_icb <- dcp_main_new%>% 
     group_by(month, commissioner_name, DCP_description) %>%
-    summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
+      dplyr::summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
                total_B1 = sum(Band_1._UDA, na.rm = TRUE),
                total_B2 = sum(Band_2._UDA, na.rm = TRUE),
                total_B3 = sum(Band_3._UDA, na.rm = TRUE),
                total_urgent = sum(Urgent_UDA, na.rm = TRUE))
     
+    #change the format of total delivery and separate dcp and then get full data ready for plotting 
+    # then calculate the percentage of each dcp description/total delivery 
     dcp_summary_national_longer <- dcp_summary_national %>% pivot_longer ( ##where does dcp summary come from?
       cols = starts_with("total"),
       names_to = "Bands",
@@ -348,54 +394,13 @@ data_UDA<-data_UDA_de_co%>%
     rename(`Geography Name`=`commissioner_name`)%>%
     mutate(`Geography Level`='ICB')
   
-  total<- rbind(total_national, total_regional, total_icb)
-
-
-### Unique patients seen ###
-  # Unique patients rolling
-  data_Nat_unique <- get_unique_patients() %>% 
-    mutate(month = format(as.Date(month), "%Y-%m"), 
-           `Geography Level`='National',`Geography Name`='England') %>% 
-    rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
-           `Children seen in 12 month rolling period` = child_12m_count, 
-           `Adults seen in 24 month rolling period` = adult_24m_count, 
-           `Calendar month` = month)
-  
-  data_reg_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
-    group_by(month, region_name) %>% 
-    summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
-              child_12m_count = sum(child_12m_count, na.rm = TRUE), 
-              adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
-    mutate(month = format(as.Date(month), "%Y-%m"), 
-           region_name = str_to_title(region_name), 
-           `Geography Level` = "Regional") %>% 
-    rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
-           `Children seen in 12 month rolling period` = child_12m_count, 
-           `Adults seen in 24 month rolling period` = adult_24m_count, 
-           `Geography Name` = region_name, 
-           `Calendar month` = month)
-  
-  data_icb_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
-    group_by(month, commissioner_name) %>% 
-    summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
-              child_12m_count = sum(child_12m_count, na.rm = TRUE), 
-              adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
-    mutate(month = format(as.Date(month), "%Y-%m"), 
-           commissioner_name = str_to_title(commissioner_name), 
-           `Geography Level` = "ICB") %>% 
-    rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
-           `Children seen in 12 month rolling period` = child_12m_count, 
-           `Adults seen in 24 month rolling period` = adult_24m_count, 
-           `Geography Name` = commissioner_name, 
-           `Calendar month` = month)
-  
-  data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique)
+  total_dcp<- rbind(total_national, total_regional, total_icb) %>% 
+    rename(assisted_percent = asissted_percent)
   
 # create Excel file
 # specify tabs
-data<- list('UDA' = data_UDA, 
-            'DCP' = total, 
-            'Unique patients' = data_unique)
+data<- list('Dental contract and activity' = data_dental_activity, 
+            'DCP' = total_dcp)
 
 openxlsx::write.xlsx(data, file = paste0('SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
   
