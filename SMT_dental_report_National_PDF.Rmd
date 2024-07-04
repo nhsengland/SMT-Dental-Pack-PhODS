@@ -90,8 +90,6 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 
 # UOA Information
 
-## UOA Activity
-
 ## UOA activity - treatment data standardised by working days
 
 * Data not yet available in calendar format
