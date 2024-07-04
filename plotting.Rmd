@@ -589,7 +589,7 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
   data1 <- data %>%
     filter(year_type=="Previous Financial Years (Averages)") 
   
-  data2 <- datam%>%
+  data2 <- data%>%
     filter(year_type=="Current Financial Year") 
   
    p1 = ggplot() +
@@ -1260,7 +1260,7 @@ plot_111_referrals <- function(data = dental_data_111,
                     data = data_labels, 
                     colour = "black", 
                     position = "dodge") +
-    scale_x_date(date_breaks = "1 month", 
+    scale_x_date(breaks = function(x) seq.Date(from = min(data$month), to = max(data$month), by = "1 month"), 
                  date_labels = "%b-%y") +
     scale_y_continuous(breaks = seq(0, 
                                     max(data$monthly_case_volume, na.rm = T) + 10000,
@@ -1407,7 +1407,7 @@ if(plotChart == TRUE & asIndex == FALSE){
          subtitle = subtitle,
          caption = chartCaption
     ) +
-    scale_x_date(date_breaks = "1 month", 
+    scale_x_date(breaks = function(x) seq.Date(from = min(data$month), to = max(data$month), by = "1 month"), 
                  date_labels = "%b-%y") +
     theme(axis.text.x = element_text(angle = 90))
 } else if(plotChart == TRUE & asIndex == TRUE){
@@ -1462,7 +1462,7 @@ if(plotChart == TRUE & asIndex == FALSE){
            y = ylab,
            subtitle = subtitle,
            caption = chartCaption) +
-      scale_x_date(date_breaks = "1 month", 
+      scale_x_date(breaks = function(x) seq.Date(from = min(data$month), to = max(data$month), by = "1 month"), 
                    date_labels = "%b-%y") +
       theme(axis.text.x = element_text(angle = 90))
   }
