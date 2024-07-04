@@ -41,7 +41,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # UDA Information
 
-## UDA activity - treatment data standardised by working days
+## Units of Dental Activity - Calendar activity data standardised by working days
 
 ```{r UDA_activity_Calendar2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
@@ -49,11 +49,14 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                               region_STP_name = NULL)
 ```
 
-* This data excludes contracts with less than 100 annual contracted UDAs.
+* This graph shows, for each month the percentage of UDAs delivered for that month compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs* Monthly working days/working days per year.
+* For the previous financial years, annual average performance is shown.
+* The most recent two months data are incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
+* Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
 
-* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
 
-## YTD UDA delivery
+
+## Units of Dental Activity - Calendar year to date delivery
 
 ```{r YTD UDA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
@@ -64,9 +67,9 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           all_regions_and_STPs = FALSE)
 ```
 
-* This data excludes contracts with less than 100 annual contracted UDAs.
+* This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
-## Time series of banded Courses of Treatment
+## Banded courses of treatment standardised by working days (included FD)
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center"}
 plot_banded_CoT(data = UDA_calendar_data_FD, 
@@ -75,9 +78,9 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
                 asIndex = FALSE)
 ```
 
-* This data excludes contracts with less than 100 annual contracted UDAs.
+* This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as UDAs* Monthly working days/working days per year.
 
-## Banded Courses of Treatment as % of February 2020 delivery
+## Banded Courses of Treatment as % of February 2020 delivery (included FD)
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_banded_CoT(data = UDA_calendar_data_FD, 
@@ -86,7 +89,8 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
                 asIndex = TRUE)
 ```
 
-* This data excludes contracts with less than 100 annual contracted UDAs.
+* This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-covid delivery.
+
 
 # UOA Information
 
@@ -100,9 +104,9 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 #                                              region_STP_name = NULL)
 ```
 
-<!-- * This data excludes contracts with less than 100 annual contracted UOAs. -->
+* Data not yet available in calendar format
+ 
 
-<!-- * For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days).  -->
 
 ## YTD UOA delivery
 
@@ -116,19 +120,21 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 #                           all_regions_and_STPs = FALSE)
 ```
 
-<!-- * This data excludes contracts with less than 100 annual contracted UOAs. -->
+* Data not yet available in calendar format
+
 
 # 111 Information
 
-## 111 dental related call volumes
+## 111 triage dental related call volumes
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
 plot_111_referrals()
 ```
+* This chart shows the demand for dental services via calls to 111.
 
 # Dental Care Practitioners (DCPs) Information
 
-## Percentage of CoTs assisted by Dental Care Practitioners (DCPs)
+## Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
 plot_DCP_analysis(data = UDA_calendar_data,
@@ -138,9 +144,10 @@ plot_DCP_analysis(data = UDA_calendar_data,
                   region_STP_name = NULL)
 ```
 
-* This data excludes contracts with less than 100 annual contracted UDAs.
+* This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners.DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 
-## Percentage of UDAs assisted by Dental Care Practitioners (DCPs)
+
+## Percentage of total UDAs delivered which had DCP assistance by band
 
 ```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
 plot_DCP_analysis_band(data = UDA_calendar_data,
@@ -150,7 +157,8 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                               region_STP_name = NULL)
 ```
 
-* This data excludes contracts with less than 100 annual contracted UDAs.
+* This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+
 
 # Unique patients
 
@@ -162,6 +170,9 @@ plot_unique_patients_rolling(level = "National",
                              all_regions_and_STPs = FALSE, 
                              asIndex = FALSE)
 ```
+*Include definition +++++++
+* Contracts included: GDS/PDS/PDS+
+* The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
 
 ## Unique dental patients seen as a percentage of February 2020 figures
 
