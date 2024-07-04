@@ -38,38 +38,38 @@ source(knitr::purl("plotting.Rmd", output = tempfile()), local = TRUE)
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+# Introduction
+
 ## Introduction
 
 This slide pack has been streamlined to help users to easily access the most important information. This change took effect as of June 2024 data. As part of this change we have also sought to make the slides more useful by making the following changes. 
 
 * Swapping from scheduled data (the month the dentist claimed for payment following a finished course of treatment) to Calendar month data (the month the course of treatment finished). This change better reflects the activity of dentists.
-* Including only GDS/PDS/PDS+ contracts where Total contracted UDA>100. This change means data held by BSA for payment and not monitoring purposes is excluded.
+* Including only GDS/PDS/PDS+ contracts where Total contracted UDAs >100. This means contracts with low UDA targets are excluded since they likely do not represent **Caroline to supply some wording**
 * A national HTML will no longer be produced, instead the data is an excel file available alongside this pack.
 
-#### Soon to be added
+#### Metrics and outputs soon to be added  
 
-We will be adding data on:
-* Orthodontics 
+* Orthodontics metrics
 * Oral health risk assessment
-* New Patient Premiums
+* New Patient Premiums metrics
 * ICB level HTML packs will be available in the future, for now the data is available in the excel document.
 
 ## Calendar Vs scheduled data
 
 Analyses in this report now only use **calendar data** Previous packs used scheduled data. An explanation on the difference is given below. The appendix also provides more detail on how the switch effects the data. 
 
-* Following a finished Course of Treatment (COT), dentists have 62 days to declare CoTs via FP17 forms to BSA.
-
 #### Calendar data explanation
 * Calendar data represents the month that a Course of Treatment (COT) was completed.
-* For calendar data, if a COT was completed in February but not declared till March, that activity would be recorded as occurring in February.
-* Since dentists have 62 days to declare CoTs via FP17 forms. This means The most recent two months data are incomplete and subject to change, particularly for the most recent month. We expect final data to be higher. 
+* For calendar data, if a COT was completed in February but not declared till March, that activity would still be recorded as occurring in February.
 
 #### Scheduled data explanation
-* Scheduled data represents the date that a Course of Treatment (COT) was claimed for in the BSA COMPASS system.
-* For scheduled data, if a COT was completed in February but not declared till March, that activity would recorded as occurring in March.
+* Scheduled data represents the month that a Course of Treatment (COT) was claimed for in the BSA COMPASS system.
+* For scheduled data, if a COT was completed in February but not declared till March, the financial activity would recorded as occurring in March.  
 
-The swap to using calendar data allows us to more accurately see what activity is happening per month rather than what payments are being claimed per month. 
+The swap to using calendar data allows us to more accurately see what activity is happening per month rather than what payments are being claimed per month.  
+
+Note that following a finished Course of Treatment (COT), dentists have 62 days to declare their activity via FP17 forms to the BSA COMPASS system. This means when using calendar data, the most recent two months data are incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
 
 # Units of Dental Activity (UDA) Information
 
@@ -81,11 +81,9 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                               region_STP_name = NULL)
 ```
 
-* This graph shows, for each month the percentage of UDAs delivered for that month compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs* Monthly working days/working days per year.
-* For the previous financial years, annual average performance is shown.
-* The most recent two months data are incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
-* Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
-
+* These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs* Monthly working days/working days per year.
+* For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+* Over the course of the financial year this graph allows us to see patterns of delivery.
 
 
 ## Units of Dental Activity - Calendar year to date delivery
@@ -100,6 +98,8 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
 ```
 
 * This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+* Providers are expected to have achieved 30% of their annual delivery by the financial year mid point (October)
+* Implications of not reaching target delivery at the end of the financial year can be seen via this link: https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01672/en-us
 
 ## Banded courses of treatment standardised by working days (included FD)
 
@@ -123,37 +123,6 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 
 * This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-covid delivery.
 
-
-# Units of Orthadontic Activity (UOA) Information
-* UOA data is not yet available in calendar format
-
-
-
-```{r UOA_activity_Calendar1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-# plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
-#                                              level = "National",
-#                                              region_STP_name = NULL) UOA activity - treatment data standardised by working days
-```
-
-
-
-```{r YTD UOA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-# plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
-#                           UDAorUOA = "UOA", 
-#                           level = "National", 
-#                           region_STP_name = NULL, 
-#                           all_regions_and_STPs = FALSE) YTD UOA delivery
-```
-
-
-# 111 Information
-
-## 111 triage dental related call volumes
-
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
-plot_111_referrals()
-```
-* This chart shows the demand for dental services via calls to 111.
 
 # Dental Care Practitioners (DCPs) Information
 
@@ -195,7 +164,7 @@ plot_unique_patients_rolling(level = "National",
 ```
 * This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
 * A person seen more than once in the rolling 12/24 months would be counted only once
-* NICE guidelines state that children should be seen every 12 months and only adults with oral health concerns should be seen more frequently than every 24 months.
+* NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
 
 
 ## Unique dental patients seen as a percentage of February 2020 figures
@@ -208,7 +177,39 @@ plot_unique_patients_rolling(level = "National",
 ```
 * This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels
 * A person seen more than once in the rolling 12/24 months would be counted only once
-* NICE guidelines state that children should be seen every 12 months and only adults with oral health concerns should be seen more frequently than every 24 months.
+* NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+
+# Units of Orthadontic Activity (UOA) Information
+* UOA data is not yet available in calendar format
+
+
+
+```{r UOA_activity_Calendar1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+# plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+#                                              level = "National",
+#                                              region_STP_name = NULL) UOA activity - treatment data standardised by working days
+```
+
+
+
+```{r YTD UOA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+# plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+#                           UDAorUOA = "UOA", 
+#                           level = "National", 
+#                           region_STP_name = NULL, 
+#                           all_regions_and_STPs = FALSE) YTD UOA delivery
+```
+
+
+# 111 Information
+
+## 111 triage dental related call volumes
+
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_111_referrals()
+```
+* This chart shows the demand for dental services via calls to 111.
 
 
 # Annex
@@ -224,4 +225,5 @@ plot_unique_patients_rolling(level = "National",
 * **Foundation Dentists (FD)** - Foundation Dentists are newly qualified dentists who are undertaking additional training in a Dental Practice. They are excluded from metrics unless explicitly included.
 * **FP17** - The Form (electronic) Dental practices use to submit claims for finished courses of treatment to BSA via COMPASS. Data from these forms is used in these slides. Helpful link: https://www.nhsbsa.nhs.uk/activity-payment-and-pension-services/dental-activity-processing
 
-## Data sources
+## Impact of swapping to calendar data
+**Clare and Jenny to add**
