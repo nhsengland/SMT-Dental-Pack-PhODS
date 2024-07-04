@@ -1373,8 +1373,9 @@ plot_unique_patients_rolling <- function(data = unique_patients_rolling,
   options(scipen = 5)
 
 chartCaption <- "Contracts included: GDS/PDS/PDS+
+Includes all patients seen
 The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
-This analysis uses unique patients per contract and does not take into account patients who have been seen at more than one dental practice."
+This analysis uses unique patients per ICB of patient address."
 
 #filter for region or STP
 if(level == "Regional"){
@@ -1418,7 +1419,7 @@ if(plotChart == TRUE & asIndex == FALSE){
     scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
     scale_colour_manual(values = get_colour_palette()) +
     labs(title = title,
-         x = "12 month rolling period end date",
+         x = "12 or 24 month rolling period end date",
          y = ylab,
          subtitle = subtitle,
          caption = chartCaption
@@ -1450,7 +1451,7 @@ if(plotChart == TRUE & asIndex == FALSE){
       select(-month.y) %>% 
       rename(month = month.x)
 
-    title <- "Total number of unique patients seen over a rolling 12 (24) month period as a percentage of February 2020 figures"
+    title <- "Total number of unique patients seen over a rolling 12 or 24 month period as a percentage of February 2020 figures"
     ylab <- "Percentage of February 2020 unique patients"
     
     data_labels <- data %>% 
@@ -1476,7 +1477,7 @@ if(plotChart == TRUE & asIndex == FALSE){
       scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
       scale_colour_manual(values = get_colour_palette()) +
       labs(title = title,
-           x = "12 month rolling period end date",
+           x = "12 or 24 month rolling period end date",
            y = ylab,
            subtitle = subtitle,
            caption = chartCaption) +
