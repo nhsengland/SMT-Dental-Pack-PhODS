@@ -2,7 +2,7 @@
 
 **Author:** Pharmacy, Optometry and Dental Strategy Analysis team, NHS England
 
-**Contact:** [england.primarycare.phodsdata\@nhs.net](mailto:england.primarycare.phodsdata@nhs.net){.email}
+**Contact:** [england.primarycare.phodsdata\@nhs.net](mailto:england.primarycare.phodsdata@nhs.net)
 
 ## Description
 
