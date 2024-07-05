@@ -1,0 +1,173 @@
+---
+title: "Dental Data Pack"
+subtitle:  "National"
+author: "`r paste(format(Sys.time(), '%B, %Y'), ' - Reporting up to end of', format(Sys.Date() - lubridate::weeks(4), '%B, %Y'))`"
+output:
+  beamer_presentation:
+    slide_level: 2
+    toc: true
+    includes:
+      in_header: slide_format2.tex
+  slidy_presentation: default
+sansfont: Calibri Light
+fontsize: 8pt
+classoption: aspectratio = 169
+##always_allow_html: true
+---
+
+```{r libraries, include = FALSE}
+library(tidyverse)
+library(readxl)
+library(DBI)
+library(odbc)
+library(reactable)
+library(downloadthis)
+library(lubridate)
+library(knitr)
+library(ggrepel)
+library(ggpubr)
+options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
+options(knitr.duplicate.label = 'allow')
+
+#source in all files --  do not need if using auto-render
+#source(knitr::purl("SQLpulls.Rmd", output = tempfile()))
+#source(knitr::purl("Data_Processing.Rmd", output = tempfile()), local = TRUE)
+#source(knitr::purl("plotting.Rmd", output = tempfile()), local = TRUE)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# UDA Information
+
+## UDA activity - treatment data standardised by working days
+
+```{r UDA_activity_Calendar2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
+                              level = "National",
+                              region_STP_name = NULL)
+```
+
+* This data excludes contracts with less than 100 annual contracted UDAs.
+
+* For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UDAs * (monthly working days/annual working days).
+
+## YTD UDA delivery
+
+```{r YTD UDA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
+                          UDAorUOA = "UDA", 
+                          level = "National", 
+                          region_STP_name = NULL, 
+                          plotChart = TRUE, 
+                          all_regions_and_STPs = FALSE)
+```
+
+* This data excludes contracts with less than 100 annual contracted UDAs.
+
+## Time series of banded Courses of Treatment
+
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center"}
+plot_banded_CoT(data = UDA_calendar_data_FD, 
+                level = "National", 
+                region_STP_name = NULL, 
+                asIndex = FALSE)
+```
+
+* This data excludes contracts with less than 100 annual contracted UDAs.
+
+## Banded Courses of Treatment as % of February 2020 delivery
+
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_banded_CoT(data = UDA_calendar_data_FD, 
+                level = "National", 
+                region_STP_name = NULL, 
+                asIndex = TRUE)
+```
+
+* This data excludes contracts with less than 100 annual contracted UDAs.
+
+# UOA Information
+
+## UOA activity - treatment data standardised by working days
+
+* Data not yet available in calendar format
+
+```{r UOA_activity_Calendar1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+# plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+#                                              level = "National",
+#                                              region_STP_name = NULL)
+```
+
+<!-- * This data excludes contracts with less than 100 annual contracted UOAs. -->
+
+<!-- * For the previous financial year, the black trend line shows the average performance. In current financial year the denominator is annual contracted UOAs * (monthly working days/annual working days).  -->
+
+## YTD UOA delivery
+
+* Data not yet available in calendar format
+
+```{r YTD UOA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+# plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data, 
+#                           UDAorUOA = "UOA", 
+#                           level = "National", 
+#                           region_STP_name = NULL, 
+#                           all_regions_and_STPs = FALSE)
+```
+
+<!-- * This data excludes contracts with less than 100 annual contracted UOAs. -->
+
+# 111 Information
+
+## 111 dental related call volumes
+
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_111_referrals()
+```
+
+# Dental Care Practitioners (DCPs) Information
+
+## Percentage of CoTs assisted by Dental Care Practitioners (DCPs)
+
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "National",
+                  region_STP_name = NULL)
+```
+
+* This data excludes contracts with less than 100 annual contracted UDAs.
+
+## Percentage of UDAs assisted by Dental Care Practitioners (DCPs)
+
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                              dcp_data = DCP_data,
+                              UDA_or_FP17 = "UDA",
+                              level = "National",
+                              region_STP_name = NULL)
+```
+
+* This data excludes contracts with less than 100 annual contracted UDAs.
+
+# Unique patients
+
+## Unique dental patients seen
+
+```{r unique patients, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "National", 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+## Unique dental patients seen as a percentage of February 2020 figures
+
+```{r unique patients percentage, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "National", 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
