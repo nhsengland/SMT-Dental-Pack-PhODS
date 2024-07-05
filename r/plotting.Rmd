@@ -810,20 +810,22 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
     data <- get_delivery_data(data, UDAorUOA = "UDA", all_regions_and_STPs = all_regions_and_STPs)
     title <- "YTD UDA delivery across all contracts against annual contracted UDAs (millions)"
     ylab <- "YTD UDA delivery (millions)"
-    #captionTitle <- "*These are treatment months..."
+    captionTitle <- "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
+    The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher."
     lineCol <- "#CC79A7"
     labels <- c("Expected YTD delivery to meet contracted UDAs \nif delivery were equal across the financial year", 
                 "Total annual contracted UDAs", 
                 "Actual YTD delivery")
-    
   }else{
     #get data into the right format for UOA
     data <- get_delivery_data(data, UDAorUOA = "UOA", all_regions_and_STPs = all_regions_and_STPs)
     title <- "YTD UOA delivery across all contracts against annual contracted UOAs (millions)"
     ylab <- "YTD UOA delivery (millions)"
-    #captionTitle <- "*These are treatment months..."
+    captionTitle <- "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
+The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher."
     lineCol <- "steelblue"
     labels <- c("Expected YTD delivery to meet contracted UOAs \nif delivery were equal across the financial year",
+
                 "Total annual contracted UOAs", 
                 "Actual YTD delivery")
   }
@@ -972,13 +974,14 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
                       data = data_labels, 
                       colour = "black", 
                       position = "dodge") + 
+
       scale_x_date(date_breaks = "1 month",
                    date_labels = "%b-%y") +
       labs(title = title,
            x = "Month",
            y = ylab,
            subtitle = subtitle,
-           #caption = captionTitle,
+           caption = captionTitle,
            colour = "",
            linetype = "") +
         
@@ -1133,6 +1136,9 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
     
     title <- "Banded Courses of Treatment as a Percentage of February 2020 Delivery Including Foundation Dentists"
     ylab <- "Percentage of February 2020 FP17 forms submitted"
+    caption <- "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
+The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
+This chart includes foundation dentists so total counts will differ to other charts."
     
   }else{ # or standardise for working days only
     data <- data %>% left_join(working_days,by=c('month')) %>% 
@@ -1142,7 +1148,12 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
       
       title <- "Banded Courses of Treatment Including Foundation Dentists"
       ylab <- "Number of FP17 forms submitted"
-  }
+
+      caption <- "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
+The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
+This chart includes foundation dentists so total counts will differ to other charts."
+    }
+
   
   data_labels <- data %>%
     filter(month == max(month)) %>% 
@@ -1172,7 +1183,10 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
            x = "Month",
            y = ylab,
            colour = "Band",
-           subtitle = subtitle)
+
+           subtitle = subtitle,
+           caption = caption)
+
   }else{
     
   data <- data_to_print %>%
@@ -1358,7 +1372,10 @@ plot_unique_patients_rolling <- function(data = unique_patients_rolling,
   
   options(scipen = 5)
 
-chartCaption <- "*N.B. this analysis uses unique patients per contract and does not take \ninto account patients who have been seen at more than one dental practice."
+chartCaption <- "Contracts included: GDS/PDS/PDS+
+Includes all patients seen
+The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
+This analysis uses unique patients per ICB of patient address."
 
 #filter for region or STP
 if(level == "Regional"){
@@ -1382,7 +1399,7 @@ if(plotChart == TRUE & asIndex == FALSE){
   pivot_longer(!month) %>% 
   rename(total_unique_patients = value)
   
-  title <- "Total number of unique patients seen over a rolling 12 (24) month period"
+  title <- "Total number of unique patients seen over a rolling 12 or 24 month period"
   ylab <- "Unique patients"
   
   data_labels <- data %>% 
@@ -1402,7 +1419,7 @@ if(plotChart == TRUE & asIndex == FALSE){
     scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
     scale_colour_manual(values = get_colour_palette()) +
     labs(title = title,
-         x = "12 month rolling period end date",
+         x = "12 or 24 month rolling period end date",
          y = ylab,
          subtitle = subtitle,
          caption = chartCaption
@@ -1421,10 +1438,12 @@ if(plotChart == TRUE & asIndex == FALSE){
   #reshape to the right format
   data <- reshape2::melt(data, id.vars = "month")
 
-  #Feb 202 has been used as an reference
+
+  #Feb 2020 has been used as an reference
   dataFeb2020 <- data %>% 
       filter(month == "2020-02-01") %>% 
       rename(value_Feb2020 = value)
+
   
     data <- data %>% 
       left_join(dataFeb2020, by = c("variable")) %>% 
@@ -1432,7 +1451,7 @@ if(plotChart == TRUE & asIndex == FALSE){
       select(-month.y) %>% 
       rename(month = month.x)
 
-    title <- "Total number of unique patients seen over a rolling 12 (24) month period as a percentage of February 2020 figures"
+    title <- "Total number of unique patients seen over a rolling 12 or 24 month period as a percentage of February 2020 figures"
     ylab <- "Percentage of February 2020 unique patients"
     
     data_labels <- data %>% 
@@ -1458,7 +1477,7 @@ if(plotChart == TRUE & asIndex == FALSE){
       scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
       scale_colour_manual(values = get_colour_palette()) +
       labs(title = title,
-           x = "12 month rolling period end date",
+           x = "12 or 24 month rolling period end date",
            y = ylab,
            subtitle = subtitle,
            caption = chartCaption) +
@@ -1585,20 +1604,24 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
                       colour = "black", 
                       position = "dodge") +
       scale_fill_manual(values = c("#009E73", "#F0E442", "#D55E00"),
-                        labels = c("Dental Nurse assisted", "Hygienist assisted", "Therapist assisted")) +
+                        labels = c("Dental Nurse assisted", "Hygienist", "Therapist")) +
       scale_x_date(date_breaks = "1 month",
                    date_labels = "%b-%y") +
       theme_bw() +
-      labs(title = "Percentage of total UDAs delivered which had DCP* assistance by DCP roles",
+      labs(title = "Percentage of total UDAs delivered which had Dental Care Practitioner (DCP) assistance by DCP roles",
            subtitle = subtitle,
            x = "Month",
            y = "Percentage of total UDAs delivered",
            colour = "Bands",
-           caption = "*Dental Care Practitioner") + 
+           caption = "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100
+           The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
+This chart includes foundation dentists so total counts will differ to other charts") + 
       scale_y_continuous(labels = scales::percent)+
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001))
 
     UDA_plot
+
+
 
   }else{
     
@@ -1621,16 +1644,19 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
       theme_bw() +
       scale_x_date(date_breaks = "1 month",
                    date_labels = "%b-%y") +
-      labs(title = "Percentage of total Courses of Treatment (CoTs) delivered which had DCP* assistance",
+      labs(title = "Percentage of total Courses of Treatment (CoTs) delivered which had Dental Care Practitioner (DCP) assistance",
            subtitle = subtitle,
            x = "Month",
            y = "Percentage of total CoTs delivered",
            colour = "DCP description",
-           caption = "*Dental Care Practitioner") + 
+           caption = "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100
+           The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
+This chart includes foundation dentists so total counts will differ to other charts") + 
       scale_y_continuous(labels = scales::percent)  +
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001))
     
     FP17_plot
+
     
   }
 }
@@ -1950,6 +1976,7 @@ plot_DCP_analysis_ICB_check <- function(data = UDA_calendar_data,
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001))
     
     FP17_plot
+
     
   }
 }
@@ -2068,16 +2095,18 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
       scale_x_date(date_breaks = "1 month",
                    date_labels = "%b-%y") +
       theme_bw() +
-      labs(title = "Percentage of total UDAs delivered which had DCP* assistance by DCP roles",
+      labs(title = "Percentage of total UDAs delivered which had Dental Care Practitioner (DCP) assistance by DCP roles",
            subtitle = subtitle,
            x = "Month",
            y = "Percentage of total UDAs delivered",
            colour = "Bands",
-           caption = "*Dental Care Practitioner") + 
+           caption = "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
+The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher") + 
       scale_y_continuous(labels = scales::percent)+
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001))
 
     UDA_plot
+
 
   }else{
 #UDA is only for those with 'total_FP17'
@@ -2104,11 +2133,13 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
            x = "Month",
            y = "Percentage of total CoTs delivered",
            colour = "DCP description",
-           caption = "*Dental Care Practitioner") + 
+           caption = "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
+The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher") + 
       scale_y_continuous(labels = scales::percent)  +
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001))
 
     FP17_plot
+
 
   }
 }
