@@ -6,7 +6,6 @@ title: "appendix functions for SMT Dental Pack"
 library(tidyverse)
 library(DBI)
 library(odbc)
-library(flextable)
 library(gridExtra)
 
 options(scipen = 999)
@@ -19,13 +18,15 @@ pull_scheduled_data <- function(){
   con <- dbConnect(odbc::odbc(), "NCDR")
   
   sql <- "SELECT *
-  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[UDA_scheduled]"
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[UDA_scheduled]
+  WHERE annual_contracted_UDA > 100"
   result <- dbSendQuery(con, sql)
   scheduled <- dbFetch(result)
   dbClearResult(result)
   
   sql <- "SELECT *
-  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[UDA_scheduled_historical]"
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[UDA_scheduled_historical]
+  WHERE annual_contracted_UDA > 100"
   result <- dbSendQuery(con, sql)
   scheduled_historical <- dbFetch(result)
   dbClearResult(result)
@@ -45,28 +46,35 @@ UDA_scheduled_data <- pull_scheduled_data()
 
 ```{r pull unfiltered calendar data}
 # extract calendar data from NCDR
-pull_unfiltered_calendar_data <- function(){
+pull_calendar_data <- function(){
   con <- dbConnect(odbc::odbc(), "NCDR")
   
   sql <- "SELECT *
-  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity]"
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity]
+  WHERE UDA_PERF_TARGET > 100"
   result <- dbSendQuery(con, sql)
   calendar <- dbFetch(result)
   dbClearResult(result)
   
   # pull contractual dataset
-  contractual_dataset<-pull_contractual_dataset()%>%
-    mutate(YEAR_MONTH = as.Date(YEAR_MONTH))%>% 
-  group_by(YEAR_MONTH) %>% summarize(CONTRACT_NUMBER = unique(CONTRACT_NUMBER))
+  contractual_dataset<-pull_contractual_dataset() %>%
+    mutate(YEAR_MONTH = as.Date(YEAR_MONTH)) %>% 
+    group_by(YEAR_MONTH) %>% summarize(CONTRACT_NUMBER = unique(CONTRACT_NUMBER))
+  
+  #remove duplicates
+  contractual_dataset <- pull_contractual_dataset() %>%
+    mutate(YEAR_MONTH = as.Date(YEAR_MONTH)) %>% 
+    group_by(YEAR_MONTH) %>% 
+    summarize(CONTRACT_NUMBER = unique(CONTRACT_NUMBER))
   
   calendar <- calendar %>% 
-  mutate(CONTRACT_NUMBER = as.numeric(CONTRACT_NUMBER)) %>% 
-  inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER')) %>% 
-  rename(month = YEAR_MONTH, 
-         contract_number = CONTRACT_NUMBER)
+    mutate(CONTRACT_NUMBER = as.numeric(CONTRACT_NUMBER)) %>% 
+    inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER')) %>% 
+    rename(month = YEAR_MONTH,
+           contract_number = CONTRACT_NUMBER)
 }
 
-UDA_calendar_data <- pull_unfiltered_calendar_data()
+UDA_calendar_data <- pull_calendar_data()
 ```
 
 ```{r contract differences}
@@ -99,27 +107,17 @@ not_in_calendar <- UDA_scheduled_data %>%
 
 n_not_in_calendar <- n_distinct(not_in_calendar$contract_number)
 
-# count contracts not in calendar data with contracted UDA < 100
-# save number and percent with contracted UDA < 100 as a variable to use in slides
-low_contracted_uda <- not_in_calendar %>% 
-  filter(annual_contracted_UDA < 100 | is.na(annual_contracted_UDA))
-
-n_low_contracted_uda <- prettyNum(n_distinct(low_contracted_uda$contract_number), big.mark = ",")
-
-pct_low_contracted_uda <-  round((n_distinct(low_contracted_uda$contract_number)/ n_not_in_calendar)*100)
-
 # count contracts not in calendar data which submitted no UDA delivered
 # save number and percent with no contracted UDA as a variable to use in slides
 no_uda_delivered <- not_in_calendar %>% 
-  filter(annual_contracted_UDA >=100 & !is.na(annual_contracted_UDA) 
-         & (is.na(UDA_delivered) | UDA_delivered == 0.0))
+  filter((is.na(UDA_delivered) | UDA_delivered == 0.0))
 
 n_no_uda_delivered <- prettyNum(n_distinct(no_uda_delivered$contract_number), big.mark = ",")
 
 pct_no_uda_delivered <- round((n_distinct(no_uda_delivered$contract_number) / n_not_in_calendar)*100)
 
 # count remaining contracts
-n_remaining <- n_not_in_calendar - n_distinct(low_contracted_uda$contract_number) - n_distinct(no_uda_delivered$contract_number)
+n_remaining <- n_not_in_calendar - n_distinct(no_uda_delivered$contract_number)
 ```
 
 ```{r format data}
@@ -137,80 +135,14 @@ get_YTD_source_comparison <- function(data = UDA_scheduled_data,
     
     data <- get_delivery_data(data)
   }
-  
-  # calculate cumulative sum for historic data
-  historic_data <- data %>% 
-    filter(month >= as.Date("2022-04-01") & month <= as.Date("2023-03-01")) %>% ##must be updated each financial year
-    mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
 
   # calculate cumulative sum for latest financial year
   data <- data %>%
-    filter(month > as.Date("2023-03-01")) %>% ##must be updated each financial year
+    filter(month >= as.Date("2023-04-01") & month <= as.Date("2024-03-01")) %>% ##must be updated each financial year
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
 
   # save out latest contracted UDA or UOAs
   mean_annual_contracted_UDA_UOAs <- dplyr::last(data$annual_contracted_UDA_UOA)
-  mean_annual_contracted_UDA_UOAs_historic <- dplyr::last(historic_data$annual_contracted_UDA_UOA)
-
-  #add in blanks for the rest of the year
-  # NEEDS UPDATING EACH FINANCIAL YEAR
-  if(nrow(data) < 12){
-  
-    if(!(as.Date("2023-05-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-05-01"))
-    }
-  
-    if(!(as.Date("2023-06-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-06-01"))
-    }
-    
-    if(!(as.Date("2023-07-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-07-01"))
-    }
-  
-    if(!(as.Date("2023-08-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-08-01"))
-    }
-  
-    if(!(as.Date("2023-09-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-09-01"))
-    }
-  
-    if(!(as.Date("2023-10-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-10-01"))
-    }
-  
-    if(!(as.Date("2023-11-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-11-01"))
-    }
-  
-    if(!(as.Date("2023-12-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-12-01"))
-    }
-  
-    if(!(as.Date("2024-01-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2024-01-01"))
-    }
-  
-    if(!(as.Date("2024-02-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2024-02-01"))
-    }
-  
-    if(!(as.Date("2024-03-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2024-03-01"))
-    }
-  }
   
   #add column for expected delivery
   data_to_print <- data %>%
@@ -221,19 +153,11 @@ get_YTD_source_comparison <- function(data = UDA_scheduled_data,
     pivot_longer(cols = c("YTD_delivery"), 
                 names_to = "measure", values_to = "value")
 
-  # format historic data to match current year
-  historic_data_to_print <- historic_data %>% 
-    select(month, YTD_delivery)
-
-  historic_data <- historic_data_to_print %>% 
-    pivot_longer(cols = c("YTD_delivery"), 
-                names_to = "measure", values_to = "value")
-
   # bind current and previous financial years
   # pivot so latest contracted UDA or UOAs is a separate column
-  data <- rbind(data, historic_data) %>% 
-    mutate(year_type = ifelse(month > max(historic_data$month), "Current Financial Year", "Previous Financial Year")) %>% 
-    mutate(source = source)
+  data <- data %>% 
+    mutate(year_type = "Current Financial Year", 
+           source = source)
   
   data
 }
@@ -252,8 +176,7 @@ plot_YTD_comparison <- function(){
 
   # combine calendar and scheduled data for plot
   YTD_comparison <- rbind(scheduled_YTD, calendar_YTD) %>% 
-    mutate(month = as.Date(month), 
-          year_type = factor(year_type, levels = c("Previous Financial Year", "Current Financial Year")))
+    mutate(month = as.Date(month))
   
   # plot chart
   p <- ggplot(YTD_comparison) + 

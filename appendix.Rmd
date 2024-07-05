@@ -43,7 +43,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
     -   9% was submitted in January 2024.
 
-    -   1% was submitted in February
+    -   1% was submitted in February 2024.
 
 ## Contracts included
 
@@ -52,7 +52,6 @@ There are some minor differences in the contracts included in the different data
 In January 2024:
 
 -   There were `r n_scheduled_contracts` in the scheduled data compared to `r n_calendar_contracts` in the calendar data.
--   `r n_low_contracted_uda` of the contracts not in the calendar data (`r pct_low_contracted_uda`%) have a contracted UDA less than 100, so are excluded from this pack.
 -   `r n_no_uda_delivered` of the contracts not in the calendar data (`r pct_no_uda_delivered`%) reported no UDA delivered in January 2024.
 -   For the remaining `r n_remaining` contracts which are in the scheduled data but not in the calendar data, it is likely that they submitted claims in January for treatments which finished earlier than January.
 
