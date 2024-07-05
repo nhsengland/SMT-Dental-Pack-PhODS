@@ -219,11 +219,20 @@ plot_111_referrals()
 * **Calendar data** - This represents the date that a Course of Treatment (COT) was completed. 
 * **Scheduled data** - This represents the date that a Course of Treatment (COT) was claimed for in the BSA COMPASS system.
 * **Course of Treatment (COT)** - During a checkup, the dentist will identify any problems that need treatment. After discussing them with the patient, a Course of Treatment is created that deals with all of the problems.
-* **Unit of Dental Activity (UDA)** - Under the GDS contract, payments for primary care dentistry are made for units of dental activity (UDAs). Helpful link: https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01976
+* **Unit of Dental Activity (UDA)** - Under the GDS contract, payments for primary care dentistry are made for units of dental activity (UDAs). https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01976
+* **Treatment bands** - Treatment is grouped into bands which have UDAs associated with them. A brief overview is listed here
+  + **Band 1** - check up and simple treatment e.g. examination, x-rays and prevention advice (1 UDA)
+  + **Band 2** - mid range treatments e.g. fillings, extractions, and root canal work plus Band 1 work (3-7 UDAs)
+  +  **Band 3** - includes complex treatments e.g. crowns, dentures, and bridges plus Band 1 and Band 2 work (12 UDAs)
+  + **Urgent** - a specified set of treatments delivered where oral health is likely to deteriorate significantly/ the person is in sever pain (1.2 UDAs)
+  + **Other** -* **not sure - need to find out** (mixed UDAs)
 * **Contracted UDAs** - Agreed number of UDAs a provider will deliver in a financial year 
 * **Delivered UDAs** - Actual number of UDAs a provider has delivered 
 * **Foundation Dentists (FD)** - Foundation Dentists are newly qualified dentists who are undertaking additional training in a Dental Practice. They are excluded from metrics unless explicitly included.
-* **FP17** - The Form (electronic) Dental practices use to submit claims for finished courses of treatment to BSA via COMPASS. Data from these forms is used in these slides. Helpful link: https://www.nhsbsa.nhs.uk/activity-payment-and-pension-services/dental-activity-processing
+* **FP17** - The Form (electronic) Dental practices use to submit claims for finished courses of treatment to BSA via COMPASS. Data from these forms is used in these slides. https://www.nhsbsa.nhs.uk/activity-payment-and-pension-services/dental-activity-processing
+
+Kings fund - https://www.kingsfund.org.uk/insight-and-analysis/long-reads/dentistry-england-explained
+
 
 ## Impact of swapping to calendar data
 **Clare and Jenny to add**
