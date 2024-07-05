@@ -9,10 +9,10 @@ library(readxl)
 library(textclean)
 library(lubridate)
 
-#### get raw data
-#source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE) # do not need if using auto-render
-#source(knitr::purl("Data_Processing.Rmd", output = tempfile()))  # do not need if using auto-render
-#source(knitr::purl("plotting.Rmd", output = tempfile()))  # do not need if using auto-render
+#### get raw data -- do not need if using auto-render
+#source(knitr::purl("r/SQLpulls.Rmd", output = tempfile()), local = TRUE)  
+#source(knitr::purl("r/Data_Processing.Rmd", output = tempfile()))  
+#source(knitr::purl("r/plotting.Rmd", output = tempfile()))  
 
 
 ######UDA
