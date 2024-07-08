@@ -33,11 +33,13 @@ options(knitr.duplicate.label = 'allow')
 source(knitr::purl("SQLpulls.Rmd", output = tempfile()))
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()), local = TRUE)
 source(knitr::purl("plotting.Rmd", output = tempfile()), local = TRUE)
+source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
 ```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+
 # Introduction
 
 ## Introduction
@@ -235,4 +237,54 @@ Kings fund - https://www.kingsfund.org.uk/insight-and-analysis/long-reads/dentis
 
 
 ## Impact of swapping to calendar data
-**Clare and Jenny to add**
+
+-   Dental activity data can be grouped into months using two different methods - by 'calendar' month or by 'scheduled' month.
+
+-   Using calendar month means that activity is allocated to months based on the month in which the course of treatment finished.
+
+-   Using scheduled month means that activity is allocated to months based on the month the dentist claimed for payment following a finished course of treatment.
+
+-   This pack has switched from using scheduled data to calendar data to better reflect when dental activity occurs.
+
+-   Dentists have 62 days following the completion of a course of treatment to claim payment. This means that the latest two months of any charts using activity data should now be considered provisional, as more claims for treatment ending in these months can be submitted.
+
+-   While the last two months of activity data will be incomplete, UDA claim patterns indicate that most activity is claimed for in the same month as treatment finished.
+
+-   For example, for treatment ending in December 2023:
+
+    -   90% was submitted in December 2023.
+
+    -   9% was submitted in January 2024.
+
+    -   1% was submitted in February 2024.
+
+## Contracts included
+
+There are some minor differences in the contracts included in the different data sources each month.
+
+In January 2024:
+
+-   There were `r n_scheduled_contracts` in the scheduled data compared to `r n_calendar_contracts` in the calendar data.
+-   `r n_no_uda_delivered` of the contracts not in the calendar data (`r pct_no_uda_delivered`%) reported no UDA delivered in January 2024.
+-   For the remaining `r n_remaining` contracts which are in the scheduled data but not in the calendar data, it is likely that they submitted claims in January for treatments which finished earlier than January.
+
+## Comparison of monthly UDA data
+
+
+Switching to calendar data means that spikes in the number of claims submitted due to submission arrangements are smoothed out.
+
+```{r time series comparison, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
+plot <- plot_time_series_comparison()
+table <- table_time_series_comparison()
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+```
+
+## Comparison of YTD UDA data
+
+This has very little impact on the metrics reported in this pack.
+
+```{r YTD comparison, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_comparison()
+```
