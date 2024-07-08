@@ -23,6 +23,7 @@ library(rmarkdown)
 source(knitr::purl("r/SQLpulls.Rmd", output = tempfile()), local = TRUE)
 source(knitr::purl("r/Data_Processing.Rmd", output = tempfile()))
 source(knitr::purl("r/plotting.Rmd", output = tempfile()))
+source(knitr::purl("r/appendix_functions.Rmd", output = tempfile()))
 
 
 # Render the RMarkdown document
