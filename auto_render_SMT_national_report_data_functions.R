@@ -20,18 +20,18 @@ print("Directory 'reports' exists or was successfully created.")
 #render monthly report
 library(rmarkdown)
 
-source(knitr::purl("r/SQLpulls.Rmd", output = tempfile()), local = TRUE)
-source(knitr::purl("r/Data_Processing.Rmd", output = tempfile()))
-source(knitr::purl("r/plotting.Rmd", output = tempfile()))
-source(knitr::purl("r/appendix_functions.Rmd", output = tempfile()))
+source(knitr::purl("~/SMT-Dental-Pack-PhODS/SQLpulls.Rmd", output = tempfile()), local = TRUE)
+source(knitr::purl("~/SMT-Dental-Pack-PhODS/Data_Processing.Rmd", output = tempfile()))
+source(knitr::purl("~/SMT-Dental-Pack-PhODS/plotting.Rmd", output = tempfile()))
+#source(knitr::purl("~/SMT-Dental-Pack-PhODS/appendix_functions.Rmd", output = tempfile()))
 
 
 # Render the RMarkdown document
-rmarkdown::render(input = "rmarkdown/SMT_dental_report_National_PDF.Rmd",
+rmarkdown::render(input = "~/SMT-Dental-Pack-PhODS/SMT_dental_report_National_PDF.Rmd",
                   output_format = "beamer_presentation",
                   output_file = paste0(reports_dir, "/SMT Dental Pack Monthly - National ", Sys.Date(), ".pdf"))
 
-source("r/ExportDataFile.R")
+source("~/SMT-Dental-Pack-PhODS/ExportDataFile.R")
 
 
 ##for debugging converting to pdf errors
@@ -41,3 +41,4 @@ tinytex::tlmgr_update()
 #step 2
 tinytex::reinstall_tinytex()
 #if still not working, go to debugging site  link in error message for further solutions.
+
