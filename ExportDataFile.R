@@ -10,9 +10,9 @@ library(textclean)
 library(lubridate)
 
 #### get raw data -- do not need if using auto-render
-#source(knitr::purl("r/SQLpulls.Rmd", output = tempfile()), local = TRUE)  
-#source(knitr::purl("r/Data_Processing.Rmd", output = tempfile()))  
-#source(knitr::purl("r/plotting.Rmd", output = tempfile()))  
+#source(knitr::purl("~/SMT-Dental-Pack-PhODS/SQLpulls.Rmd", output = tempfile()), local = TRUE)  
+#source(knitr::purl("~/SMT-Dental-Pack-PhODS/Data_Processing.Rmd", output = tempfile()))  
+#source(knitr::purl("~/SMT-Dental-Pack-PhODS/plotting.Rmd", output = tempfile()))  
 
 
 ######UDA
@@ -25,7 +25,9 @@ data_Nat_UDA=plot_UDA_UOA_delivery_wd(data = UDA_calendar_data,
                          region_STP_name = NULL)
 
 data_Nat_UDA<- data_Nat_UDA %>% 
-  select(`Calendar month`,`Annual contracted UDAs`,`Monthly UDAs delivered`,`no workdays`,`Standardised monthly percentage of contracted UDAs delivered`)%>%
+  select(`Calendar month`,`Annual contracted UDAs`,
+         `Monthly UDAs Band1 delivered`,`Monthly UDAs Band2 delivered`,`Monthly UDAs Band3 delivered`,`Monthly UDAs Band Urgent delivered`,
+         `Monthly UDAs Band Other delivered`,`Monthly UDAs total delivered`,`no workdays`,`Standardised monthly percentage of contracted UDAs delivered`)%>%
   mutate(`Geography Level`='National',`Geography Name`='England')
 
 data_reg_UDA=plot_UDA_UOA_delivery_all_regions(data = UDA_calendar_data, 
@@ -35,21 +37,27 @@ data_reg_UDA=plot_UDA_UOA_delivery_all_regions(data = UDA_calendar_data,
                                   plotChart = FALSE, 
                                   all_regions_and_STPs = TRUE)
 data_reg_UDA <- data_reg_UDA %>%
-  select(`Calendar month`,`Geography Name`=`Region Name`,`Annual contracted UDAs`,`Monthly UDAs delivered`,
-         `no workdays`,`Standardised monthly percentage of contracted UDAs delivered`)%>%
+  select(`Calendar month`,`Geography Name`=`Region Name`,`Annual contracted UDAs`,`Monthly UDAs Band1 delivered`,`Monthly UDAs Band2 delivered`,
+         `Monthly UDAs Band3 delivered`,`Monthly UDAs Band Urgent delivered`,
+         `Monthly UDAs Band Other delivered`,`Monthly UDAs total delivered`,`no workdays`,
+         `Standardised monthly percentage of contracted UDAs delivered`)%>%
   mutate(`Geography Level`='Regional')
 
 data_ICB_UDA <- Table_UDA_UOA_delivery_all_ICBs(data = UDA_calendar_data, 
                                 UDAorUOA = "UDA")
 
 data_ICB_UDA <- data_ICB_UDA %>%
-  select(`Calendar month`,`Geography Name`=`Commissioner Name`,`Annual contracted UDAs`,`Monthly UDAs delivered`,
-         `no workdays`,`Standardised monthly percentage of contracted UDAs delivered`)%>%
+  select(`Calendar month`,`Geography Name`=`Commissioner Name`,`Annual contracted UDAs`,`Monthly UDAs Band1 delivered`,
+         `Monthly UDAs Band2 delivered`,`Monthly UDAs Band3 delivered`,`Monthly UDAs Band Urgent delivered`,
+         `Monthly UDAs Band Other delivered`,`Monthly UDAs total delivered`,`no workdays`,
+         `Standardised monthly percentage of contracted UDAs delivered`)%>%
   mutate(`Geography Level`='ICB')
 
 data_UDA_de_co<- rbind(data_Nat_UDA, data_reg_UDA, data_ICB_UDA) %>% 
   rename("Workdays" = `no workdays`)%>%
-  select("Calendar month","Geography Level","Geography Name","Annual contracted UDAs","Monthly UDAs delivered",
+  select("Calendar month","Geography Level","Geography Name","Annual contracted UDAs",
+         "Monthly UDAs Band1 delivered" ,"Monthly UDAs Band2 delivered","Monthly UDAs Band3 delivered",
+         "Monthly UDAs Band Urgent delivered","Monthly UDAs total delivered" ,"Monthly UDAs total delivered" ,
           "Workdays","Standardised monthly percentage of contracted UDAs delivered")
 
 ####YTD delivery
@@ -341,7 +349,7 @@ data_dental_activity<-data_UDA_de_co%>%
     #change the format of total delivery and separate dcp and then get full data ready for plotting 
     # then calculate the percentage of each dcp description/total delivery 
     dcp_summary_national_longer <- dcp_summary_national %>% pivot_longer ( ##where does dcp summary come from?
-      cols = starts_with("completed"),
+      cols = c(completed_courses_of_treatment, UDA_B1, UDA_B2, UDA_B3, UDA_urgent),
       names_to = "DCP_metric",
       names_prefix = "dcp",
       values_to = "numbers",
@@ -349,7 +357,7 @@ data_dental_activity<-data_UDA_de_co%>%
     ) 
     
     delivery_total_national_longer <- delivery_total_national %>% pivot_longer(
-      cols = starts_with("completed"),
+      cols =c(completed_courses_of_treatment, UDA_B1, UDA_B2, UDA_B3, UDA_urgent),
       names_to = "DCP_metric",
       names_prefix = "dcp",
       values_to = "all_numbers",
@@ -366,7 +374,7 @@ data_dental_activity<-data_UDA_de_co%>%
     
     
     dcp_summary_regional_longer <- dcp_summary_regional %>% pivot_longer ( ##where does dcp summary come from?
-      cols = starts_with("completed"),
+      cols = c(completed_courses_of_treatment, UDA_B1, UDA_B2, UDA_B3, UDA_urgent),
       names_to = "DCP_metric",
       names_prefix = "dcp",
       values_to = "numbers",
@@ -374,7 +382,7 @@ data_dental_activity<-data_UDA_de_co%>%
     ) 
     
     delivery_total_regional_longer <- delivery_total_regional %>% pivot_longer(
-      cols = starts_with("completed"),
+      cols = c(completed_courses_of_treatment, UDA_B1, UDA_B2, UDA_B3, UDA_urgent),
       names_to = "DCP_metric",
       names_prefix = "dcp",
       values_to = "all_numbers",
@@ -391,7 +399,7 @@ data_dental_activity<-data_UDA_de_co%>%
       mutate(`Geography Level`='Region')
   
   dcp_summary_icb_longer <- dcp_summary_icb %>% pivot_longer ( ##where does dcp summary come from?
-    cols = starts_with("completed"),
+    cols = c(completed_courses_of_treatment, UDA_B1, UDA_B2, UDA_B3, UDA_urgent),
     names_to = "DCP_metric",
     names_prefix = "dcp",
     values_to = "numbers",
@@ -399,7 +407,7 @@ data_dental_activity<-data_UDA_de_co%>%
   ) 
   
   delivery_total_ICB_longer <- delivery_total_ICB %>% pivot_longer(
-    cols = starts_with("completed"),
+    cols = c(completed_courses_of_treatment, UDA_B1, UDA_B2, UDA_B3, UDA_urgent),
     names_to = "DCP_metric",
     names_prefix = "dcp",
     values_to = "all_numbers",
@@ -419,7 +427,7 @@ data_dental_activity<-data_UDA_de_co%>%
     rename(assisted_percent = asissted_percent)%>%
     mutate(`month` = format(as.Date(month), "%Y-%m"))%>%
     select('Calendar month'='month',"Geography Level","Geography Name","DCP_metric","DCP_description"="DCP_description.x","numbers",
-           "DCP_description.y" ="DCP_description.y" ,"all_numbers","assisted_percent")
+           "assisted_percent")
   
   
 
