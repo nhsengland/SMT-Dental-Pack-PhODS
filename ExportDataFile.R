@@ -10,9 +10,9 @@ library(textclean)
 library(lubridate)
 
 #### get raw data -- do not need if using auto-render
-#source(knitr::purl("~/SMT-Dental-Pack-PhODS/SQLpulls.Rmd", output = tempfile()), local = TRUE)  
-#source(knitr::purl("~/SMT-Dental-Pack-PhODS/Data_Processing.Rmd", output = tempfile()))  
-#source(knitr::purl("~/SMT-Dental-Pack-PhODS/plotting.Rmd", output = tempfile()))  
+source(knitr::purl("~/SMT-Dental-Pack-PhODS/SQLpulls.Rmd", output = tempfile()), local = TRUE)  
+source(knitr::purl("~/SMT-Dental-Pack-PhODS/Data_Processing.Rmd", output = tempfile()))  
+source(knitr::purl("~/SMT-Dental-Pack-PhODS/plotting.Rmd", output = tempfile()))  
 
 
 ######UDA
@@ -56,8 +56,9 @@ data_ICB_UDA <- data_ICB_UDA %>%
 data_UDA_de_co<- rbind(data_Nat_UDA, data_reg_UDA, data_ICB_UDA) %>% 
   rename("Workdays" = `no workdays`)%>%
   select("Calendar month","Geography Level","Geography Name","Annual contracted UDAs",
-         "Monthly UDAs Band1 delivered" ,"Monthly UDAs Band2 delivered","Monthly UDAs Band3 delivered",
-         "Monthly UDAs Band Urgent delivered","Monthly UDAs total delivered" ,"Monthly UDAs total delivered" ,
+         #"Monthly UDAs Band1 delivered" ,"Monthly UDAs Band2 delivered","Monthly UDAs Band3 delivered",
+         #"Monthly UDAs Band Urgent delivered",
+         "Monthly UDAs total delivered" ,"Monthly UDAs total delivered" ,
           "Workdays","Standardised monthly percentage of contracted UDAs delivered")
 
 ####YTD delivery
@@ -93,16 +94,16 @@ data_Nat_CoT <- table_banded_CoT(data = UDA_calendar_data,
                                  all_regions_and_STPs = FALSE)
 
 data_Nat_CoT <- data_Nat_CoT %>% 
-  mutate(`Total FP17s` =rowSums(
+  mutate(`Total CoT incl FD` =rowSums(
     select(., band1, band2, band3, other, urgent), 
     na.rm = TRUE))%>%
   mutate(`Geography Level`='National',`Geography Name`='England') %>% 
   rename(`Calendar month` = month, 
-         `Band 1 FP17s` = band1, 
-         `Band 2 FP17s` = band2, 
-         `Band 3 FP17s` = band3, 
-         `Other FP17s` = other, 
-         `Urgent FP17s` = urgent)
+         `Band 1 CoT incl FD` = band1, 
+         `Band 2 CoT incl FD` = band2, 
+         `Band 3 CoT incl FD` = band3, 
+         `Other CoT incl FD` = other, 
+         `Urgent CoT incl FD` = urgent)
 
 data_reg_CoT <- table_banded_CoT(data = UDA_calendar_data, 
                                  level = "Regional", 
@@ -114,15 +115,15 @@ data_reg_CoT <- data_reg_CoT %>%
 
 # Create the Total FP17s column by summing the specified numeric columns
 data_reg_CoT <- data_reg_CoT %>%
-  mutate(`Total FP17s` = rowSums(across(c(band1, band2, band3, other, urgent)), na.rm = TRUE))%>%
+  mutate(`Total CoT incl FD` = rowSums(across(c(band1, band2, band3, other, urgent)), na.rm = TRUE))%>%
   mutate(`Geography Level` = "Regional") %>%
   rename(`Geography Name` = region_name, 
          `Calendar month` = month, 
-         `Band 1 FP17s` = band1, 
-         `Band 2 FP17s` = band2, 
-         `Band 3 FP17s` = band3, 
-         `Other FP17s` = other, 
-         `Urgent FP17s` = urgent)
+         `Band 1 CoT incl FD` = band1, 
+         `Band 2 CoT incl FD` = band2, 
+         `Band 3 CoT incl FD` = band3, 
+         `Other CoT incl FD` = other, 
+         `Urgent CoT incl FD` = urgent)
 
 data_icb_CoT <- table_banded_CoT(data = UDA_calendar_data,
                                  level = "STP", 
@@ -137,15 +138,15 @@ data_icb_CoT <- data_icb_CoT %>% ungroup()
 
 # Create the Total FP17s column by summing the specified numeric columns
 data_icb_CoT <- data_icb_CoT %>%
-  mutate(`Total FP17s` = rowSums(select(., band1, band2, band3, other, urgent), na.rm = TRUE))%>%
+  mutate(`Total CoT incl FD` = rowSums(select(., band1, band2, band3, other, urgent), na.rm = TRUE))%>%
   mutate(`Geography Level` = "ICB") %>% 
   rename(`Geography Name` = commissioner_name, 
          `Calendar month` = month, 
-         `Band 1 FP17s` = band1, 
-         `Band 2 FP17s` = band2, 
-         `Band 3 FP17s` = band3, 
-         `Other FP17s` = other, 
-         `Urgent FP17s` = urgent)
+         `Band 1 CoT incl FD` = band1, 
+         `Band 2 CoT incl FD` = band2, 
+         `Band 3 CoT incl FD` = band3, 
+         `Other CoT incl FD` = other, 
+         `Urgent CoT incl FD` = urgent)
 
 data_CoT <- rbind(data_Nat_CoT, data_reg_CoT, data_icb_CoT)
 
@@ -266,7 +267,13 @@ data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique)
 data_dental_activity<-data_UDA_de_co%>%
   full_join(data_UDA_YTD,by=c('Calendar month','Geography Name','Geography Level'))%>%
   left_join(data_CoT, by = c('Calendar month', 'Geography Name', 'Geography Level')) %>% 
-  left_join(data_unique, by = c('Calendar month', 'Geography Name', 'Geography Level'))
+  left_join(data_unique, by = c('Calendar month', 'Geography Name', 'Geography Level'))%>%
+  select("Calendar month","financial_year", "Geography Level","Geography Name", "Annual contracted UDAs",
+         "UDAs total delivered exc FD"="Monthly UDAs total delivered",
+         "Standardised monthly percentage of contracted UDAs delivered",                                              
+         "YTD_delivery_excl_FD"="YTD_delivery" ,"Band 1 CoT incl FD","Band 2 CoT incl FD","Band 3 CoT incl FD","Urgent CoT incl FD" ,                                            
+         "Other CoT incl FD","Total CoT incl FD","Unique patients seen in 12 month rolling period", "Children seen in 12 month rolling period",
+         "Adults seen in 24 month rolling period")
 
 
 ##########DCP#######################################
@@ -426,8 +433,8 @@ data_dental_activity<-data_UDA_de_co%>%
   total_dcp<- rbind(total_national, total_regional, total_icb) %>% 
     rename(assisted_percent = asissted_percent)%>%
     mutate(`month` = format(as.Date(month), "%Y-%m"))%>%
-    select('Calendar month'='month',"Geography Level","Geography Name","DCP_metric","DCP_description"="DCP_description.x","numbers",
-           "assisted_percent")
+    select('Calendar month'='month',"Geography Level","Geography Name","DCP metric (excl FD)"="DCP_metric","DCP description"="DCP_description.x","numbers",
+           "DCP_description.y", "all_numbers","assisted_percent")
   
   
 
@@ -437,5 +444,21 @@ data_dental_activity<-data_UDA_de_co%>%
 data<- list('Dental contract and activity' = data_dental_activity, 
             'DCP' = total_dcp)
 
+
+# we will first create a folder to save our output
+# Print the current working directory
+current_wd <- getwd()
+print(paste("Current working directory:", current_wd))
+
+# Check if the reports directory exists
+reports_dir <- file.path(current_wd, "reports")
+if (!dir.exists(reports_dir)) {
+  # Try to create the directory
+  dir.create(reports_dir)
+  # Verify if the directory was successfully created
+  if (!dir.exists(reports_dir)) {
+    stop("Failed to create 'reports' directory")
+  }
+}
 openxlsx::write.xlsx(data, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
   
