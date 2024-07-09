@@ -1204,7 +1204,7 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
       mutate(CoTs = CoTs * 100 / CoTs_feb2020)
     
     title <- "Banded Courses of Treatment as a Percentage of February 2020 Delivery Including Foundation Dentists"
-    ylab <- "Percentage of February 2020 FP17 forms submitted"
+    ylab <- "Percentage of February 2020 completed CoT"
     caption <- "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
 The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
 This chart includes foundation dentists so total counts will differ to other charts."
@@ -1216,7 +1216,7 @@ This chart includes foundation dentists so total counts will differ to other cha
       rename(CoTs = standardised_CoTs)
       
       title <- "Banded Courses of Treatment Including Foundation Dentists"
-      ylab <- "Number of FP17 forms submitted"
+      ylab <- "Number of completed Courses of Treatment"
 
       caption <- "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
 The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
@@ -1683,8 +1683,7 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
            y = "Percentage of total UDAs delivered",
            colour = "Bands",
            caption = "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100
-           The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
-This chart includes foundation dentists so total counts will differ to other charts") + 
+           The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.") + 
       scale_y_continuous(labels = scales::percent)+
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001))
 
@@ -1723,8 +1722,7 @@ This chart includes foundation dentists so total counts will differ to other cha
            y = "Percentage of total CoTs delivered",
            colour = "DCP description",
            caption = "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100
-           The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
-This chart includes foundation dentists so total counts will differ to other charts") + 
+           The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.") + 
       scale_y_continuous(labels = scales::percent)  +
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001))
     
