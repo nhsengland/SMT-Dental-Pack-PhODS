@@ -59,6 +59,8 @@ This slide pack has been streamlined to help users to easily access the most imp
 * New Patient Premiums metrics
 * ICB level HTML packs will be available in the future, for now the data is available in the excel document.
 
+This pack will continue to evolve and change, any questions/comments should be directed to england.primarycare.phodsdata@nhs.net
+
 ## Calendar Vs scheduled data
 
 Analyses in this report now only use **calendar data** Previous packs used scheduled data. An explanation on the difference is given below. The appendix also provides more detail on how the switch effects the data. 
@@ -68,7 +70,7 @@ Analyses in this report now only use **calendar data** Previous packs used sched
 * For calendar data, if a COT was completed in February but not declared till March, that activity would still be recorded as occurring in February.
 
 #### Scheduled data explanation
-* Scheduled data represents the month that a Course of Treatment (COT) was claimed for in the BSA COMPASS system.
+* Scheduled data represents the month that a Course of Treatment (COT) was claimed for in the BSA Compass system.
 * For scheduled data, if a COT was completed in February but not declared till March, the financial activity would recorded as occurring in March.  
 
 The swap to using calendar data allows us to more accurately see what activity is happening per month rather than what payments are being claimed per month.  
@@ -103,7 +105,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
 
 * This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 * Providers are expected to have achieved 30% of their annual delivery by the financial year mid point (October)
-* Implications of not reaching target delivery at the end of the financial year can be seen via this link: https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01672/en-us
+* Implications of not reaching target delivery at the end of the financial year can be understood via this link: https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01672/en-us
 
 ## Banded courses of treatment standardised by working days (included FD)
 
@@ -114,7 +116,7 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
                 asIndex = FALSE)
 ```
 
-* This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as UDAs*Monthly working days/working days per year.
+* This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed COTs*Monthly working days/working days per year.
 
 ## Banded Courses of Treatment as % of February 2020 delivery (included FD)
 
@@ -217,13 +219,13 @@ plot_111_referrals()
 
 
 
-# Annex
+# Appendix
 
-## Annex of terms for dental data
+## Description of terms used in this pack
 
-* **Calendar data** - This represents the date that a Course of Treatment (COT) was completed. 
-* **Scheduled data** - This represents the date that a Course of Treatment (COT) was claimed for in the BSA COMPASS system.
-* **Course of Treatment (COT)** - During a checkup, the dentist will identify any problems that need treatment. After discussing them with the patient, a Course of Treatment is created that deals with all of the problems.
+* **Calendar data** - This represents the month that a Course of Treatment (CoT) was completed. 
+* **Scheduled data** - This represents the month that a Course of Treatment (CoT) was claimed for in the BSA Compass system.
+* **Course of Treatment (CoT)** - During a checkup, the dentist will identify any problems that need treatment. After discussing them with the patient, a Course of Treatment is created that deals with all of the problems.
 * **Unit of Dental Activity (UDA)** - Under the GDS contract, payments for primary care dentistry are made for units of dental activity (UDAs). https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01976
 * **Treatment bands** - Treatment is grouped into bands which have UDAs associated with them. A brief overview is listed here
   + **Band 1** - check up and simple treatment e.g. examination, x-rays and prevention advice (1 UDA)
@@ -233,11 +235,14 @@ plot_111_referrals()
   + **Other** - mixed activity (0.75-1.2 UDAs)
 * **Contracted UDAs** - Agreed number of UDAs a provider will deliver in a financial year 
 * **Delivered UDAs** - Actual number of UDAs a provider has delivered 
-* **Foundation Dentists (FD)** - Foundation Dentists are newly qualified dentists who are undertaking additional training in a Dental Practice. They are excluded from metrics unless explicitly included.
-* **FP17** - The Form (electronic) Dental practices use to submit claims for finished courses of treatment to BSA via COMPASS. Data from these forms is used in these slides. https://www.nhsbsa.nhs.uk/activity-payment-and-pension-services/dental-activity-processing
+* **Foundation Dentists (FD)** - Foundation Dentists are newly qualified dentists who are undertaking additional training in a Dental Practice. They are excluded from metrics unless explicitly stated.
+* **FP17** - The Form (electronic) Dental practices use to submit claims for finished courses of treatment to BSA via Compass. Data from these forms is used in these slides. https://www.nhsbsa.nhs.uk/activity-payment-and-pension-services/dental-activity-processing
 
 Helpful reading https://www.kingsfund.org.uk/insight-and-analysis/long-reads/dentistry-england-explained
 
 
 ## Impact of swapping to calendar data
 **Clare and Jenny to add**
+include
+- prisons excluded
+- 
