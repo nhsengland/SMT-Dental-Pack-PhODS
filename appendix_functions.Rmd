@@ -67,6 +67,27 @@ pull_unfiltered_calendar_data <- function(){
 }
 
 UDA_calendar_data_append <- pull_unfiltered_calendar_data()
+
+names(UDA_calendar_data_append) <- base::tolower(names(UDA_calendar_data_append))
+
+UDA_calendar_data_append <- UDA_calendar_data_append %>% 
+  rename(annual_contracted_UDA = uda_perf_target, 
+         UDA_delivered = uda_delivered,
+         commissioner_ods_code_icb = commissioner_code, 
+         name_or_company_name = provider_name,
+         FP17s_band_1 = band_1_delivered, 
+         FP17s_band_2 = band_2_delivered, 
+         FP17s_band_2a = band_2a_delivered,
+         FP17s_band_2b = band_2b_delivered, 
+         FP17s_band_2c = band_2c_delivered, 
+         FP17s_band_3 = band_3_delivered,
+         FP17s_band_urgent = band_urgent_delivered, 
+         FP17s_band_other = band_other_delivered,
+         UDA_band_1 = uda_band_1_delivered, 
+         UDA_band_2 = uda_band_2_delivered, 
+         UDA_band_3 = uda_band_3_delivered,
+         UDA_urgent = uda_band_urgent_delivered, 
+         UDA_other = uda_band_other_delivered)
 ```
 
 ```{r contract differences}
@@ -127,16 +148,7 @@ get_YTD_source_comparison <- function(data = UDA_scheduled_data,
                                       source = "scheduled", 
                                       scheduled_or_calendar = "scheduled"){
   
-  # rename columns if using calendar data
-  if (scheduled_or_calendar == "scheduled"){
-    data <- get_delivery_data(data)
-  } else if (scheduled_or_calendar == "calendar"){
-    data <- data %>% 
-      rename(UDA_delivered = UDA_DELIVERED, 
-             annual_contracted_UDA = UDA_PERF_TARGET)
-    
-    data <- get_delivery_data(data)
-  }
+  data <- get_delivery_data(data)
   
   # calculate cumulative sum for historic data
   historic_data <- data %>% 
@@ -283,15 +295,15 @@ plot_time_series_comparison <- function(){
   
   # group by month and calculate sum of UDA delivered for scheduled and calendar data
   scheduled_delivered <- UDA_scheduled_data %>% 
-    filter(month <= max(UDA_calendar_data_append$month) & month >= min(UDA_calendar_data_append$month)) %>% 
+    filter(month <= max(UDA_scheduled_data$month) & month >= min(UDA_calendar_data_append$month)) %>% 
     group_by(month) %>% 
     summarise(delivered = sum(UDA_delivered, na.rm = TRUE)) %>% 
     mutate(source = "Scheduled data")
 
   calendar_delivered <- UDA_calendar_data_append %>% 
-    filter(month <= max(UDA_calendar_data_append$month)) %>% 
+    filter(month <= max(UDA_scheduled_data$month)) %>% 
     group_by(month) %>% 
-    summarise(delivered = sum(UDA_DELIVERED, na.rm = TRUE)) %>% 
+    summarise(delivered = sum(UDA_delivered, na.rm = TRUE)) %>% 
     mutate(source = "Calendar data")
 
   # combine to use in plot
@@ -324,15 +336,15 @@ table_time_series_comparison <- function(){
   
   # group by month and calculate sum of UDA delivered for scheduled and calendar data
   scheduled_delivered <- UDA_scheduled_data %>% 
-    filter(month <= max(UDA_calendar_data_append$month) & month >= min(UDA_calendar_data_append$month)) %>% 
+    filter(month <= max(UDA_scheduled_data$month) & month >= min(UDA_calendar_data_append$month)) %>% 
     group_by(month) %>% 
     summarise(delivered = sum(UDA_delivered, na.rm = TRUE)) %>% 
     mutate(source = "Scheduled data")
   
   calendar_delivered <- UDA_calendar_data_append %>% 
-    filter(month <= max(UDA_calendar_data_append$month)) %>% 
+    filter(month <= max(UDA_scheduled_data$month)) %>% 
     group_by(month) %>% 
-    summarise(delivered = sum(UDA_DELIVERED, na.rm = TRUE)) %>% 
+    summarise(delivered = sum(UDA_delivered, na.rm = TRUE)) %>% 
     mutate(source = "Calendar data")
   
   # combine to use in table
