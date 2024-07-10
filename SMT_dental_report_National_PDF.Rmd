@@ -51,7 +51,7 @@ knitr::opts_chunk$set(echo = FALSE)
 This slide pack has been streamlined to help users to easily access the most important information. This change took effect as of June 2024 data. As part of this change we have also sought to make the slides more useful by making the following changes:
 
 -   Swapping from scheduled data (the month the dentist claimed for payment following a finished course of treatment) to calendar month data (the month the course of treatment finished). This change better reflects the activity of dentists.
--   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded since they likely do not represent **Caroline to supply some wording**
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDa delivery.
 -   A national HTML will no longer be produced, instead the data is an excel file available alongside this pack.
 
 #### Metrics and outputs soon to be added
@@ -112,7 +112,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
 
 ## Banded courses of treatment standardised by working days (including Foundation Dentists (FD))
 
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center"}
+```{r banded CoT 1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align="center"}
 plot_banded_CoT(data = UDA_calendar_data_FD, 
                 level = "National", 
                 region_STP_name = NULL, 
@@ -123,7 +123,7 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 
 ## Banded Courses of Treatment as % of February 2020 delivery (including FD)
 
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+```{r banded CoT 2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_banded_CoT(data = UDA_calendar_data_FD, 
                 level = "National", 
                 region_STP_name = NULL, 
@@ -136,7 +136,7 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 
 ## Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance
 
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+```{r DCP1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
 plot_DCP_analysis(data = UDA_calendar_data,
                   dcp_data = DCP_data,
                   UDA_or_FP17 = "FP17",
@@ -148,7 +148,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 
 ## Percentage of total UDAs delivered which had DCP assistance by band
 
-```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+```{r DCP2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
 plot_DCP_analysis_band(data = UDA_calendar_data,
                               dcp_data = DCP_data,
                               UDA_or_FP17 = "UDA",
@@ -208,7 +208,7 @@ plot_unique_patients_rolling(level = "National",
 
 ## 111 triage dental related call volumes
 
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+```{r 111 referrals, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
 plot_111_referrals()
 ```
 
@@ -256,16 +256,6 @@ Helpful reading https://www.kingsfund.org.uk/insight-and-analysis/long-reads/den
     -   9% was submitted in January 2024.
 
     -   1% was submitted in February 2024.
-
-## Contracts included
-
-There are some minor differences in the contracts included in the different data sources each month.
-
-In January 2024:
-
--   There were `r n_scheduled_contracts` in the scheduled data compared to `r n_calendar_contracts` in the calendar data.
--   `r n_no_uda_delivered` of the contracts not in the calendar data (`r pct_no_uda_delivered`%) reported no UDA delivered in January 2024.
--   For the remaining `r n_remaining` contracts which are in the scheduled data but not in the calendar data, it is likely that they submitted claims in January for treatments which finished earlier than January.
 
 ## Comparison of monthly UDA data
 
