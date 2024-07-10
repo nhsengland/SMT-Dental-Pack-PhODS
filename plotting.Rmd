@@ -673,7 +673,7 @@ p1 <- ggplot() +
   geom_line(data = data1, aes(x = month, y = line_for_100), colour = "blue") +
   geom_point(data = data1, aes(x = month, y = perc_UDA_delivered), colour = "steelblue") +
   ylab("Percentage of contracted UDAs delivered") +
-  xlab(NULL) + 
+  xlab(NULL) +
   ggtitle("Previous Financial Years (Averages)") +
   geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
             aes(x = month + 120, y = perc_UDA_delivered + 4, label = paste0(round(perc_UDA_delivered), "%")),
@@ -689,8 +689,8 @@ p2 <- ggplot() +
   geom_line(data = data2, aes(x = month, y = perc_UDA_delivered), colour = "black") +
   geom_line(data = data2, aes(x = month, y = line_for_100), colour = "blue") +
   geom_point(data = data2, aes(x = month, y = perc_UDA_delivered), colour = "steelblue") +
-  ylab(NULL) + 
-  xlab(NULL) + 
+  ylab(NULL) +
+  xlab(NULL) +
   ggtitle("Current Financial Year") +
   geom_text(data = filter(data2, year_type == "Current Financial Year"),
             aes(x = month, y = perc_UDA_delivered + 4, label = paste0(round(perc_UDA_delivered), "%")),
@@ -719,15 +719,20 @@ annotation <- annotate_figure(
   bottom = text_grob("Time period")
 )
 
-
-# Add footnote using grid.text (from grid package)
-grid.arrange(
-  annotation,
-  bottom = textGrob(footnote_text, x = unit(0, "npc"), y = unit(0, "npc") + unit(1, "line"), just = "left", gp = gpar(fontsize = 10, fontface = "italic")),
-  heights = c(1, 0.1)  # Adjust heights as needed
+# Add footnote through annotation
+annotation2 <- annotate_figure(
+  annotation, 
+  bottom = textGrob(footnote_text, x = unit(0, "npc"), y = unit(0, "npc") + unit(1, "line"), just = "left", gp = gpar(fontsize = 10, fontface = "italic"))
 )
 
-print(annotation)
+# # Add footnote using grid.text (from grid package)
+# grid.arrange(
+#   annotation,
+#   bottom = textGrob(footnote_text, x = unit(0, "npc"), y = unit(0, "npc") + unit(1, "line"), just = "left", gp = gpar(fontsize = 10, fontface = "italic")),
+#   heights = c(1, 0.1)  # Adjust heights as needed
+# )
+
+print(annotation2)
 
 }
 ```
@@ -1486,7 +1491,8 @@ if(plotChart == TRUE & asIndex == FALSE){
                     colour = "black", 
                     position = "dodge") + 
     scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
-    scale_colour_manual(values = get_colour_palette()) +
+    scale_colour_manual(values = get_colour_palette(), 
+                        name = "") +
     labs(title = title,
          x = "12 or 24 month rolling period end date",
          y = ylab,
@@ -1496,6 +1502,7 @@ if(plotChart == TRUE & asIndex == FALSE){
     scale_x_date(breaks = function(x) seq.Date(from = min(data$month), to = max(data$month), by = "1 month"), 
                  date_labels = "%b-%y") +
     theme(axis.text.x = element_text(angle = 90))
+  
 } else if(plotChart == TRUE & asIndex == TRUE){
   
   #rename
@@ -1544,7 +1551,8 @@ if(plotChart == TRUE & asIndex == FALSE){
                     colour = "black", 
                     position = "dodge") + 
       scale_y_continuous(labels=function(x) format(x, big.mark = ",", scientific = FALSE)) +
-      scale_colour_manual(values = get_colour_palette()) +
+      scale_colour_manual(values = get_colour_palette(), 
+                          name = "") +
       labs(title = title,
            x = "12 or 24 month rolling period end date",
            y = ylab,

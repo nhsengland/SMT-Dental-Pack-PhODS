@@ -157,72 +157,12 @@ get_YTD_source_comparison <- function(data = UDA_scheduled_data,
 
   # calculate cumulative sum for latest financial year
   data <- data %>%
-    filter(month > as.Date("2023-03-01")) %>% ##must be updated each financial year
+    filter(month > as.Date("2023-03-01") & month <= as.Date("2024-03-01")) %>% ##must be updated each financial year
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
 
   # save out latest contracted UDA or UOAs
   mean_annual_contracted_UDA_UOAs <- dplyr::last(data$annual_contracted_UDA_UOA)
   mean_annual_contracted_UDA_UOAs_historic <- dplyr::last(historic_data$annual_contracted_UDA_UOA)
-
-  #add in blanks for the rest of the year
-  # NEEDS UPDATING EACH FINANCIAL YEAR
-  if(nrow(data) < 12){
-  
-    if(!(as.Date("2023-05-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-05-01"))
-    }
-  
-    if(!(as.Date("2023-06-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-06-01"))
-    }
-    
-    if(!(as.Date("2023-07-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-07-01"))
-    }
-  
-    if(!(as.Date("2023-08-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-08-01"))
-    }
-  
-    if(!(as.Date("2023-09-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-09-01"))
-    }
-  
-    if(!(as.Date("2023-10-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-10-01"))
-    }
-  
-    if(!(as.Date("2023-11-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-11-01"))
-    }
-  
-    if(!(as.Date("2023-12-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2023-12-01"))
-    }
-  
-    if(!(as.Date("2024-01-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2024-01-01"))
-    }
-  
-    if(!(as.Date("2024-02-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2024-02-01"))
-    }
-  
-    if(!(as.Date("2024-03-01") %in% data$month)){
-      data <- data %>% 
-        add_row(month = as.Date("2024-03-01"))
-    }
-  }
   
   #add column for expected delivery
   data_to_print <- data %>%
