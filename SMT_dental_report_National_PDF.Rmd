@@ -285,6 +285,23 @@ This has very little impact on the metrics reported in this pack.
 
 ```{r YTD comparison, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_YTD_comparison()
-```
+```  
 
-include - prisons excluded -
+# Data sources
+
+## Data sources
+
+* BSA calendar data received from BSA and added to NCDR
+* Tables are:
+  + [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts]
+  + [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity]
+  + [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only]
+  + [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Unique_rolling]
+  + [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_DCP]
+
+
+* R code used to create this pack is available on Github
+  + https://github.com/nhsengland/SMT-Dental-Pack-PhODS
+
+
+
