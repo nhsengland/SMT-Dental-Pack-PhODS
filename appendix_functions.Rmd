@@ -91,16 +91,30 @@ UDA_calendar_data_append <- UDA_calendar_data_append %>%
 
 # extract list of contracts in calendar table to use later to filter scheduled data
 calendar_contract_list <- unique(UDA_calendar_data_append$contract_number)
+
+scheduled_contract_list <- unique(UDA_scheduled_data_append$contract_number)
 ```
 
 ```{r format data}
-get_YTD_source_comparison <- function(data = UDA_scheduled_data_append){
+get_YTD_source_comparison <- function(data = UDA_scheduled_data_append, 
+                                      source = "scheduled"){
   
-  data <- data %>% 
-    filter(contract_number %in% calendar_contract_list) %>% 
-    group_by(month) %>% 
-    summarise(monthly_UDAs_delivered = sum(UDA_delivered, na.rm = T), 
-              annual_contracted_UDA = sum(annual_contracted_UDA, na.rm = T))
+  if (source == "scheduled"){
+  
+    data <- data %>% 
+      filter(contract_number %in% calendar_contract_list) %>% 
+      group_by(month) %>% 
+      summarise(monthly_UDAs_delivered = sum(UDA_delivered, na.rm = T),
+                annual_contracted_UDA = sum(annual_contracted_UDA, na.rm = T))
+  
+  } else if (source == "calendar"){
+    
+    data <- data %>% 
+      filter(contract_number %in% scheduled_contract_list) %>% 
+      group_by(month) %>% 
+      summarise(monthly_UDAs_delivered = sum(UDA_delivered, na.rm = T),
+                annual_contracted_UDA = sum(annual_contracted_UDA, na.rm = T))
+  }
 
   # calculate cumulative sum for latest complete financial year
   data <- data %>%
@@ -127,10 +141,12 @@ get_YTD_source_comparison <- function(data = UDA_scheduled_data_append){
   data
 }
 
-scheduled_YTD <- get_YTD_source_comparison(data = UDA_scheduled_data_append) %>% 
+scheduled_YTD <- get_YTD_source_comparison(data = UDA_scheduled_data_append, 
+                                           source = "scheduled") %>% 
   mutate(source = "scheduled")
 
-calendar_YTD <- get_YTD_source_comparison(data = UDA_calendar_data_append) %>% 
+calendar_YTD <- get_YTD_source_comparison(data = UDA_calendar_data_append, 
+                                          source = "calendar") %>% 
   mutate(source = "calendar")
 ```
 
