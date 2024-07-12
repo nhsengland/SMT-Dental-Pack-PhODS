@@ -1282,42 +1282,48 @@ table_banded_CoT <- function(data = UDA_calendar_data,
     # filter for region or STP
     # start from 2020-04-01 as geographic information not available before then
     #calculate in each band
-    data <- data_to_print %>% 
-      filter(month >= "2020-04-01") %>% 
-      mutate(month = format(as.Date(month), "%Y-%m")) %>% 
-      group_by(month, region_name) %>% 
-      summarise(band1 = sum(band1, na.rm=TRUE), 
-                band2 = sum(band2, na.rm=TRUE), 
-                band3 = sum(band3, na.rm=TRUE), 
-                other = sum(other, na.rm=TRUE), 
-                urgent = sum(urgent, na.rm=TRUE))
+    data_to_print <- reshape2::melt(data_to_print, id.vars = c("month", "region_name"))
+    
+    data <- data_to_print %>%
+          filter(variable != "commissioner_name") %>% 
+          left_join(working_days, by = c("month")) %>%
+          mutate(month = format(as.Date(month), "%Y-%m"),
+                 CoTs = as.numeric(value),
+                 standardised_CoTs = CoTs*(`no workdays`/`total workdays`)) %>% 
+          group_by(month, region_name, variable) %>% 
+          summarise(standardised_CoTs = sum(standardised_CoTs, na.rm = TRUE)) %>% 
+          pivot_wider(names_from = variable, values_from = standardised_CoTs)
 
     }else if(level == "STP"){
       
       #filter for region or STP
       # start from 2020-04-01 as geographic information not available before then
       #calculate in each band
-      data <- data_to_print %>% 
-        filter(month >= "2020-04-01") %>% 
-        mutate(month = format(as.Date(month), "%Y-%m")) %>% 
-        group_by(month, commissioner_name) %>% 
-        summarise(band1 = sum(band1, na.rm=TRUE), 
-                  band2 = sum(band2, na.rm=TRUE), 
-                  band3 = sum(band3, na.rm=TRUE), 
-                  other = sum(other, na.rm=TRUE), 
-                  urgent = sum(urgent, na.rm=TRUE))
+      data_to_print <- reshape2::melt(data_to_print, id.vars = c("month", "commissioner_name"))
+      
+      data <- data_to_print %>%
+          filter(variable != "region_name") %>% 
+          left_join(working_days, by = c("month")) %>%
+          mutate(month = format(as.Date(month), "%Y-%m"),
+                 CoTs = as.numeric(value),
+                 standardised_CoTs = CoTs*(`no workdays`/`total workdays`)) %>% 
+          group_by(month, commissioner_name, variable) %>% 
+          summarise(standardised_CoTs = sum(standardised_CoTs, na.rm = TRUE)) %>% 
+          pivot_wider(names_from = variable, values_from = standardised_CoTs)
       
       }else{
         #at national level
         #calculate in each band
-        data <- data_to_print %>% 
-          mutate(month = format(as.Date(month), "%Y-%m")) %>% 
-          group_by(month) %>% 
-          summarise(band1 = sum(band1, na.rm=TRUE), 
-                    band2 = sum(band2, na.rm=TRUE), 
-                    band3 = sum(band3, na.rm=TRUE), 
-                    other = sum(other, na.rm=TRUE), 
-                    urgent = sum(urgent, na.rm=TRUE))
+        data_to_print <- reshape2::melt(data_to_print, id.vars = c("month"))
+        
+        data <- data_to_print %>%
+          left_join(working_days, by = c("month")) %>%
+          mutate(month = format(as.Date(month), "%Y-%m"),
+                 CoTs = as.numeric(value),
+                 standardised_CoTs = CoTs*(`no workdays`/`total workdays`)) %>% 
+          group_by(month, variable) %>% 
+          summarise(standardised_CoTs = sum(standardised_CoTs, na.rm = TRUE)) %>% 
+          pivot_wider(names_from = variable, values_from = standardised_CoTs)
         }
 }
 ```

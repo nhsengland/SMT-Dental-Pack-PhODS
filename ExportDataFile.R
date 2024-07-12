@@ -94,9 +94,8 @@ data_Nat_CoT <- table_banded_CoT(data = UDA_calendar_data,
                                  all_regions_and_STPs = FALSE)
 
 data_Nat_CoT <- data_Nat_CoT %>% 
-  mutate(`Total CoT incl FD` =rowSums(
-    select(., band1, band2, band3, other, urgent), 
-    na.rm = TRUE))%>%
+  rowwise() %>% 
+  mutate(`Total CoT incl FD` = sum(band1, band2, band3, other, urgent, na.rm = TRUE)) %>%
   mutate(`Geography Level`='National',`Geography Name`='England') %>% 
   rename(`Calendar month` = month, 
          `Band 1 CoT incl FD` = band1, 
