@@ -89,7 +89,7 @@ data_icb_YTD_UDA <- data_icb_YTD_UDA %>%
 data_UDA_YTD<- rbind(data_Nat_YTD_UDA, data_reg_YTD_UDA, data_icb_YTD_UDA)
 
 #### Banded CoTs
-data_Nat_CoT <- table_banded_CoT(data = UDA_calendar_data, 
+data_Nat_CoT <- table_banded_CoT(data = UDA_calendar_data_FD, 
                                  level = "National", 
                                  all_regions_and_STPs = FALSE)
 
@@ -104,7 +104,7 @@ data_Nat_CoT <- data_Nat_CoT %>%
          `Other CoT incl FD` = other, 
          `Urgent CoT incl FD` = urgent)
 
-data_reg_CoT <- table_banded_CoT(data = UDA_calendar_data, 
+data_reg_CoT <- table_banded_CoT(data = UDA_calendar_data_FD, 
                                  level = "Regional", 
                                  all_regions_and_STPs = TRUE)
 
@@ -124,7 +124,7 @@ data_reg_CoT <- data_reg_CoT %>%
          `Other CoT incl FD` = other, 
          `Urgent CoT incl FD` = urgent)
 
-data_icb_CoT <- table_banded_CoT(data = UDA_calendar_data,
+data_icb_CoT <- table_banded_CoT(data = UDA_calendar_data_FD,
                                  level = "STP", 
                                  all_regions_and_STPs = TRUE)
 
@@ -232,21 +232,6 @@ data_Nat_unique <- get_unique_patients() %>%
          `Adults seen in 24 month rolling period` = adult_24m_count, 
          `Calendar month` = month)
 
-
-data_reg_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
-  group_by(month, region_name) %>% 
-  dplyr::summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
-                   child_12m_count = sum(child_12m_count, na.rm = TRUE), 
-                   adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
-  mutate(month = format(as.Date(month), "%Y-%m"), 
-         region_name = str_to_title(region_name), 
-         `Geography Level` = "Regional") %>% 
-  rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
-         `Children seen in 12 month rolling period` = child_12m_count, 
-         `Adults seen in 24 month rolling period` = adult_24m_count, 
-         `Geography Name` = region_name, 
-         `Calendar month` = month)
-
 data_icb_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
   group_by(month, commissioner_name) %>% 
   dplyr::summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
@@ -254,12 +239,18 @@ data_icb_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>%
                    adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
   mutate(month = format(as.Date(month), "%Y-%m"), 
          commissioner_name = str_to_title(commissioner_name), 
+         commissioner_name = replace(commissioner_name, commissioner_name == "Icb", "ICB"),
          `Geography Level` = "ICB") %>% 
   rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
          `Children seen in 12 month rolling period` = child_12m_count, 
          `Adults seen in 24 month rolling period` = adult_24m_count, 
          `Geography Name` = commissioner_name, 
          `Calendar month` = month)
+
+# change Icb to ICB so joins work
+data_icb_unique$`Geography Name` <- substr(data_icb_unique$`Geography Name`, 1, 
+                                           nchar(data_icb_unique$`Geography Name`)-3)
+data_icb_unique$`Geography Name` <- paste0(data_icb_unique$`Geography Name`, "ICB", sep = "")
 
 data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique)
 

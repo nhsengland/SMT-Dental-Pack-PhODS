@@ -1270,7 +1270,7 @@ This chart includes foundation dentists so total counts will differ to other cha
 ```
 
 ```{r table_banded_CoT}
-table_banded_CoT <- function(data = UDA_calendar_data, 
+table_banded_CoT <- function(data = UDA_calendar_data_FD, 
                              level = "National", 
                              all_regions_and_STPs = FALSE, 
                              asIndex = FALSE){
@@ -1457,14 +1457,8 @@ Includes all patients seen
 The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
 This analysis uses unique patients per ICB of patient address."
 
-#filter for region or STP
-if(level == "Regional"){
-  data <- data %>%
-    filter(region_name == region_STP_name)
-  subtitle <- region_STP_name
-}else if(level == "STP"){
-  data <- data %>%
-    filter(commissioner_name == region_STP_name)
+#set subtitles
+if(level == "STP"){
   subtitle <- region_STP_name
 }else{
   subtitle <- "England"

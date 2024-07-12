@@ -106,28 +106,30 @@ new_data <- new_data %>%
 
 ```{r unique patients seen}
 get_unique_patients <- function(data = unique_patients_rolling, 
-                                all_regions_and_STPs = FALSE){
+                                level = "National"){
   
   data <- pull_unique_patients()
   
-#group data for further calculation is needed
-  if(all_regions_and_STPs == FALSE){
+# select columns to use for ICB or national results
+  if(level == "STP"){
     
-    # group by month and sum unique patients seen
+    # select unique values by month for national metrics
     new_data <- data %>% 
-      group_by(month)
+      select(month, all_12m_count, child_12m_count, adult_24m_count) %>% 
+      mutate(all_12m_count = as.numeric(all_12m_count), 
+             child_12m_count = as.numeric(child_12m_count), 
+             adult_24m_count = as.numeric(adult_24m_count))
     
   } else {
     
-    # group by month, region name, and commissioner name and sum unique patients seen
+    # select ICB unique patient numbers
     new_data <- data %>% 
-      group_by(month, region_name, commissioner_name)
+      select(month, all_12m_count_ctry, child_12m_count_ctry, adult_24m_count_ctry) %>%
+      distinct() %>% 
+      mutate(all_12m_count = as.numeric(all_12m_count_ctry), 
+             child_12m_count = as.numeric(child_12m_count_ctry), 
+             adult_24m_count = as.numeric(adult_24m_count_ctry)) %>% 
+      select(-c(all_12m_count_ctry, child_12m_count_ctry, adult_24m_count_ctry))
   }
-
-#calculate no or unique patient seen for general/adult/child  
-  new_data <- new_data %>% 
-    summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE), 
-              child_12m_count = sum(child_12m_count, na.rm = TRUE), 
-              adult_24m_count = sum(adult_24m_count, na.rm = TRUE))
 }
 ```

@@ -158,7 +158,7 @@ UDA_calendar_data_FD_only<-UDA_calendar_data_FD_only %>%
   mutate(general_FP17s=rowSums(
     select(., FP17s_band_1, FP17s_band_2, FP17s_band_3, FP17s_band_urgent, FP17s_band_other), 
     na.rm = TRUE))%>%
-  select("month","commissioner_ods_code_icb" ,"commissioner_name","contract_number","child_12m_count" ,
+  select("month","commissioner_ods_code_icb" ,"commissioner_name", "region_name","contract_number","child_12m_count" ,
          "adult_24m_count","general_FP17s","FP17s_band_1","FP17s_band_2","FP17s_band_2a","FP17s_band_2b","FP17s_band_2c",
          "FP17s_band_3","FP17s_band_urgent","FP17s_band_other","UDA_delivered","UDA_band_1","UDA_band_2",
          "uda_band_2a_delivered","uda_band_2b_delivered","uda_band_2c_delivered","UDA_band_3","UDA_urgent","UDA_other")
@@ -187,8 +187,8 @@ UDA_calendar_data_FD <- UDA_calendar_data %>%
     UDA_band_3 = rowSums(select(., UDA_band_3.x, UDA_band_3.y), na.rm = TRUE),
     UDA_urgent = rowSums(select(., UDA_urgent.x, UDA_urgent.y), na.rm = TRUE),
     UDA_other = rowSums(select(., UDA_other.x, UDA_other.y), na.rm = TRUE)) %>% 
-  select(final_yn, month, commissioner_ods_code_icb, commissioner_name, contract_number, name_or_company_name, 
-         contract_type, ppc_address_postcode, lsoa11_code, annual_contracted_UDA, uda_fin_val, 
+  select(final_yn, month, commissioner_ods_code_icb, commissioner_name, region_name = region_name.x, contract_number,
+         name_or_company_name, contract_type, ppc_address_postcode, lsoa11_code, annual_contracted_UDA, uda_fin_val, 
          general_dental_fin_value, UDA_delivered, FP17s_general, FP17s_band_1, FP17s_band_2, FP17s_band_3, FP17s_band_urgent, 
          FP17s_band_other, child_12m_count, adult_24m_count, FP17s_band_2a, FP17s_band_2b, FP17s_band_2c, 
          UDA_band_1, UDA_band_2, uda_band_2a_delivered, uda_band_2b_delivered, uda_band_2c_delivered, UDA_band_3, 
