@@ -10,9 +10,9 @@ library(textclean)
 library(lubridate)
 
 #### get raw data -- do not need if using auto-render
-source(knitr::purl("~/SMT-Dental-Pack-PhODS/SQLpulls.Rmd", output = tempfile()), local = TRUE)  
-source(knitr::purl("~/SMT-Dental-Pack-PhODS/Data_Processing.Rmd", output = tempfile()))  
-source(knitr::purl("~/SMT-Dental-Pack-PhODS/plotting.Rmd", output = tempfile()))  
+source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)  
+source(knitr::purl("Data_Processing.Rmd", output = tempfile()))  
+source(knitr::purl("plotting.Rmd", output = tempfile()))  
 
 
 ######UDA
