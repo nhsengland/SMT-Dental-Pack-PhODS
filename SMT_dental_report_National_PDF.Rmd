@@ -269,14 +269,6 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
              layout_matrix = rbind(c(1, 1, 2)))
 ```
 
-## Comparison of YTD UDA data
-
-This has very little impact on the metrics reported in this pack.
-
-```{r YTD comparison, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_YTD_comparison()
-```  
-
 # Data sources
 
 ## Data sources

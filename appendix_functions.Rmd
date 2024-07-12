@@ -241,10 +241,9 @@ table_time_series_comparison <- function(){
   # combine to use in table
   total_delivered <- rbind(calendar_delivered, scheduled_delivered)
 
-  # create table for latest 12 months of data
+  # create table for latest full financial year
   comparison_table <- total_delivered %>% 
-    arrange(desc(month)) %>% 
-    slice_head(n=24) %>% 
+    filter(month >= "2023-04-01" & month <= "2024-03-01") %>% 
     pivot_wider(names_from = source, values_from = delivered) %>% 
     arrange(month) %>% 
     mutate(month = as.character(month), 
