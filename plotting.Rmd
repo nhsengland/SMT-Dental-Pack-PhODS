@@ -1455,7 +1455,7 @@ plot_unique_patients_rolling <- function(data = unique_patients_rolling,
 chartCaption <- "Contracts included: GDS/PDS/PDS+
 Includes all patients seen
 The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
-This analysis uses unique patients per ICB of patient address."
+This analysis uses unique patients per ICB of patient address. Please note we are checking this data as we are not sure we have received the correct breakdowns at ICB level."
 
 #set subtitles
 if(level == "STP"){
