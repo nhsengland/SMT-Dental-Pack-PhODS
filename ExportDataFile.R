@@ -232,27 +232,29 @@ data_Nat_unique <- get_unique_patients() %>%
          `Adults seen in 24 month rolling period` = adult_24m_count, 
          `Calendar month` = month)
 
-data_icb_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
-  group_by(month, commissioner_name) %>% 
-  dplyr::summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
-                   child_12m_count = sum(child_12m_count, na.rm = TRUE), 
-                   adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
-  mutate(month = format(as.Date(month), "%Y-%m"), 
-         commissioner_name = str_to_title(commissioner_name), 
-         commissioner_name = replace(commissioner_name, commissioner_name == "Icb", "ICB"),
-         `Geography Level` = "ICB") %>% 
-  rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
-         `Children seen in 12 month rolling period` = child_12m_count, 
-         `Adults seen in 24 month rolling period` = adult_24m_count, 
-         `Geography Name` = commissioner_name, 
-         `Calendar month` = month)
+# data_icb_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
+#   group_by(month, commissioner_name) %>% 
+#   dplyr::summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
+#                    child_12m_count = sum(child_12m_count, na.rm = TRUE), 
+#                    adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
+#   mutate(month = format(as.Date(month), "%Y-%m"), 
+#          commissioner_name = str_to_title(commissioner_name), 
+#          commissioner_name = replace(commissioner_name, commissioner_name == "Icb", "ICB"),
+#          `Geography Level` = "ICB") %>% 
+#   rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
+#          `Children seen in 12 month rolling period` = child_12m_count, 
+#          `Adults seen in 24 month rolling period` = adult_24m_count, 
+#          `Geography Name` = commissioner_name, 
+#          `Calendar month` = month)
 
 # change Icb to ICB so joins work
-data_icb_unique$`Geography Name` <- substr(data_icb_unique$`Geography Name`, 1, 
-                                           nchar(data_icb_unique$`Geography Name`)-3)
-data_icb_unique$`Geography Name` <- paste0(data_icb_unique$`Geography Name`, "ICB", sep = "")
+# data_icb_unique$`Geography Name` <- substr(data_icb_unique$`Geography Name`, 1, 
+#                                            nchar(data_icb_unique$`Geography Name`)-3)
+# data_icb_unique$`Geography Name` <- paste0(data_icb_unique$`Geography Name`, "ICB", sep = "")
 
-data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique)
+# data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique)
+
+data_unique <- data_Nat_unique
 
 data_dental_activity<-data_UDA_de_co%>%
   full_join(data_UDA_YTD,by=c('Calendar month','Geography Name','Geography Level'))%>%
