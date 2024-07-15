@@ -1455,7 +1455,9 @@ plot_unique_patients_rolling <- function(data = unique_patients_rolling,
 chartCaption <- "Contracts included: GDS/PDS/PDS+
 Includes all patients seen
 The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
-This analysis uses unique patients per ICB of patient address. Please note we are checking this data as we are not sure we have received the correct breakdowns at ICB level."
+Unique patients are based on ICB of patient home postcode, each patient is counted only once and allocated to an ICB as identified by their most recent FP17 patient postcode.
+Patients without a postcode are excluded from this analysis. NHS England and BSA are working together to alter this metric in the future so that it matches the planning guidance metrics.
+This does not impact the data at an England level."
 
 #set subtitles
 if(level == "STP"){
