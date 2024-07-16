@@ -8,11 +8,13 @@ library(scales)
 library(readxl)
 library(textclean)
 library(lubridate)
+library(openxlsx)
 
 #### get raw data -- do not need if using auto-render
 source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)  
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()))  
 source(knitr::purl("plotting.Rmd", output = tempfile()))  
+source("ExportDataFile_metadata.R")
 
 
 ######UDA
@@ -25,10 +27,9 @@ data_Nat_UDA=plot_UDA_UOA_delivery_wd(data = UDA_calendar_data,
                          region_STP_name = NULL)
 
 data_Nat_UDA<- data_Nat_UDA %>% 
-  select(`Calendar month`,`Annual contracted UDAs`,
-         `Monthly UDAs Band1 delivered`,`Monthly UDAs Band2 delivered`,`Monthly UDAs Band3 delivered`,`Monthly UDAs Band Urgent delivered`,
-         `Monthly UDAs Band Other delivered`,`Monthly UDAs total delivered`,`no workdays`,`Standardised monthly percentage of contracted UDAs delivered`)%>%
-  mutate(`Geography Level`='National',`Geography Name`='England')
+  select(calendar_month,UDAs_annual_contracted,UDAs_delivered_month,UDAs_delivered_month_percent_contracted_standardised)%>%
+  mutate(geography_level='National',geography_name='England') %>% 
+  arrange(desc(calendar_month))
 
 data_reg_UDA=plot_UDA_UOA_delivery_all_regions(data = UDA_calendar_data, 
                                   UDAorUOA = "UDA",
@@ -37,29 +38,21 @@ data_reg_UDA=plot_UDA_UOA_delivery_all_regions(data = UDA_calendar_data,
                                   plotChart = FALSE, 
                                   all_regions_and_STPs = TRUE)
 data_reg_UDA <- data_reg_UDA %>%
-  select(`Calendar month`,`Geography Name`=`Region Name`,`Annual contracted UDAs`,`Monthly UDAs Band1 delivered`,`Monthly UDAs Band2 delivered`,
-         `Monthly UDAs Band3 delivered`,`Monthly UDAs Band Urgent delivered`,
-         `Monthly UDAs Band Other delivered`,`Monthly UDAs total delivered`,`no workdays`,
-         `Standardised monthly percentage of contracted UDAs delivered`)%>%
-  mutate(`Geography Level`='Regional')
+  select(calendar_month,geography_name=region_name,
+         UDAs_annual_contracted,UDAs_delivered_month,UDAs_delivered_month_percent_contracted_standardised)%>%
+  mutate(geography_level='Regional') %>% 
+  arrange(desc(calendar_month))
 
 data_ICB_UDA <- Table_UDA_UOA_delivery_all_ICBs(data = UDA_calendar_data, 
                                 UDAorUOA = "UDA")
 
 data_ICB_UDA <- data_ICB_UDA %>%
-  select(`Calendar month`,`Geography Name`=`Commissioner Name`,`Annual contracted UDAs`,`Monthly UDAs Band1 delivered`,
-         `Monthly UDAs Band2 delivered`,`Monthly UDAs Band3 delivered`,`Monthly UDAs Band Urgent delivered`,
-         `Monthly UDAs Band Other delivered`,`Monthly UDAs total delivered`,`no workdays`,
-         `Standardised monthly percentage of contracted UDAs delivered`)%>%
-  mutate(`Geography Level`='ICB')
+  select(calendar_month,geography_name=commissioner_name,
+         UDAs_annual_contracted,UDAs_delivered_month,UDAs_delivered_month_percent_contracted_standardised)%>%
+  mutate(geography_level='ICB') %>% 
+  arrange(desc(calendar_month))
 
-data_UDA_de_co<- rbind(data_Nat_UDA, data_reg_UDA, data_ICB_UDA) %>% 
-  rename("Workdays" = `no workdays`)%>%
-  select("Calendar month","Geography Level","Geography Name","Annual contracted UDAs",
-         #"Monthly UDAs Band1 delivered" ,"Monthly UDAs Band2 delivered","Monthly UDAs Band3 delivered",
-         #"Monthly UDAs Band Urgent delivered",
-         "Monthly UDAs total delivered" ,"Monthly UDAs total delivered" ,
-          "Workdays","Standardised monthly percentage of contracted UDAs delivered")
+data_UDA_de_co<- rbind(data_Nat_UDA, data_reg_UDA, data_ICB_UDA)
 
 ####YTD delivery
 data_Nat_YTD_UDA<- Table_YTD_UDA_UOA_delivery (data = UDA_calendar_data, 
@@ -68,25 +61,29 @@ data_Nat_YTD_UDA<- Table_YTD_UDA_UOA_delivery (data = UDA_calendar_data,
                                        all_regions_and_STPs = FALSE)
 
 data_Nat_YTD_UDA<- data_Nat_YTD_UDA %>% 
-  mutate(`Geography Level`='National',`Geography Name`='England')
+  mutate(geography_level='National',geography_name='England') %>% 
+  arrange(desc(calendar_month))
 
 data_reg_YTD_UDA<- Table_YTD_UDA_UOA_delivery (data = UDA_calendar_data, 
                                                UDAorUOA = "UDA",
                                                level = "Regional",
                                                all_regions_and_STPs =TRUE)
 data_reg_YTD_UDA <- data_reg_YTD_UDA %>%
-  rename(`Geography Name`=`region_name`)%>%
-  mutate(`Geography Level`='Regional')
+  rename(geography_name=region_name)%>%
+  mutate(geography_level='Regional') %>% 
+  arrange(desc(calendar_month))
 
 data_icb_YTD_UDA<- Table_YTD_UDA_UOA_delivery (data = UDA_calendar_data, 
                                                UDAorUOA = "UDA",
                                                level = "STP",
                                                all_regions_and_STPs =TRUE)
 data_icb_YTD_UDA <- data_icb_YTD_UDA %>%
-  rename(`Geography Name`=`commissioner_name`)%>%
-  mutate(`Geography Level`='ICB')
+  rename(geography_name=commissioner_name)%>%
+  mutate(geography_level='ICB') %>% 
+  arrange(desc(calendar_month))
 
-data_UDA_YTD<- rbind(data_Nat_YTD_UDA, data_reg_YTD_UDA, data_icb_YTD_UDA)
+data_UDA_YTD<- rbind(data_Nat_YTD_UDA, data_reg_YTD_UDA, data_icb_YTD_UDA) %>% 
+  rename(UDAs_delivered_year_to_date = YTD_delivery)
 
 #### Banded CoTs
 data_Nat_CoT <- table_banded_CoT(data = UDA_calendar_data_FD, 
@@ -95,14 +92,15 @@ data_Nat_CoT <- table_banded_CoT(data = UDA_calendar_data_FD,
 
 data_Nat_CoT <- data_Nat_CoT %>% 
   rowwise() %>% 
-  mutate(`Total CoT incl FD` = sum(band1, band2, band3, other, urgent, na.rm = TRUE)) %>%
-  mutate(`Geography Level`='National',`Geography Name`='England') %>% 
-  rename(`Calendar month` = month, 
-         `Band 1 CoT incl FD` = band1, 
-         `Band 2 CoT incl FD` = band2, 
-         `Band 3 CoT incl FD` = band3, 
-         `Other CoT incl FD` = other, 
-         `Urgent CoT incl FD` = urgent)
+  mutate(CoT_total_delivered_incl_FD_standardised = sum(band1, band2, band3, other, urgent, na.rm = TRUE)) %>%
+  mutate(geography_level='National',geography_name='England') %>% 
+  rename(calendar_month = month, 
+         CoT_band1_delivered_incl_FD_standardised = band1, 
+         CoT_band2_delivered_incl_FD_standardised = band2, 
+         CoT_band3_delivered_incl_FD_standardised = band3, 
+         CoT_other_delivered_incl_FD_standardised = other, 
+         CoT_urgent_delivered_incl_FD_standardised = urgent) %>% 
+  arrange(desc(calendar_month))
 
 data_reg_CoT <- table_banded_CoT(data = UDA_calendar_data_FD, 
                                  level = "Regional", 
@@ -114,15 +112,16 @@ data_reg_CoT <- data_reg_CoT %>%
 
 # Create the Total FP17s column by summing the specified numeric columns
 data_reg_CoT <- data_reg_CoT %>%
-  mutate(`Total CoT incl FD` = rowSums(across(c(band1, band2, band3, other, urgent)), na.rm = TRUE))%>%
-  mutate(`Geography Level` = "Regional") %>%
-  rename(`Geography Name` = region_name, 
-         `Calendar month` = month, 
-         `Band 1 CoT incl FD` = band1, 
-         `Band 2 CoT incl FD` = band2, 
-         `Band 3 CoT incl FD` = band3, 
-         `Other CoT incl FD` = other, 
-         `Urgent CoT incl FD` = urgent)
+  mutate(CoT_total_delivered_incl_FD_standardised = rowSums(across(c(band1, band2, band3, other, urgent)), na.rm = TRUE))%>%
+  mutate(geography_level = "Regional") %>% 
+  rename(calendar_month = month,
+         geography_name = region_name,
+         CoT_band1_delivered_incl_FD_standardised = band1, 
+         CoT_band2_delivered_incl_FD_standardised = band2, 
+         CoT_band3_delivered_incl_FD_standardised = band3, 
+         CoT_other_delivered_incl_FD_standardised = other, 
+         CoT_urgent_delivered_incl_FD_standardised = urgent) %>% 
+  arrange(desc(calendar_month))
 
 data_icb_CoT <- table_banded_CoT(data = UDA_calendar_data_FD,
                                  level = "STP", 
@@ -137,15 +136,16 @@ data_icb_CoT <- data_icb_CoT %>% ungroup()
 
 # Create the Total FP17s column by summing the specified numeric columns
 data_icb_CoT <- data_icb_CoT %>%
-  mutate(`Total CoT incl FD` = rowSums(select(., band1, band2, band3, other, urgent), na.rm = TRUE))%>%
-  mutate(`Geography Level` = "ICB") %>% 
-  rename(`Geography Name` = commissioner_name, 
-         `Calendar month` = month, 
-         `Band 1 CoT incl FD` = band1, 
-         `Band 2 CoT incl FD` = band2, 
-         `Band 3 CoT incl FD` = band3, 
-         `Other CoT incl FD` = other, 
-         `Urgent CoT incl FD` = urgent)
+  mutate(CoT_total_delivered_incl_FD_standardised = rowSums(select(., band1, band2, band3, other, urgent), na.rm = TRUE))%>%
+  mutate(geography_level = "ICB") %>% 
+  rename(calendar_month = month,
+         geography_name = commissioner_name,
+         CoT_band1_delivered_incl_FD_standardised = band1, 
+         CoT_band2_delivered_incl_FD_standardised = band2, 
+         CoT_band3_delivered_incl_FD_standardised = band3, 
+         CoT_other_delivered_incl_FD_standardised = other, 
+         CoT_urgent_delivered_incl_FD_standardised = urgent) %>% 
+  arrange(desc(calendar_month))
 
 data_CoT <- rbind(data_Nat_CoT, data_reg_CoT, data_icb_CoT)
 
@@ -226,11 +226,12 @@ data_CoT <- rbind(data_Nat_CoT, data_reg_CoT, data_icb_CoT)
 # get the right data -- sum unique patient seen for general population/adult/child 
 data_Nat_unique <- get_unique_patients() %>% 
   mutate(month = format(as.Date(month), "%Y-%m"), 
-         `Geography Level`='National',`Geography Name`='England') %>% 
-  rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
-         `Children seen in 12 month rolling period` = child_12m_count, 
-         `Adults seen in 24 month rolling period` = adult_24m_count, 
-         `Calendar month` = month)
+         geography_level='National',geography_name='England') %>% 
+  rename(unique_patients_seen_12_month = all_12m_count, 
+         unique_children_seen_12_month = child_12m_count, 
+         unique_adults_seen_24_month = adult_24m_count, 
+         calendar_month = month) %>% 
+  arrange(desc(calendar_month))
 
 # data_icb_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
 #   group_by(month, commissioner_name) %>% 
@@ -240,32 +241,28 @@ data_Nat_unique <- get_unique_patients() %>%
 #   mutate(month = format(as.Date(month), "%Y-%m"), 
 #          commissioner_name = str_to_title(commissioner_name), 
 #          commissioner_name = replace(commissioner_name, commissioner_name == "Icb", "ICB"),
-#          `Geography Level` = "ICB") %>% 
-#   rename(`Unique patients seen in 12 month rolling period` = all_12m_count, 
-#          `Children seen in 12 month rolling period` = child_12m_count, 
-#          `Adults seen in 24 month rolling period` = adult_24m_count, 
-#          `Geography Name` = commissioner_name, 
-#          `Calendar month` = month)
+#          geography_level = "ICB") %>% 
+#   rename(unique_patients_seen_12_month = all_12m_count, 
+#          unique_children_seen_12_month = child_12m_count, 
+#          unique_adults_seen_24_month = adult_24m_count, 
+#          geography_name = commissioner_name, 
+#          calendar_month = month) %>% 
+#           arrange(desc(calendar_month))
 
 # change Icb to ICB so joins work
-# data_icb_unique$`Geography Name` <- substr(data_icb_unique$`Geography Name`, 1, 
-#                                            nchar(data_icb_unique$`Geography Name`)-3)
-# data_icb_unique$`Geography Name` <- paste0(data_icb_unique$`Geography Name`, "ICB", sep = "")
+# data_icb_unique$geography_name <- substr(data_icb_unique$geography_name, 1, 
+#                                            nchar(data_icb_unique$geography_name)-3)
+# data_icb_unique$geography_name <- paste0(data_icb_unique$geography_name, "ICB", sep = "")
 
 # data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique)
 
 data_unique <- data_Nat_unique
 
 data_dental_activity<-data_UDA_de_co%>%
-  full_join(data_UDA_YTD,by=c('Calendar month','Geography Name','Geography Level'))%>%
-  left_join(data_CoT, by = c('Calendar month', 'Geography Name', 'Geography Level')) %>% 
-  left_join(data_unique, by = c('Calendar month', 'Geography Name', 'Geography Level'))%>%
-  select("Calendar month","financial_year", "Geography Level","Geography Name", "Annual contracted UDAs",
-         "UDAs total delivered exc FD"="Monthly UDAs total delivered",
-         "Standardised monthly percentage of contracted UDAs delivered",                                              
-         "YTD_delivery_excl_FD"="YTD_delivery" ,"Band 1 CoT incl FD","Band 2 CoT incl FD","Band 3 CoT incl FD","Urgent CoT incl FD" ,                                            
-         "Other CoT incl FD","Total CoT incl FD","Unique patients seen in 12 month rolling period", "Children seen in 12 month rolling period",
-         "Adults seen in 24 month rolling period")
+  full_join(data_UDA_YTD,by=c('calendar_month','geography_name','geography_level'))%>%
+  left_join(data_CoT, by = c('calendar_month', 'geography_name', 'geography_level')) %>% 
+  left_join(data_unique, by = c('calendar_month', 'geography_name', 'geography_level'))%>%
+  select(calendar_month, financial_year, geography_level, geography_name, everything())
 
 
 ##########DCP#######################################
@@ -369,7 +366,8 @@ data_dental_activity<-data_UDA_de_co%>%
     
     total_national <- all_lookup_national %>% 
       mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
-      mutate(`Geography Name`='England',`Geography Level`='National')
+      mutate(geography_name='England',geography_level='National') %>% 
+      arrange(desc(month))
     
     
     dcp_summary_regional_longer <- dcp_summary_regional %>% pivot_longer ( ##where does dcp summary come from?
@@ -394,8 +392,9 @@ data_dental_activity<-data_UDA_de_co%>%
     
     total_regional <- all_lookup_regional %>% 
       mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
-      rename(`Geography Name`=`Region`)%>%
-      mutate(`Geography Level`='Region')
+      rename(geography_name=`Region`)%>%
+      mutate(geography_level='Region') %>% 
+      arrange(desc(month))
   
   dcp_summary_icb_longer <- dcp_summary_icb %>% pivot_longer ( ##where does dcp summary come from?
     cols = c(completed_courses_of_treatment, UDA_B1, UDA_B2, UDA_B3, UDA_urgent),
@@ -419,22 +418,40 @@ data_dental_activity<-data_UDA_de_co%>%
   
   total_icb <- all_lookup_icb %>% 
     mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
-    rename(`Geography Name`=`commissioner_name`)%>%
-    mutate(`Geography Level`='ICB')
+    rename(geography_name=`commissioner_name`)%>%
+    mutate(geography_level='ICB') %>% 
+    arrange(desc(month))
   
   total_dcp<- rbind(total_national, total_regional, total_icb) %>% 
-    rename(assisted_percent = asissted_percent)%>%
-    mutate(`month` = format(as.Date(month), "%Y-%m"))%>%
-    select('Calendar month'='month',"Geography Level","Geography Name","DCP metric (excl FD)"="DCP_metric","DCP description"="DCP_description.x","numbers",
-           "DCP_description.y", "all_numbers","assisted_percent")
-  
-  
+    filter(DCP_metric != "completed_courses_of_treatment") %>% 
+    mutate(financial_year = case_when( # needs updating each financial year
+             month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
+             month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
+             month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
+             month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
+             month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
+             month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"), 
+           `month` = format(as.Date(month), "%Y-%m"))%>%
+    select(calendar_month=month, financial_year,geography_level,geography_name,DCP_metric,DCP_description=DCP_description.x,
+           metric_count_by_DCP = numbers,metric_count_total = all_numbers,DCP_assisted_percent = asissted_percent)
 
-  
 # create Excel file
+output_file <- createWorkbook()
+
+addWorksheet(output_file, "Dental contract and activity")
+writeData(output_file, "Dental contract and activity", data_dental_activity)
+
+addWorksheet(output_file, "DCP")
+writeData(output_file, "DCP", total_dcp)
+
+addWorksheet(output_file, "Metadata")
+writeData(output_file, "Metadata", metadata)
+setColWidths(output_file, "Metadata", cols = 1:3, widths = "auto")
+  
 # specify tabs
-data<- list('Dental contract and activity' = data_dental_activity, 
-            'DCP' = total_dcp)
+# data<- list('Dental contract and activity' = data_dental_activity, 
+#             'DCP' = total_dcp, 
+#             'Metadata' = metadata)
 
 
 # we will first create a folder to save our output
@@ -452,5 +469,7 @@ if (!dir.exists(reports_dir)) {
     stop("Failed to create 'reports' directory")
   }
 }
-openxlsx::write.xlsx(data, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
+
+# overwrite file if it already exists in the directory
+openxlsx::saveWorkbook(output_file, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx'), overwrite = TRUE) 
   
