@@ -120,30 +120,16 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
     
     # what if plotChart == FALSE -- want to create a table instead of a plot
     if(UDAorUOA == "UDA"){
-      new_col_names <- c(`Calendar month` = "month",
-                         `Region Name` = "region_name",
-                         `Commissioner Name` = "commissioner_name",
-                         `Monthly UDAs Band1 delivered` = "monthly_UDA_UOAs_BAND1_delivered",
-                         `Monthly UDAs Band2 delivered` = "monthly_UDA_UOAs_BAND2_delivered",
-                         `Monthly UDAs Band3 delivered` = "monthly_UDA_UOAs_BAND3_delivered",
-                         `Monthly UDAs Band Urgent delivered` = "monthly_UDA_UOAs_BAND_URGENT_delivered",
-                         `Monthly UDAs Band Other delivered` = "monthly_UDA_UOAs_BAND_OTHER_delivered",
-                         `Monthly UDAs total delivered` = "monthly_UDA_UOAs_delivered",
-                         `Annual contracted UDAs` = "annual_contracted_UDA_UOA",
-                         `Standardised monthly percentage of contracted UDAs delivered` = "perc_standardised_wd")
+      new_col_names <- c("calendar_month" = "month",
+                         "UDAs_delivered_month" = "monthly_UDA_UOAs_delivered",
+                         "UDAs_annual_contracted" = "annual_contracted_UDA_UOA",
+                         "UDAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
     }else{
       
-      new_col_names <- c(`Calendar month` = "month",
-                         `Region Name` = "region_name",
-                         `Commissioner Name` = "commissioner_name",
-                         `Monthly UOAs Band1 delivered` = "monthly_UDA_UOAs_BAND1_delivered",
-                         `Monthly UOAs Band2 delivered` = "monthly_UDA_UOAs_BAND2_delivered",
-                         `Monthly UOAs Band3 delivered` = "monthly_UDA_UOAs_BAND3_delivered",
-                         `Monthly UOAs Band Urgent delivered` = "monthly_UDA_UOAs_BAND_URGENT_delivered",
-                         `Monthly UOAs Band Other delivered` = "monthly_UDA_UOAs_BAND_OTHER_delivered",
-                         `Monthly UOAs delivered` = "monthly_UDA_UOAs_delivered",
-                         `Annual contracted UOAs` = "annual_contracted_UDA_UOA",
-                         `Standardised monthly percentage of contracted UOAs delivered` = "perc_standardised_wd")
+      new_col_names <- c("calendar_month" = "month",
+                         "UOAs_delivered_month" = "monthly_UDA_UOAs_delivered",
+                         "UOAs_annual_contracted" = "annual_contracted_UDA_UOA",
+                         "UOAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
     }
     
     data$`month` <- format(as.Date(data$`month`), "%Y-%m")
@@ -271,30 +257,16 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
   }else{
    #IF WANT TO GET A DATA TABLE -- rename
     if(UDAorUOA == "UDA"){
-      new_col_names <- c(`Calendar month` = "month",
-                         `Region Name` = "region_name",
-                         `Commissioner Name` = "commissioner_name",
-                         `Monthly UDAs Band1 delivered` = "monthly_UDA_UOAs_BAND1_delivered",
-                         `Monthly UDAs Band2 delivered` = "monthly_UDA_UOAs_BAND2_delivered",
-                         `Monthly UDAs Band3 delivered` = "monthly_UDA_UOAs_BAND3_delivered",
-                         `Monthly UDAs Band Urgent delivered` = "monthly_UDA_UOAs_BAND_URGENT_delivered",
-                         `Monthly UDAs Band Other delivered` = "monthly_UDA_UOAs_BAND_OTHER_delivered",
-                         `Monthly UDAs total delivered` = "monthly_UDA_UOAs_delivered",
-                         `Annual contracted UDAs` = "annual_contracted_UDA_UOA",
-                         `Standardised monthly percentage of contracted UDAs delivered` = "perc_standardised_wd")
+      new_col_names <- c("calendar_month" = "month",
+                         "UDAs_delivered_month" = "monthly_UDA_UOAs_delivered",
+                         "UDAs_annual_contracted" = "annual_contracted_UDA_UOA",
+                         "UDAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
     }else{
       
-      new_col_names <- c(`Calendar month` = "month",
-                         `Region Name` = "region_name",
-                         `Commissioner Name` = "commissioner_name",
-                         `Monthly UOAs Band1 delivered` = "monthly_UDA_UOAs_BAND1_delivered",
-                         `Monthly UOAs Band2 delivered` = "monthly_UDA_UOAs_BAND2_delivered",
-                         `Monthly UOAs Band3 delivered` = "monthly_UDA_UOAs_BAND3_delivered",
-                         `Monthly UOAs Band Urgent delivered` = "monthly_UDA_UOAs_BAND_URGENT_delivered",
-                         `Monthly UOAs Band Other delivered` = "monthly_UDA_UOAs_BAND_OTHER_delivered",
-                         `Monthly UOAs delivered` = "monthly_UDA_UOAs_delivered",
-                         `Annual contracted UOAs` = "annual_contracted_UDA_UOA",
-                         `Standardised monthly percentage of contracted UOAs delivered` = "perc_standardised_wd")
+      new_col_names <- c("calendar_month" = "month",
+                         "UOAs_delivered_month" = "monthly_UDA_UOAs_delivered",
+                         "UOAs_annual_contracted" = "annual_contracted_UDA_UOA",
+                         "UOAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
     }
    
     data$`month` <- format(as.Date(data$`month`), "%Y-%m")
@@ -419,30 +391,16 @@ plot_UDA_UOA_delivery_all_ICBs <- function(data = UDA_calendar_data,
     
     #if we only need a table instead of a plot -- rename
    if(UDAorUOA == "UDA"){
-      new_col_names <- c(`Calendar month` = "month",
-                         `Region Name` = "region_name",
-                         `Commissioner Name` = "commissioner_name",
-                         `Monthly UDAs Band1 delivered` = "monthly_UDA_UOAs_BAND1_delivered",
-                         `Monthly UDAs Band2 delivered` = "monthly_UDA_UOAs_BAND2_delivered",
-                         `Monthly UDAs Band3 delivered` = "monthly_UDA_UOAs_BAND3_delivered",
-                         `Monthly UDAs Band Urgent delivered` = "monthly_UDA_UOAs_BAND_URGENT_delivered",
-                         `Monthly UDAs Band Other delivered` = "monthly_UDA_UOAs_BAND_OTHER_delivered",
-                         `Monthly UDAs total delivered` = "monthly_UDA_UOAs_delivered",
-                         `Annual contracted UDAs` = "annual_contracted_UDA_UOA",
-                         `Standardised monthly percentage of contracted UDAs delivered` = "perc_standardised_wd")
+      new_col_names <- c("calendar_month" = "month",
+                         "UDAs_delivered_month" = "monthly_UDA_UOAs_delivered",
+                         "UDAs_annual_contracted" = "annual_contracted_UDA_UOA",
+                         "UDAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
     }else{
       
-      new_col_names <- c(`Calendar month` = "month",
-                         `Region Name` = "region_name",
-                         `Commissioner Name` = "commissioner_name",
-                         `Monthly UOAs Band1 delivered` = "monthly_UDA_UOAs_BAND1_delivered",
-                         `Monthly UOAs Band2 delivered` = "monthly_UDA_UOAs_BAND2_delivered",
-                         `Monthly UOAs Band3 delivered` = "monthly_UDA_UOAs_BAND3_delivered",
-                         `Monthly UOAs Band Urgent delivered` = "monthly_UDA_UOAs_BAND_URGENT_delivered",
-                         `Monthly UOAs Band Other delivered` = "monthly_UDA_UOAs_BAND_OTHER_delivered",
-                         `Monthly UOAs delivered` = "monthly_UDA_UOAs_delivered",
-                         `Annual contracted UOAs` = "annual_contracted_UDA_UOA",
-                         `Standardised monthly percentage of contracted UOAs delivered` = "perc_standardised_wd")
+      new_col_names <- c("calendar_month" = "month",
+                         "UOAs_delivered_month" = "monthly_UDA_UOAs_delivered",
+                         "UOAs_annual_contracted" = "annual_contracted_UDA_UOA",
+                         "UOAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
     }
     
     data$`month` <- format(as.Date(data$`month`), "%Y-%m")
@@ -488,17 +446,10 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
       mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
     
    #rename columns
-   new_col_names <- c(`Calendar month` = "month",
-                         `Region Name` = "region_name",
-                         `Commissioner Name` = "commissioner_name",
-                         `Monthly UDAs Band1 delivered` = "monthly_UDA_UOAs_BAND1_delivered",
-                         `Monthly UDAs Band2 delivered` = "monthly_UDA_UOAs_BAND2_delivered",
-                         `Monthly UDAs Band3 delivered` = "monthly_UDA_UOAs_BAND3_delivered",
-                         `Monthly UDAs Band Urgent delivered` = "monthly_UDA_UOAs_BAND_URGENT_delivered",
-                         `Monthly UDAs Band Other delivered` = "monthly_UDA_UOAs_BAND_OTHER_delivered",
-                         `Monthly UDAs total delivered` = "monthly_UDA_UOAs_delivered",
-                         `Annual contracted UDAs` = "annual_contracted_UDA_UOA",
-                         `Standardised monthly percentage of contracted UDAs delivered` = "perc_standardised_wd")
+   new_col_names <- c("calendar_month" = "month",
+                         "UDAs_delivered_month" = "monthly_UDA_UOAs_delivered",
+                         "UDAs_annual_contracted" = "annual_contracted_UDA_UOA",
+                         "UDAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
    
    data$`month` <- format(as.Date(data$`month`), "%Y-%m")
    data <- data %>%
@@ -1022,12 +973,12 @@ The most recent two months data will be incomplete and subject to change, partic
   data$year_type <- factor(data$year_type, levels = c("Previous Financial Year",
                                                       "Current Financial Year"))  
   
-  prev_yr_latest_data <- max(historic_data$month)
-  
   current_yr_latest_data <- data %>% 
     filter(measure == "YTD_delivery" & value > 0)
   
   current_yr_latest_data <- max(current_yr_latest_data$month)
+  
+  prev_yr_latest_data <- lubridate::add_with_rollback(current_yr_latest_data, years(-1))
   
   data_labels <- data %>% 
     filter(month %in% c(prev_yr_latest_data, current_yr_latest_data) & measure == "YTD_delivery")
@@ -1094,7 +1045,7 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
     data <- get_delivery_data(data, UDAorUOA = "UOA", all_regions_and_STPs = all_regions_and_STPs)
   }
   
-  data$`Calendar month` <- format(as.Date(data$`month`), "%Y-%m")
+  data$calendar_month <- format(as.Date(data$`month`), "%Y-%m")
   
   #create a new variable 'financial_year'
   # NEEDS UPDATING EACH FINANCIAL YEAR
@@ -1112,32 +1063,32 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
     #then cumulative sum of YT delivery by financial_year and region
     data <- data %>%
       filter(month >= as.Date ("2020-04-01")) %>%
-      group_by(`Calendar month`,region_name, financial_year) %>%
+      group_by(calendar_month,region_name, financial_year) %>%
       summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered)) %>%
       group_by(region_name, financial_year) %>%
       dplyr::mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered)) %>%
-      select(`Calendar month`,YTD_delivery)
+      select(calendar_month,YTD_delivery)
     
   }else if(level == "STP"){
    
-    #calculate monthly_UDA_UOAs_delivered by `Calendar month`,commissioner_name, financial_year
+    #calculate monthly_UDA_UOAs_delivered by calendar_month,commissioner_name, financial_year
     #then cumulative sum of YT delivery by financial_year and commissioner_name
     data <- data %>%
       filter(month >= as.Date ("2020-04-01")) %>%
-      group_by(`Calendar month`,commissioner_name, financial_year) %>%
+      group_by(calendar_month,commissioner_name, financial_year) %>%
       summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered)) %>%
       group_by(commissioner_name, financial_year) %>%
       dplyr::mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered)) %>%
-      select(`Calendar month`,YTD_delivery)
+      select(calendar_month,YTD_delivery)
    
   }else{
 
 #calculate cumulative sum of YTD delivery by financial_year
     data <- data %>%
-      arrange(`Calendar month`) %>%
+      arrange(calendar_month) %>%
       group_by(financial_year) %>% 
       dplyr::mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered)) %>%
-      select(`Calendar month`,YTD_delivery)
+      select(calendar_month,YTD_delivery)
   }
 }
   
