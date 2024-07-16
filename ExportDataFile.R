@@ -8,11 +8,13 @@ library(scales)
 library(readxl)
 library(textclean)
 library(lubridate)
+library(openxlsx)
 
 #### get raw data -- do not need if using auto-render
 source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)  
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()))  
 source(knitr::purl("plotting.Rmd", output = tempfile()))  
+source("ExportDataFile_metadata.R")
 
 
 ######UDA
@@ -427,14 +429,24 @@ data_dental_activity<-data_UDA_de_co%>%
     mutate(`month` = format(as.Date(month), "%Y-%m"))%>%
     select('Calendar month'='month',"Geography Level","Geography Name","DCP metric (excl FD)"="DCP_metric","DCP description"="DCP_description.x","numbers",
            "DCP_description.y", "all_numbers","assisted_percent")
-  
-  
 
-  
 # create Excel file
+output_file <- createWorkbook()
+
+addWorksheet(output_file, "Dental contract and activity")
+writeData(output_file, "Dental contract and activity", data_dental_activity)
+
+addWorksheet(output_file, "DCP")
+writeData(output_file, "DCP", total_dcp)
+
+addWorksheet(output_file, "Metadata")
+writeData(output_file, "Metadata", metadata)
+setColWidths(output_file, "Metadata", cols = 1:3, widths = "auto")
+  
 # specify tabs
-data<- list('Dental contract and activity' = data_dental_activity, 
-            'DCP' = total_dcp)
+# data<- list('Dental contract and activity' = data_dental_activity, 
+#             'DCP' = total_dcp, 
+#             'Metadata' = metadata)
 
 
 # we will first create a folder to save our output
@@ -452,5 +464,7 @@ if (!dir.exists(reports_dir)) {
     stop("Failed to create 'reports' directory")
   }
 }
-openxlsx::write.xlsx(data, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
+
+# overwrite file if it already exists in the directory
+openxlsx::saveWorkbook(output_file, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx'), overwrite = TRUE) 
   
