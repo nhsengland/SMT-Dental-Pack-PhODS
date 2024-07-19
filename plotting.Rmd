@@ -568,12 +568,18 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
                                       month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
                                       month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
                                       month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
-                                      month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24")) %>%
-    group_by(financial_year) %>%
-    summarise(full_year_UDA_delivery = sum(UDA_delivered, na.rm = TRUE),
-              full_year_contracted_UDAs = sum(annual_contracted_UDA, na.rm = TRUE) / 12) %>%
-    mutate(perc_UDA_delivered = full_year_UDA_delivery * 100 / full_year_contracted_UDAs)
-
+                                      month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24"))
+  
+  historic_latest_contracted_uda <- historic_data %>% 
+    group_by(month, financial_year) %>% 
+    summarise(final_contracted_UDAs = sum(annual_contracted_UDA, na.rm = TRUE)) %>% 
+    filter(month(month) == 3)
+  
+  historic_data <- historic_data %>% 
+    group_by(financial_year) %>% 
+    summarise(full_year_UDA_delivery = sum(UDA_delivered, na.rm = TRUE)) %>% 
+    left_join(historic_latest_contracted_uda, by = "financial_year") %>% 
+    mutate(perc_UDA_delivered = full_year_UDA_delivery * 100 / final_contracted_UDAs)
   
   #get current FY data ready
   # way to calculate percentage of UDA delivered which is standardized by no of working days 
@@ -1093,6 +1099,61 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
 }
   
 ```
+
+```{r monthly UDA delivered}
+plot_monthly_uda_delivered <- function(data = UDA_calendar_data, 
+                                       level = "National", 
+                                       region_STP_name = NULL){
+  # filter for STP or region - select the STP or region you want
+  if(level == "Regional"){
+    data <- data %>% 
+      filter(region_name == region_STP_name)
+    subtitle <- region_STP_name
+    } else if(level == "STP"){
+      data <- data %>% 
+        filter(commissioner_name == region_STP_name)
+      subtitle <- region_STP_name
+      } else {
+        subtitle <- "England"
+        }
+  
+  data <- data %>% 
+    filter(month >= "2023-04-01" & month <= "2025-03-01") %>% # needs updating every financial year
+    group_by(month) %>% 
+    summarise(uda_delivered = sum(UDA_delivered, na.rm = TRUE)) %>% 
+    mutate(financial_year = ifelse(month <= "2024-03-01", "2023/24", "2024/25"), 
+           month_name = format(month, "%B"))
+
+  # set month names to the right order
+  data$month_name <- factor(data$month_name, 
+                            levels = c("April", "May", "June", "July", "August", "September", "October",
+                                       "November", "December", "January", "February", "March"))
+  
+  latest_complete_month <- format(max(data$month)-58, "%B")
+  
+  data_labels <- data %>% 
+    filter(month_name == latest_complete_month)
+
+  ggplot(data, aes(x = month_name, y = uda_delivered, fill = financial_year)) + 
+    geom_bar(position = "dodge", stat = "identity") + 
+    geom_text(aes(label = prettyNum(uda_delivered, big.mark=",")), 
+              data = data_labels,
+              colour = "black",
+              vjust = -0.5, 
+              position = position_dodge(.9)) + 
+    theme_bw() +
+    theme(legend.position = "bottom") + 
+    labs(title = "Monthly UDAs delivered", 
+         subtitle = subtitle, 
+         x = "Month", 
+         y = "UDAs delivered", 
+         caption = "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
+The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.") + 
+    scale_fill_manual(values = get_colour_palette(), name = "") + 
+    scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE))
+}
+```
+
 
 ```{r banded_CoT}
 plot_banded_CoT <- function(data = UDA_calendar_data_FD, 
