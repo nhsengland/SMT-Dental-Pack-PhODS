@@ -61,7 +61,7 @@ This slide pack has been streamlined to help users to easily access the most imp
 -   New Patient Premiums metrics
 -   ICB level HTML packs will be available in the future, for now the data is available in the excel document.
 
-This pack will continue to evolve and change, any questions/comments should be directed to england.primarycare.phodsdata@nhs.net
+This pack will continue to evolve and change, any questions/comments should be directed to [england.primarycare.phodsdata\@nhs.net](mailto:england.primarycare.phodsdata@nhs.net){.email}
 
 ## Calendar Vs scheduled data
 
@@ -77,7 +77,11 @@ Analyses in this report now only use **calendar data**. Previous packs used sche
 -   Scheduled data represents the month that a Course of Treatment (CoT) was claimed for in the BSA Compass system.
 -   For scheduled data, if a CoT was completed in February but not declared till March, the financial activity would recorded as occurring in March.
 
+&nbsp; <!--This is to force a line break-->
+
 The swap to using calendar data allows us to more accurately see what activity is happening per month rather than what payments are being claimed per month.
+
+&nbsp; <!--This is to force a line break-->
 
 Note that following a finished Course of Treatment (CoT), dentists have 62 days to declare their activity via FP17 forms to the BSA Compass system. This means when using calendar data, the most recent two months data are incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
 
@@ -108,7 +112,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
 
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 -   Providers are expected to have achieved 30% of their annual delivery by the financial year mid point (October)
--   Implications of not reaching target delivery at the end of the financial year can be understood via https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01672/en-us
+-   Implications of not reaching target delivery at the end of the financial year can be understood via <https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01672/en-us>
 
 ## Banded courses of treatment standardised by working days (including Foundation Dentists (FD))
 
@@ -171,7 +175,7 @@ plot_unique_patients_rolling(level = "National",
 
 -   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
 -   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
 
 ## Unique dental patients seen as a percentage of February 2020 figures
 
@@ -221,7 +225,7 @@ plot_111_referrals()
 -   **Calendar data** - This represents the month that a Course of Treatment (CoT) was completed.
 -   **Scheduled data** - This represents the month that a Course of Treatment (CoT) was claimed for in the BSA Compass system.
 -   **Course of Treatment (CoT)** - During a checkup, the dentist will identify any problems that need treatment. After discussing them with the patient, a Course of Treatment is created that deals with all of the problems.
--   **Unit of Dental Activity (UDA)** - Under the GDS contract, payments for primary care dentistry are made for units of dental activity (UDAs). https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01976
+-   **Unit of Dental Activity (UDA)** - Under the GDS contract, payments for primary care dentistry are made for units of dental activity (UDAs). <https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01976>
 -   **Treatment bands** - Treatment is grouped into bands which have UDAs associated with them. A brief overview is listed here
     -   **Band 1** - check up and simple treatment e.g. examination, x-rays and prevention advice (1 UDA)
     -   **Band 2** - mid range treatments e.g. fillings, extractions, and root canal work plus Band 1 work (3-7 UDAs)
@@ -231,9 +235,9 @@ plot_111_referrals()
 -   **Contracted UDAs** - Agreed number of UDAs a provider will deliver in a financial year
 -   **Delivered UDAs** - Actual number of UDAs a provider has delivered
 -   **Foundation Dentists (FD)** - Foundation Dentists are newly qualified dentists who are undertaking additional training in a Dental Practice. They are excluded from metrics unless explicitly stated.
--   **FP17** - The form (electronic) Dental practices use to submit claims for finished courses of treatment to BSA via Compass. Data from these forms is used in these slides. https://www.nhsbsa.nhs.uk/activity-payment-and-pension-services/dental-activity-processing
+-   **FP17** - The form (electronic) Dental practices use to submit claims for finished courses of treatment to BSA via Compass. Data from these forms is used in these slides. <https://www.nhsbsa.nhs.uk/activity-payment-and-pension-services/dental-activity-processing>
 
-Helpful reading https://www.kingsfund.org.uk/insight-and-analysis/long-reads/dentistry-england-explained
+Helpful reading <https://www.kingsfund.org.uk/insight-and-analysis/long-reads/dentistry-england-explained>
 
 ## Impact of swapping to calendar data
 
@@ -273,17 +277,12 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ## Data sources
 
-* BSA calendar data received from BSA and added to NCDR
-* Tables are:
-  + [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts]
-  + [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity]
-  + [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only]
-  + [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Unique_rolling]
-  + [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_DCP]
-
-
-* R code used to create this pack is available on Github
-  + https://github.com/nhsengland/SMT-Dental-Pack-PhODS
-
-
-
+-   BSA calendar data received from BSA and added to NCDR
+-   Tables are:
+    -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts]
+    -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity]
+    -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only]
+    -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Unique_rolling]
+    -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_DCP]
+-   R code used to create this pack is available on Github
+    -   <https://github.com/nhsengland/SMT-Dental-Pack-PhODS>
