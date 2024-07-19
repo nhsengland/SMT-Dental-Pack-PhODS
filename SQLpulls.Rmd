@@ -13,7 +13,7 @@ library(lubridate)
 ```{r working days}
 
 #read local file -- No working days in each month
-working_days <- read_excel("N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/workdays.xlsx",sheet = "workdays")
+working_days <- read_excel("workdays.xlsx",sheet = "workdays")
 working_days$month <- as.Date(working_days$Month)
 
 ```
