@@ -1613,6 +1613,10 @@ plot_npp_activity <- function(data = npp_data,
   data_labels <- data %>% 
     filter(month == latest_month)
   
+  chartCaption <- "Contracts included: GDS/PDS/PDS+
+  Includes all patients seen.
+  The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher."
+  
   ggplot(data, aes(x = month,
                    y = values, 
                    colour = variable)) + 
@@ -1632,7 +1636,7 @@ plot_npp_activity <- function(data = npp_data,
          subtitle = subtitle, 
          y = "Eligible patients", 
          x = "Month", 
-         caption = "The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher") + 
+         caption = chartCaption) + 
     theme(legend.position = "bottom")
 }
 ```
@@ -1703,7 +1707,7 @@ plot_npp_contracts <- function(data = npp_data,
          x = "Month", 
          caption = "The most recent two months data will be incomplete and subject to change, 
          particularly for the most recent month. 
-         We expect final data to be higher") + 
+         We expect final data to be higher.") + 
     theme(legend.position = "bottom")
 }
 ```
