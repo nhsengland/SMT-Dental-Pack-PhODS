@@ -257,7 +257,43 @@ pull_unique_patients <- function(){
 }
 ```
 
+```{r npp activity}
+# extract npp data
+pull_npp_data <- function(){
+  con <- dbConnect(odbc::odbc(), "NCDR")
+  
+  npp_data <- dbGetQuery(con, "SELECT *
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity] a
+  LEFT JOIN (SELECT DISTINCT
+  [Region_Name]
+  ,[STP_Code]
+  ,[STP_Name]
+  FROM [NHSE_Reference].[dbo].[tbl_Ref_ODS_Commissioner_Hierarchies]
+  WHERE STP_Code NOT IN ('DUM001', 'DUM002', 'UNK','X24')) b
+  ON a.[COMMISSIONER_CODE] = b.[STP_Code]")
+}
 
+# filter and calculate totals
+npp_data <- pull_npp_data() %>% 
+  filter(EXCLUDE_FROM_NPT == "N") %>% 
+  mutate(adult_count = rowSums(select(., BAND1_ADULT_COUNT, BAND23_ADULT_COUNT), na.rm = TRUE), 
+         child_count = rowSums(select(., BAND1_CHILD_COUNT, BAND23_CHILD_COUNT), na.rm = TRUE), 
+         total = rowSums(select(., BAND1_ADULT_COUNT, BAND23_ADULT_COUNT, BAND1_CHILD_COUNT, BAND23_CHILD_COUNT), na.rm = TRUE)) %>% 
+  select(month = YEAR_MONTH, CONTRACT_NUMBER, COMMISSIONER_CODE, Region_Name, STP_Code, COMMISSIONER_NAME = STP_Name, 
+         adult_count, child_count, total)
+
+# reformat names and region and commissioner names
+names(npp_data) <- tolower(names(npp_data))
+
+npp_data$region_name <- str_to_title(npp_data$region_name)
+npp_data$commissioner_name <- str_to_title(npp_data$commissioner_name)
+npp_data$commissioner_name <- substr(npp_data$commissioner_name,1,
+                                     nchar(npp_data$commissioner_name)-21)
+npp_data$commissioner_name <- substr(npp_data$commissioner_name,5,
+                                     nchar(npp_data$commissioner_name))
+npp_data$commissioner_name <- paste0(npp_data$commissioner_name,
+                                     rep("ICB", nrow(npp_data)))
+```
 
 ```{r dental 111 data}
 #get dental 111 data from local file
