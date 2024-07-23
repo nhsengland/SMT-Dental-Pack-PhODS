@@ -17,7 +17,7 @@ source(knitr::purl("plotting.Rmd", output = tempfile()))
 source("ExportDataFile_metadata.R")
 
 
-######UDA
+######UDA#####
 #### No UDA delivered, contracted & percentage
 data_Nat_UDA=plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
                          UDAorUOA = "UDA",
@@ -258,10 +258,99 @@ data_Nat_unique <- get_unique_patients() %>%
 
 data_unique <- data_Nat_unique
 
+### New Patient Premium ###
+npp_nat <- npp_data %>% 
+  group_by(month) %>% 
+  summarise(total_NPP_patients_seen = sum(total),
+            adult_NPP_patients_seen = sum(adult_count), 
+            child_NPP_patients_seen = sum(child_count)) %>% 
+  mutate(geography_level = "National", 
+         geography_name = "England", 
+         month = format(as.Date(month), "%Y-%m")) %>% 
+  arrange(desc(month)) %>% 
+  rename(calendar_month = month)
+
+npp_reg <- npp_data %>% 
+  group_by(month, region_name) %>% 
+  summarise(total_NPP_patients_seen = sum(total),
+            adult_NPP_patients_seen = sum(adult_count), 
+            child_NPP_patients_seen = sum(child_count)) %>% 
+  mutate(geography_level = "Regional", 
+         month = format(as.Date(month), "%Y-%m")) %>% 
+  arrange(desc(month)) %>% 
+  rename(geography_name = region_name, 
+         calendar_month = month)
+
+npp_icb <- npp_data %>% 
+  group_by(month, commissioner_name) %>% 
+  summarise(total_NPP_patients_seen = sum(total),
+            adult_NPP_patients_seen = sum(adult_count), 
+            child_NPP_patients_seen = sum(child_count)) %>% 
+  mutate(geography_level = "ICB", 
+         month = format(as.Date(month), "%Y-%m")) %>% 
+  arrange(desc(month)) %>% 
+  rename(geography_name = commissioner_name, 
+         calendar_month = month)
+
+npp_total <- rbind(npp_nat, npp_reg, npp_icb)
+
+npp_contracts_nat <- npp_data %>% 
+  mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
+  group_by(month, saw_new_patient) %>% 
+  summarise(contracts = n_distinct(contract_number)) %>% 
+  pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
+  mutate(yes = ifelse(is.na(yes), 0, yes), 
+         eligible = yes + no, 
+         month = format(as.Date(month), "%Y-%m"), 
+         geography_name = "England", 
+         geography_level = "National") %>% 
+  select(-no) %>% 
+  arrange(desc(month)) %>% 
+  rename(calendar_month = month, 
+         contracts_seeing_NPP_patients = yes,
+         eligible_contracts_for_NPP = eligible)
+
+npp_contracts_reg <- npp_data %>% 
+  mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
+  group_by(month, region_name, saw_new_patient) %>% 
+  summarise(contracts = n_distinct(contract_number)) %>% 
+  pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
+  mutate(yes = ifelse(is.na(yes), 0, yes), 
+         eligible = yes + no, 
+         month = format(as.Date(month), "%Y-%m"),
+         geography_level = "Regional") %>% 
+  select(-no) %>% 
+  arrange(desc(month)) %>% 
+  rename(calendar_month = month, 
+         contracts_seeing_NPP_patients = yes,
+         eligible_contracts_for_NPP = eligible, 
+         geography_name = region_name)
+
+npp_contracts_icb <- npp_data %>% 
+  mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
+  group_by(month, commissioner_name, saw_new_patient) %>% 
+  summarise(contracts = n_distinct(contract_number)) %>% 
+  pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
+  mutate(eligible = yes + no, 
+         yes = ifelse(is.na(yes), 0, yes), 
+         month = format(as.Date(month), "%Y-%m"),
+         geography_level = "Regional") %>% 
+  select(-no) %>% 
+  arrange(desc(month)) %>% 
+  rename(calendar_month = month, 
+         contracts_seeing_NPP_patients = yes,
+         eligible_contracts_for_NPP = eligible, 
+         geography_name = commissioner_name)
+
+npp_contracts <- rbind(npp_contracts_nat, npp_contracts_reg, npp_contracts_icb) %>% 
+  select(calendar_month, eligible_contracts_for_NPP, contracts_seeing_NPP_patients, everything())
+
 data_dental_activity<-data_UDA_de_co%>%
   full_join(data_UDA_YTD,by=c('calendar_month','geography_name','geography_level'))%>%
   left_join(data_CoT, by = c('calendar_month', 'geography_name', 'geography_level')) %>% 
   left_join(data_unique, by = c('calendar_month', 'geography_name', 'geography_level'))%>%
+  left_join(npp_total, by = c("calendar_month", "geography_name", "geography_level")) %>% 
+  left_join(npp_contracts, by = c("calendar_month", "geography_name", "geography_level")) %>% 
   select(calendar_month, financial_year, geography_level, geography_name, everything())
 
 
@@ -434,7 +523,8 @@ data_dental_activity<-data_UDA_de_co%>%
            `month` = format(as.Date(month), "%Y-%m"))%>%
     select(calendar_month=month, financial_year,geography_level,geography_name,DCP_metric,DCP_description=DCP_description.x,
            metric_count_by_DCP = numbers,metric_count_total = all_numbers,DCP_assisted_percent = asissted_percent)
-
+  
+###### Output #####
 # create Excel file
 output_file <- createWorkbook()
 
@@ -447,12 +537,6 @@ writeData(output_file, "DCP", total_dcp)
 addWorksheet(output_file, "Metadata")
 writeData(output_file, "Metadata", metadata)
 setColWidths(output_file, "Metadata", cols = 1:3, widths = "auto")
-  
-# specify tabs
-# data<- list('Dental contract and activity' = data_dental_activity, 
-#             'DCP' = total_dcp, 
-#             'Metadata' = metadata)
-
 
 # we will first create a folder to save our output
 # Print the current working directory
