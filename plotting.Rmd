@@ -1576,6 +1576,182 @@ if(plotChart == TRUE & asIndex == FALSE){
 }
 ```
 
+```{r npp activity}
+plot_npp_activity <- function(data = npp_data, 
+                              level = "National", 
+                              region_STP_name = NULL){
+  if(level == "Regional"){
+    data <- data %>% 
+      filter(region_name == region_STP_name) %>% 
+      group_by(month, region_name)
+    subtitle <- region_STP_name
+    
+  } else if (level == "STP"){
+    data <- data %>% 
+      filter(commissioner_name == region_STP_name) %>%
+      group_by(month, commissioner_name)
+    
+    subtitle <- region_STP_name
+    
+  } else {
+    data <- data %>%
+      group_by(month)
+    
+    subtitle <- "England"
+  }
+  
+  data <- data %>% 
+    summarise(adult_total = sum(adult_count), 
+              child_total = sum(child_count), 
+              total = sum(total)) %>% 
+    pivot_longer(cols = adult_total:total, 
+                 names_to = "variable", 
+                 values_to = "values")
+  
+  latest_month <- max(data$month)
+  
+  data_labels <- data %>% 
+    filter(month == latest_month)
+  
+  ggplot(data, aes(x = month,
+                   y = values, 
+                   colour = variable)) + 
+    geom_line(linewidth = 1) + 
+    geom_text_repel(aes(label = prettyNum(values, big.mark=",")), 
+                    data = data_labels, 
+                    colour = "black", 
+                    position = "dodge") +
+    theme_bw() + 
+    scale_x_date(date_breaks = "1 month",
+                 date_labels = "%b-%y") +
+    scale_colour_manual(values = get_colour_palette(), 
+                        name = "", 
+                        labels = c("Adults", "Children", "Total")) + 
+    scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) + 
+    labs(title = "Number of eligible patients seen according to the New Patient Premium definition", 
+         subtitle = subtitle, 
+         y = "Eligible patients", 
+         x = "Month", 
+         caption = "The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher") + 
+    theme(legend.position = "bottom")
+}
+```
+
+```{r npp contracts plot}
+plot_npp_contracts <- function(data = npp_data, 
+                               level = "National", 
+                               region_STP_name = NULL){
+  data <- data %>% 
+    mutate(saw_new_patient = ifelse(total == 0, "no", "yes"))
+  
+  if(level == "Regional"){
+    data <- data %>% 
+      filter(region_name == region_STP_name) %>% 
+      group_by(month, saw_new_patient, region_name)
+  
+    subtitle <- region_STP_name
+
+  } else if (level == "STP"){
+    data <- data %>% 
+      filter(commissioner_name == region_STP_name) %>% 
+      group_by(month, saw_new_patient, commissioner_name)
+    
+    subtitle <- region_STP_name
+
+  } else {
+    data <- data %>% 
+      group_by(month, saw_new_patient)
+  
+    subtitle <- "England"
+  }
+  
+  data <- data %>% 
+    summarise(n_contracts = as.numeric(n_distinct(contract_number))) %>% 
+    pivot_wider(names_from = saw_new_patient, values_from = n_contracts) %>% 
+    mutate(yes = ifelse(is.na(yes), 0, yes), 
+           no = ifelse(is.na(no), 0, no), 
+           eligible = no + yes) %>% 
+    select(-no) %>% 
+    pivot_longer(cols = yes:eligible, 
+                 names_to = "variable", 
+                 values_to = "values")
+
+  latest_month <- max(data$month)
+
+  data_labels <- data %>% 
+    filter(month == latest_month)
+  
+  ggplot(data, aes(x = month, 
+                   y = values, 
+                   fill = variable)) + 
+    geom_bar(stat = "identity", position = "dodge") + 
+    geom_text(aes(label = prettyNum(values, big.mark=",")), 
+              data = data_labels,
+              colour = "black",
+              vjust = -0.5, 
+              position = position_dodge(width = 25)) +
+    theme_bw() + 
+    scale_x_date(date_breaks = "1 month",
+                 date_labels = "%b-%y") +
+    scale_fill_manual(values = get_colour_palette(), 
+                      name = "", 
+                      labels = c("Eligible", "Saw new patients")) + 
+    scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) + 
+    labs(title = "Number of eligible contracts that have seen a new patient under the New Patient Premium definition", 
+         subtitle = subtitle, 
+         y = "Number of contracts", 
+         x = "Month", 
+         caption = "The most recent two months data will be incomplete and subject to change, 
+         particularly for the most recent month. 
+         We expect final data to be higher") + 
+    theme(legend.position = "bottom")
+}
+```
+
+```{r npp contracts table}
+table_npp_contracts <- function(data = npp_data, 
+                                level = "National", 
+                                region_STP_name = NULL){
+  data <- data %>% 
+    mutate(saw_new_patient = ifelse(total == 0, "no", "yes"))
+  
+  if(level == "Regional"){
+    data <- data %>% 
+      filter(region_name == region_STP_name) %>% 
+      group_by(month, saw_new_patient, region_name)
+  
+    subtitle <- region_STP_name
+
+  } else if (level == "STP"){
+    data <- data %>% 
+      filter(commissioner_name == region_STP_name) %>% 
+      group_by(month, saw_new_patient, commissioner_name)
+    
+    subtitle <- region_STP_name
+
+  } else {
+    data <- data %>% 
+      group_by(month, saw_new_patient)
+  
+    subtitle <- "England"
+  }
+  
+  data <- data %>% 
+    summarise(n_contracts = as.numeric(n_distinct(contract_number))) %>% 
+    pivot_wider(names_from = saw_new_patient, values_from = n_contracts) %>% 
+    mutate(yes = ifelse(is.na(yes), 0, yes), 
+           no = ifelse(is.na(no), 0, no), 
+           eligible = no + yes) %>% 
+    select(-no) %>% 
+    mutate(percent = yes/eligible, 
+           percent = paste0(round(percent*100), "%", sep = "")) %>% 
+    select(`Month` = month, 
+           `Percentage of \n eligible contracts` = percent)
+  
+  table_to_print <- tableGrob(data, rows = NULL)
+}
+```
+
 ```{r DCP1}
 
 plot_DCP_analysis <- function(data = UDA_calendar_data,

@@ -173,7 +173,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 
-# Unique patients
+# Patients seen
 
 ## Unique dental patients seen
 
@@ -200,6 +200,26 @@ plot_unique_patients_rolling(level = "National",
 -   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
 -   A person seen more than once in the rolling 12/24 months would be counted only once.
 -   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+## Patients seen under the New Patient Premium definition
+
+```{r npp activity, echo = FALSE, warning = FALSE, message = FALSE, fig.with=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "National", 
+                  region_STP_name = NULL)
+```
+
+## Eligible contracts that have seen new patients
+
+```{r npp contracts, echo = FALSE, warning = FALSE, message = FALSE, fig.with=14, fig.height=5, fig.align='center'}
+plot <- plot_npp_contracts(level = "National",
+                           region_STP_name = NULL)
+
+table <- table_npp_contracts(level = "National", 
+                             region_STP_name = NULL)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+```
 
 # Units of Orthodontic Activity (UOA) Information
 
