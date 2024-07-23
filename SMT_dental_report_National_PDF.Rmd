@@ -102,11 +102,11 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 ## Units of Dental Activity - Calendar year to date delivery
 
 ```{r YTD UDA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
-                          UDAorUOA = "UDA", 
-                          level = "National", 
-                          region_STP_name = NULL, 
-                          plotChart = TRUE, 
+plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
+                          UDAorUOA = "UDA",
+                          level = "National",
+                          region_STP_name = NULL,
+                          plotChart = TRUE,
                           all_regions_and_STPs = FALSE)
 ```
 
@@ -117,9 +117,14 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
 ## Units of Dental Activity - Monthly activity compared to previous financial year
 
 ```{r monthly UDAs, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height = 5, fig.align = 'center'}
-plot_monthly_uda_delivered(data = UDA_calendar_data, 
-                           level = "National", 
-                           region_STP_name = NULL)
+plot <- plot_monthly_uda_delivered(data = UDA_calendar_data,
+                                   level = "National", 
+                                   region_STP_name = NULL)
+
+table <- table_working_days()
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.

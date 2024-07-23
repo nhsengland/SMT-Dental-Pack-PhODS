@@ -1140,7 +1140,8 @@ plot_monthly_uda_delivered <- function(data = UDA_calendar_data,
               data = data_labels,
               colour = "black",
               vjust = -0.5, 
-              position = position_dodge(.9)) + 
+              position = position_dodge(.9), 
+              size = 7/.pt) + 
     theme_bw() +
     theme(legend.position = "bottom") + 
     labs(title = "Monthly UDAs delivered", 
@@ -2421,3 +2422,25 @@ The most recent two months data will be incomplete and subject to change, partic
 }
 ```
 
+```{r working days table}
+table_working_days <- function(){
+  workdays <- working_days %>% 
+    filter(month >= "2023-04-01" & month <= "2025-03-01") %>% 
+    mutate(fy = ifelse(month >= "2023-04-01" & month <= "2024-03-01", "2023/24", "2024/25"), 
+           month_name = format(month, "%B"))
+  
+  workdays$month_name = factor(workdays$month_name, 
+                               levels = c("April", "May", "June", "July", "August", "September", 
+                                          "October", "November", "December", "January", "February", "March"))
+
+  workdays <- workdays %>% 
+    select(month_name, fy, `no workdays`) %>% 
+    pivot_wider(names_from = fy, 
+                values_from = `no workdays`) %>% 
+    rename(Month = month_name, 
+           `2023/24 \n working days` = `2023/24`,
+           `2024/25 \n working days` = `2024/25`)
+  
+  table_to_print <- tableGrob(workdays, rows = NULL)
+}
+```
