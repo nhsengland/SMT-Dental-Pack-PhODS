@@ -128,6 +128,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
+- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ## Banded courses of treatment standardised by working days (including Foundation Dentists (FD))
