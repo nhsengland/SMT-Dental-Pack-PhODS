@@ -1117,6 +1117,7 @@ plot_monthly_uda_delivered <- function(data = UDA_calendar_data,
         subtitle <- "England"
         }
   
+  # calculate UDA delivered by month
   data <- data %>% 
     filter(month >= "2023-04-01" & month <= "2025-03-01") %>% # needs updating every financial year
     group_by(month) %>% 
@@ -1129,11 +1130,13 @@ plot_monthly_uda_delivered <- function(data = UDA_calendar_data,
                             levels = c("April", "May", "June", "July", "August", "September", "October",
                                        "November", "December", "January", "February", "March"))
   
+  # create data labels for latest complete month (two months prior to most recent month)
   latest_complete_month <- format(max(data$month)-58, "%B")
   
   data_labels <- data %>% 
     filter(month_name == latest_complete_month)
 
+  # plot chart
   ggplot(data, aes(x = month_name, y = uda_delivered, fill = financial_year)) + 
     geom_bar(position = "dodge", stat = "identity") + 
     geom_text(aes(label = prettyNum(uda_delivered, big.mark=",")), 
@@ -1581,6 +1584,7 @@ if(plotChart == TRUE & asIndex == FALSE){
 plot_npp_activity <- function(data = npp_data, 
                               level = "National", 
                               region_STP_name = NULL){
+  # group and filter based on level
   if(level == "Regional"){
     data <- data %>% 
       filter(region_name == region_STP_name) %>% 
@@ -1601,6 +1605,7 @@ plot_npp_activity <- function(data = npp_data,
     subtitle <- "England"
   }
   
+  # calculate number of patients seen
   data <- data %>% 
     summarise(adult_total = sum(adult_count), 
               child_total = sum(child_count), 
@@ -1609,6 +1614,7 @@ plot_npp_activity <- function(data = npp_data,
                  names_to = "variable", 
                  values_to = "values")
   
+  # create data labels for latest month
   latest_month <- max(data$month)
   
   data_labels <- data %>% 
@@ -1618,6 +1624,7 @@ plot_npp_activity <- function(data = npp_data,
   Includes all patients seen.
   The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher."
   
+  # plot chart
   ggplot(data, aes(x = month,
                    y = values, 
                    colour = variable)) + 
@@ -1646,9 +1653,11 @@ plot_npp_activity <- function(data = npp_data,
 plot_npp_contracts <- function(data = npp_data, 
                                level = "National", 
                                region_STP_name = NULL){
+  # check if contract saw new patient or not
   data <- data %>% 
     mutate(saw_new_patient = ifelse(total == 0, "no", "yes"))
   
+  # group and filter based on level
   if(level == "Regional"){
     data <- data %>% 
       filter(region_name == region_STP_name) %>% 
@@ -1670,6 +1679,7 @@ plot_npp_contracts <- function(data = npp_data,
     subtitle <- "England"
   }
   
+  # calculate number of contracts eligible and number which saw new patients
   data <- data %>% 
     summarise(n_contracts = as.numeric(n_distinct(contract_number))) %>% 
     pivot_wider(names_from = saw_new_patient, values_from = n_contracts) %>% 
@@ -1681,11 +1691,13 @@ plot_npp_contracts <- function(data = npp_data,
                  names_to = "variable", 
                  values_to = "values")
 
+  # create data labels for the latest month
   latest_month <- max(data$month)
 
   data_labels <- data %>% 
     filter(month == latest_month)
   
+  # plot chart
   ggplot(data, aes(x = month, 
                    y = values, 
                    fill = variable)) + 
@@ -1717,9 +1729,11 @@ plot_npp_contracts <- function(data = npp_data,
 table_npp_contracts <- function(data = npp_data, 
                                 level = "National", 
                                 region_STP_name = NULL){
+  # check if contract saw new patient or not
   data <- data %>% 
     mutate(saw_new_patient = ifelse(total == 0, "no", "yes"))
   
+  # group and filter based on level
   if(level == "Regional"){
     data <- data %>% 
       filter(region_name == region_STP_name) %>% 
@@ -1741,6 +1755,7 @@ table_npp_contracts <- function(data = npp_data,
     subtitle <- "England"
   }
   
+  # calculate percentage of eligible contracts which saw a new patient
   data <- data %>% 
     summarise(n_contracts = as.numeric(n_distinct(contract_number))) %>% 
     pivot_wider(names_from = saw_new_patient, values_from = n_contracts) %>% 
@@ -1753,6 +1768,7 @@ table_npp_contracts <- function(data = npp_data,
     select(`Month` = month, 
            `Percentage of \n eligible contracts` = percent)
   
+  # convert into grob object to use in slides
   table_to_print <- tableGrob(data, rows = NULL)
 }
 ```
@@ -2428,15 +2444,19 @@ The most recent two months data will be incomplete and subject to change, partic
 
 ```{r working days table}
 table_working_days <- function(){
+  # filter for the current and previous financial year#
+  # NEEDS UPDATING EACH FINANCIAL YEAR
   workdays <- working_days %>% 
     filter(month >= "2023-04-01" & month <= "2025-03-01") %>% 
     mutate(fy = ifelse(month >= "2023-04-01" & month <= "2024-03-01", "2023/24", "2024/25"), 
            month_name = format(month, "%B"))
   
+  # set order of months
   workdays$month_name = factor(workdays$month_name, 
                                levels = c("April", "May", "June", "July", "August", "September", 
                                           "October", "November", "December", "January", "February", "March"))
 
+  # create table comparing workdays in each month
   workdays <- workdays %>% 
     select(month_name, fy, `no workdays`) %>% 
     pivot_wider(names_from = fy, 
@@ -2445,6 +2465,7 @@ table_working_days <- function(){
            `2023/24 \n working days` = `2023/24`,
            `2024/25 \n working days` = `2024/25`)
   
+  # convert to grob object to use in slides
   table_to_print <- tableGrob(workdays, rows = NULL)
 }
 ```
