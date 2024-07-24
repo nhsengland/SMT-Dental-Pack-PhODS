@@ -111,8 +111,6 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
 ```
 
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
--   Providers are expected to have achieved 30% of their annual delivery by the financial year mid point (October)
--   Implications of not reaching target delivery at the end of the financial year can be understood via <https://faq.nhsbsa.nhs.uk/knowledgebase/article/KA-01672/en-us>
 
 ## Units of Dental Activity - Monthly activity compared to previous financial year
 
