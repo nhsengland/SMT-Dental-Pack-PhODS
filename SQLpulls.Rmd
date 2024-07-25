@@ -364,3 +364,49 @@ DCP_data$commissioner_name <- str_to_title(DCP_data$commissioner_name)
 DCP_data$commissioner_name <- substr(DCP_data$commissioner_name,1,nchar(DCP_data$commissioner_name)-3)
 DCP_data$commissioner_name <- paste0(DCP_data$commissioner_name, rep("ICB", nrow(DCP_data)))
 ```
+
+
+```{r BPE}
+pull_BPE_data <- function(){
+  
+  con <- dbConnect(odbc::odbc(), "NCDR")
+  sql <- "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_BPE]a
+  LEFT JOIN (SELECT DISTINCT
+  [Region_Name]
+  ,[STP_Code]
+  FROM [NHSE_Reference].[dbo].[tbl_Ref_ODS_Commissioner_Hierarchies]
+  WHERE STP_Code NOT IN ('DUM001', 'DUM002', 'UNK','X24')) b ON a.[COMMISSIONER_CODE] = b.[STP_Code]"
+  result <- dbSendQuery (con, sql)
+  bpe_all <- dbFetch(result)
+  dbClearResult(result)
+  bpe_all
+  
+}
+
+BPE_data<-pull_BPE_data()%>%
+  inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
+
+
+# calculate total FP17s and rename fields
+BPE_data<-BPE_data %>%
+  rename(commissioner_name=COMMISSIONER_NAME,
+         Latest.Region.Description=Region_Name,
+         Year_Month=YEAR_MONTH,
+         Contract.Number=CONTRACT_NUMBER,
+         Total.Form.Count=FORM_COUNT,
+         Forms_with_Highest_BPE_Sextant_Score=HIGH_BPE_SCORE_COUNT,
+         Highest.BPE.Sextant.Score=HIGH_BPE_SCORE_IND,
+         Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT=FRM_CNT_HBPE_0_1_UTD_0 ,
+         Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year=FRM_CNT_HBPE_0_1_UTD_0_SUB_12M ,
+         )
+
+# reformat region and commissioner names
+BPE_data$Latest.Region.Description <- str_to_title(BPE_data$Latest.Region.Description)
+BPE_data$commissioner_name <- str_to_title(BPE_data$commissioner_name)
+BPE_data$commissioner_name <- substr(BPE_data$commissioner_name,1,
+                                              nchar(BPE_data$commissioner_name)-3)
+BPE_data$commissioner_name <- paste0(BPE_data$commissioner_name, 
+                                              rep("ICB", nrow(BPE_data)))
+
+```
+
