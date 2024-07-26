@@ -149,77 +149,82 @@ data_icb_CoT <- data_icb_CoT %>%
 
 data_CoT <- rbind(data_Nat_CoT, data_reg_CoT, data_icb_CoT)
 
-######UOA
-#### No UDA delivered, contracted & percentage
-#data_Nat_UOA=plot_UDA_UOA_delivery_wd(data = UOA_calendar_data, 
-#                                      UDAorUOA = "UOA",
-#                                      plotChart = FALSE, 
-#                                      all_regions_and_STPs = FALSE,
-#                                      level = "National",
-#                                      region_STP_name = NULL)
+###### UOA #####
+#### No UOA delivered, contracted & percentage
+data_Nat_UOA=plot_UDA_UOA_delivery_wd(data = UOA_calendar_data,
+                                     UDAorUOA = "UOA",
+                                     plotChart = FALSE,
+                                     all_regions_and_STPs = FALSE,
+                                     level = "National",
+                                     region_STP_name = NULL)
 
-#data_Nat_UOA<- data_Nat_UOA %>% 
-#  select(`Calendar month`,`Annual contracted UOAs`,`Monthly UOAs delivered`,`no workdays`,`Standardised monthly percentage of contracted UOAs delivered`)%>%
-#  mutate(`Geography Level`='National',`Geography Name`='England')
+data_Nat_UOA<- data_Nat_UOA %>%
+  select(calendar_month, financial_year,`UOAs_annual_contracted`,`UOAs_delivered_month`,`no workdays`,
+         UOAs_delivered_month_percent_contracted_standardised)%>%
+  mutate(geography_level='National',geography_name='England') %>% 
+  arrange(desc(calendar_month))
 
-#data_reg_UOA=plot_UDA_UOA_delivery_all_regions(data = UOA_calendar_data, 
-#                                               UDAorUOA = "UOA",
-#                                               level = "National",
-#                                               region_STP_name = NULL,
-#                                               plotChart = FALSE, 
-#                                               all_regions_and_STPs = TRUE)
-#data_reg_UOA <- data_reg_UOA %>%
-# select(`Calendar month`,`Geography Name`=`Region Name`,`Annual contracted UOAs`,`Monthly UOAs delivered`,
-#         `no workdays`,`Standardised monthly percentage of contracted UOAs delivered`)%>%
-#  mutate(`Geography Level`='Regional')
+data_reg_UOA=plot_UDA_UOA_delivery_all_regions(data = UOA_calendar_data,
+                                              UDAorUOA = "UOA",
+                                              level = "Regional",
+                                              region_STP_name = NULL,
+                                              plotChart = FALSE,
+                                              all_regions_and_STPs = TRUE)
+data_reg_UOA <- data_reg_UOA %>%
+  select(calendar_month, financial_year, geography_name=region_name,`UOAs_annual_contracted`,`UOAs_delivered_month`,`no workdays`,
+         UOAs_delivered_month_percent_contracted_standardised)%>%
+  mutate(geography_level='Regional') %>% 
+  arrange(desc(calendar_month))
 
-#data_ICB_UOA <- Table_UDA_UOA_delivery_all_ICBs(data = UOA_calendar_data, 
-#                                                UDAorUOA = "UOA")
+data_ICB_UOA <- Table_UDA_UOA_delivery_all_ICBs(data = UOA_calendar_data,
+                                                UDAorUOA = "UOA")
 
-#data_ICB_UOA <- data_ICB_UOA %>%
-#  select(`Calendar month`,`Geography Name`=`Commissioner Name`,`Annual contracted UOAs`,`Monthly UOAs delivered`,
-#         `no workdays`,`Standardised monthly percentage of contracted UOAs delivered`)%>%
-#  mutate(`Geography Level`='ICB')
+data_ICB_UOA <- data_ICB_UOA %>%
+  select(calendar_month, financial_year, geography_name=commissioner_name,`UOAs_annual_contracted`=annual_contracted_UDA_UOA,
+         `UOAs_delivered_month`=monthly_UDA_UOAs_delivered,`no workdays`,
+         UOAs_delivered_month_percent_contracted_standardised=perc_standardised_wd)%>%
+  mutate(geography_level='ICB') %>% 
+  arrange(desc(calendar_month))
 
-#data_UOA_de_co<- rbind(data_Nat_UOA, data_reg_UOA, data_ICB_UOA) %>% 
-#  rename("Workdays" = `no workdays`)%>%
-#  select("Calendar month","Geography Level","Geography Name","Annual contracted UOAs","Monthly UOAs delivered",
-#         "Workdays","Standardised monthly percentage of contracted UOAs delivered")
+data_UOA_de_co<- rbind(data_Nat_UOA, data_reg_UOA, data_ICB_UOA) %>% 
+ select(calendar_month, financial_year,geography_level,geography_name,UOAs_annual_contracted,UOAs_delivered_month,
+        UOAs_delivered_month_percent_contracted_standardised)
 
 ####YTD delivery
-#data_Nat_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data, 
-#                                               UDAorUOA = "UOA",
-#                                               level = "National",
-#                                               all_regions_and_STPs = FALSE)
-#data_Nat_YTD_UOA<- data_Nat_YTD_UOA %>% 
-#  mutate(`Geography Level`='National',`Geography Name`='England')
+data_Nat_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data,
+                                              UDAorUOA = "UOA",
+                                              level = "National",
+                                              all_regions_and_STPs = FALSE)
 
-#data_reg_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data, 
-#                                               UDAorUOA = "UOA",
-#                                               level = "Regional",
-#                                               all_regions_and_STPs =TRUE)
-#data_reg_YTD_UOA <- data_reg_YTD_UOA %>%
-#  rename(`Geography Name`=`region_name`)%>%
-#  mutate(`Geography Level`='Regional')
+data_Nat_YTD_UOA<- data_Nat_YTD_UOA %>%
+ mutate(geography_level='National',geography_name='England') %>% 
+  arrange(desc(calendar_month))
 
-#data_icb_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data, 
-#                                               UDAorUOA = "UOA",
-#                                               level = "STP",
-#                                               all_regions_and_STPs =TRUE)
-#data_icb_YTD_UOA <- data_icb_YTD_UOA %>%
-#  rename(`Geography Name`=`commissioner_name`)%>%
-#  mutate(`Geography Level`='ICB')
+data_reg_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data,
+                                              UDAorUOA = "UOA",
+                                              level = "Regional",
+                                              all_regions_and_STPs =TRUE)
 
-#data_UOA_YTD<- rbind(data_Nat_YTD_UOA, data_reg_YTD_UOA, data_icb_YTD_UOA)
+data_reg_YTD_UOA <- data_reg_YTD_UOA %>%
+ rename(geography_name=region_name)%>%
+ mutate(geography_level='Regional') %>% 
+  arrange(desc(calendar_month))
 
-#data_UOA<-data_UOA_de_co%>%
-#  full_join(data_UOA_YTD,by=c('Calendar month','Geography Name','Geography Level'))
+data_icb_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data,
+                                              UDAorUOA = "UOA",
+                                              level = "STP",
+                                              all_regions_and_STPs =TRUE)
 
+data_icb_YTD_UOA <- data_icb_YTD_UOA %>%
+ rename(geography_name=`commissioner_name`)%>%
+ mutate(geography_level='ICB') %>% 
+  arrange(desc(calendar_month))
 
-# data<- list('UDA' = data_UDA, 'UOA' = data_UOA)
-# 
-# openxlsx::write.xlsx(data, file = paste0('Data_', format(Sys.Date(), '%B%Y'), '.xlsx')) 
+data_UOA_YTD<- rbind(data_Nat_YTD_UOA, data_reg_YTD_UOA, data_icb_YTD_UOA) %>% 
+  rename(UOAs_delivered_year_to_date = YTD_delivery)
 
+data_orthodontic_activity <- data_UOA_de_co %>% 
+  full_join(data_UOA_YTD, by = c("calendar_month", "financial_year", "geography_name", "geography_level"))
 
 ### Unique patients seen ###
 # Unique patients rolling
@@ -528,8 +533,11 @@ data_dental_activity<-data_UDA_de_co%>%
 # create Excel file
 output_file <- createWorkbook()
 
-addWorksheet(output_file, "Dental contract and activity")
-writeData(output_file, "Dental contract and activity", data_dental_activity)
+addWorksheet(output_file, "Dental contract & activity")
+writeData(output_file, "Dental contract & activity", data_dental_activity)
+
+addWorksheet(output_file, "Orthodontic contract & activity")
+writeData(output_file, "Orthodontic contract & activity", data_orthodontic_activity)
 
 addWorksheet(output_file, "DCP")
 writeData(output_file, "DCP", total_dcp)

@@ -29,29 +29,16 @@ get_delivery_data <- function(data = UDA_calendar_data,
       group_by(month)
   }
   
+  if(UDAorUOA == "UDA"){
   #group by month/ICB/Region (depends on the previous step) and calculate total no UDAs delivered and contracted UDA
   UDA_UOAs_delivered <- data %>%
-    summarise(monthly_UDA_UOAs_BAND1_delivered = ifelse(UDAorUOA == "UDA", 
-                                                  sum(UDA_band_1, na.rm = T),
-                                                  sum(UOA_band_1, na.rm = T)),
-              monthly_UDA_UOAs_BAND2_delivered = ifelse(UDAorUOA == "UDA", 
-                                                  sum(UDA_band_2, na.rm = T),
-                                                  sum(UOA_band_2, na.rm = T)),
-              monthly_UDA_UOAs_BAND3_delivered = ifelse(UDAorUOA == "UDA", 
-                                                  sum(UDA_band_3, na.rm = T),
-                                                  sum(UOA_band_3, na.rm = T)),
-              monthly_UDA_UOAs_BAND_OTHER_delivered = ifelse(UDAorUOA == "UDA", 
-                                                  sum(UDA_other, na.rm = T),
-                                                  sum(UOA_other, na.rm = T)),
-              monthly_UDA_UOAs_BAND_URGENT_delivered = ifelse(UDAorUOA == "UDA", 
-                                                  sum(UDA_urgent, na.rm = T),
-                                                  sum(UOA_urgent, na.rm = T)),
-              monthly_UDA_UOAs_delivered = ifelse(UDAorUOA == "UDA", 
-                                                  sum(UDA_delivered, na.rm = T),
-                                                  sum(UOA_delivered, na.rm = T)),
-              annual_contracted_UDA_UOA = ifelse(UDAorUOA == "UDA",
-                                                 sum(annual_contracted_UDA, na.rm = T),
-                                                 sum(annual_contracted_UOA, na.rm = T)))
+    summarise(monthly_UDA_UOAs_BAND1_delivered = sum(UDA_band_1, na.rm = T),
+              monthly_UDA_UOAs_BAND2_delivered = sum(UDA_band_2, na.rm = T),
+              monthly_UDA_UOAs_BAND3_delivered = sum(UDA_band_3, na.rm = T),
+              monthly_UDA_UOAs_BAND_OTHER_delivered = sum(UDA_other, na.rm = T),
+              monthly_UDA_UOAs_BAND_URGENT_delivered = sum(UDA_urgent, na.rm = T),
+              monthly_UDA_UOAs_delivered = sum(UDA_delivered, na.rm = T),
+              annual_contracted_UDA_UOA = sum(annual_contracted_UDA, na.rm = T))
   
   #for PCOR and SOF table
   if(renameColumns){
@@ -67,6 +54,12 @@ get_delivery_data <- function(data = UDA_calendar_data,
              monthly_UDA_BAND_OTHER_delivered,
              monthly_UDAs_delivered = monthly_UDA_UOAs_delivered,
              annual_contracted_UDAs = annual_contracted_UDA_UOA)
+  }
+  }else if(UDAorUOA == "UOA"){
+    #group by month/ICB/Region (depends on the previous step) and calculate total no UOAs delivered and contracted UOA
+    UDA_UOAs_delivered <- data %>% 
+      summarise(monthly_UDA_UOAs_delivered = sum(UOA_delivered, na.rm = T),
+                annual_contracted_UDA_UOA = sum(annual_contracted_UOA, na.rm = T))
   }
   
   new_data <- UDA_UOAs_delivered
