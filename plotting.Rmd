@@ -1225,19 +1225,15 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
   if(level == "Regional"){
     
     #filter for region or STP
-    # start from 2020-04-01 as region information not available before then
     data <- data %>% 
-      filter(region_name == region_STP_name,
-             month >= "2020-04-01")
+      filter(region_name == region_STP_name)
     subtitle <- region_STP_name 
     
   }else if(level == "STP"){
     
     #filter for region or STP
-    # start from 2020-04-01 as region information not available before then
     data <- data %>% 
-      filter(commissioner_name == region_STP_name, 
-             month >= "2020-04-01")
+      filter(commissioner_name == region_STP_name)
     subtitle <- region_STP_name
     
   }else{
@@ -1344,7 +1340,6 @@ table_banded_CoT <- function(data = UDA_calendar_data_FD,
   
   if(level == "Regional"){
     # filter for region or STP
-    # start from 2020-04-01 as geographic information not available before then
     #calculate in each band
     data_to_print <- reshape2::melt(data_to_print, id.vars = c("month", "region_name"))
     
@@ -1361,7 +1356,6 @@ table_banded_CoT <- function(data = UDA_calendar_data_FD,
     }else if(level == "STP"){
       
       #filter for region or STP
-      # start from 2020-04-01 as geographic information not available before then
       #calculate in each band
       data_to_print <- reshape2::melt(data_to_print, id.vars = c("month", "commissioner_name"))
       

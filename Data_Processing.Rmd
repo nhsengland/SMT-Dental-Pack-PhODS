@@ -69,10 +69,11 @@ get_delivery_data <- function(data = UDA_calendar_data,
 ```
 
 ```{r banded CoT data}
-get_banded_COTs_data <- function(data = UDA_calendar_data_FD, 
-                                        all_regions_and_STPs = FALSE){
+get_banded_COTs_data <- function(data = UDA_calendar_data_FD,
+                                 level = "National",
+                                 all_regions_and_STPs = FALSE){
 
-  if(all_regions_and_STPs == FALSE){
+  if(level == "National"){
     
     #group by month and sum UDAs delivered
     new_data <- data %>%
