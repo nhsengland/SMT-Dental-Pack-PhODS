@@ -6,7 +6,6 @@ title: "appendix functions for SMT Dental Pack"
 library(tidyverse)
 library(DBI)
 library(odbc)
-library(flextable)
 library(gridExtra)
 
 options(scipen = 999)

@@ -139,6 +139,14 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
                          "UOAs_delivered_month" = "monthly_UDA_UOAs_delivered",
                          "UOAs_annual_contracted" = "annual_contracted_UDA_UOA",
                          "UOAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
+      
+      data <- data %>% 
+        mutate(financial_year = case_when(
+               month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
+               month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
+               month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
+               month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
+               month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"))
     }
     
     data$`month` <- format(as.Date(data$`month`), "%Y-%m")
@@ -208,7 +216,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
       mutate(month = as.Date(month)) %>%
       filter(month >= as.Date ("2020-04-01")) %>%
       select(month, contract_number, commissioner_name, region_name, 
-             annual_contracted_UOA, UOA_band_1,UOA_band_2,UOA_band_3,UOA_other,UOA_urgent,UOA_delivered)
+             annual_contracted_UOA, UOA_delivered)
     
     # get data into the right format 
     # calculate the annual contracted UOA, delivered UOA and percentage of UOA delivered (standardized by no of working days)
@@ -218,12 +226,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
     
     data <- data %>%
       group_by(month, region_name) %>%
-      summarise(monthly_UDA_UOAs_BAND1_delivered = sum(monthly_UDA_UOAs_BAND1_delivered, na.rm = TRUE),
-              monthly_UDA_UOAs_BAND2_delivered = sum(monthly_UDA_UOAs_BAND2_delivered, na.rm = TRUE),
-              monthly_UDA_UOAs_BAND3_delivered = sum(monthly_UDA_UOAs_BAND3_delivered, na.rm = TRUE),
-              monthly_UDA_UOAs_BAND_OTHER_delivered = sum(monthly_UDA_UOAs_BAND_OTHER_delivered, na.rm = TRUE),
-              monthly_UDA_UOAs_BAND_URGENT_delivered = sum(monthly_UDA_UOAs_BAND_URGENT_delivered, na.rm = TRUE),
-              monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
+      summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
               annual_contracted_UDA_UOA = sum(annual_contracted_UDA_UOA, na.rm = TRUE)) %>%
       filter(!is.na(region_name))
     
@@ -276,6 +279,14 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
                          "UOAs_delivered_month" = "monthly_UDA_UOAs_delivered",
                          "UOAs_annual_contracted" = "annual_contracted_UDA_UOA",
                          "UOAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
+      
+      data <- data %>% 
+        mutate(financial_year = case_when(
+               month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
+               month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
+               month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
+               month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
+               month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"))
     }
    
     data$`month` <- format(as.Date(data$`month`), "%Y-%m")
@@ -470,7 +481,7 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
     data <- data %>%
       mutate(month = as.Date(month)) %>%
       filter(month >= as.Date ("2020-04-01")) %>%
-      select(month, contract_number, commissioner_name, region_name,  annual_contracted_UOA, UOA_band_1,UOA_band_2,UOA_band_3,UOA_other,UOA_urgent,UOA_delivered)
+      select(month, contract_number, commissioner_name, region_name,  annual_contracted_UOA,UOA_delivered)
     
     #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
     data <- get_delivery_data(data = data, UDAorUOA = "UOA", all_regions_and_STPs = TRUE)
@@ -479,35 +490,27 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
     
     data <- data %>%
       group_by(month, commissioner_name) %>%
-      summarise(monthly_UDA_UOAs_BAND1_delivered = sum(monthly_UDA_UOAs_BAND1_delivered, na.rm = TRUE),
-              monthly_UDA_UOAs_BAND2_delivered = sum(monthly_UDA_UOAs_BAND2_delivered, na.rm = TRUE),
-              monthly_UDA_UOAs_BAND3_delivered = sum(monthly_UDA_UOAs_BAND3_delivered, na.rm = TRUE),
-              monthly_UDA_UOAs_BAND_OTHER_delivered = sum(monthly_UDA_UOAs_BAND_OTHER_delivered, na.rm = TRUE),
-              monthly_UDA_UOAs_BAND_URGENT_delivered = sum(monthly_UDA_UOAs_BAND_URGENT_delivered, na.rm = TRUE),
-              monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
+      summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
                 annual_contracted_UDA_UOA = sum(annual_contracted_UDA_UOA, na.rm = TRUE))
     
     data <- data %>% 
       left_join(working_days,by=c('month')) %>% 
       mutate(perc_standardised_wd_int = 
                100*(monthly_UDA_UOAs_delivered /(annual_contracted_UDA_UOA*(`no workdays`/`total workdays`))))%>% 
-      mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0))
+      mutate(perc_standardised_wd = round(perc_standardised_wd_int, digits = 0)) %>% 
+      rename(calendar_month = month)
     
-    new_col_names <- c(`Calendar month` = "month",
-                         `Region Name` = "region_name",
-                         `Commissioner Name` = "commissioner_name",
-                         `Monthly UOAs Band1 delivered` = "monthly_UDA_UOAs_BAND1_delivered",
-                         `Monthly UOAs Band2 delivered` = "monthly_UDA_UOAs_BAND2_delivered",
-                         `Monthly UOAs Band3 delivered` = "monthly_UDA_UOAs_BAND3_delivered",
-                         `Monthly UOAs Band Urgent delivered` = "monthly_UDA_UOAs_BAND_URGENT_delivered",
-                         `Monthly UOAs Band Other delivered` = "monthly_UDA_UOAs_BAND_OTHER_delivered",
-                         `Monthly UOAs delivered` = "monthly_UDA_UOAs_delivered",
-                         `Annual contracted UOAs` = "annual_contracted_UDA_UOA",
-                         `Standardised monthly percentage of contracted UOAs delivered` = "perc_standardised_wd")
+    data <- data %>% 
+        mutate(financial_year = case_when(
+               calendar_month >= as.Date("2020-04-01") & calendar_month < as.Date("2021-04-01") ~ "2020/21",
+               calendar_month >= as.Date("2021-04-01") & calendar_month < as.Date("2022-04-01") ~ "2021/22",
+               calendar_month >= as.Date("2022-04-01") & calendar_month < as.Date("2023-04-01") ~ "2022/23",
+               calendar_month >= as.Date("2023-04-01") & calendar_month < as.Date("2024-04-01") ~ "2023/24",
+               calendar_month >= as.Date("2024-04-01") & calendar_month < as.Date("2025-04-01") ~ "2024/25"))
     
-    data$`month` <- format(as.Date(data$`month`), "%Y-%m")
-    data <- data %>%
-      rename(any_of(new_col_names))
+    data$calendar_month <- format(as.Date(data$calendar_month), "%Y-%m")
+    
+    data <- data
   }   
   
 }  
@@ -673,7 +676,7 @@ figure <- ggarrange(p1, p2, nrow = 1)
 
 # Add footnote
 footnote_text <- "Note: Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
-The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher"
+The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher."
 
 # Create annotation
 annotation <- annotate_figure(
@@ -687,13 +690,6 @@ annotation2 <- annotate_figure(
   annotation, 
   bottom = textGrob(footnote_text, x = unit(0, "npc"), y = unit(0, "npc") + unit(1, "line"), just = "left", gp = gpar(fontsize = 10, fontface = "italic"))
 )
-
-# # Add footnote using grid.text (from grid package)
-# grid.arrange(
-#   annotation,
-#   bottom = textGrob(footnote_text, x = unit(0, "npc"), y = unit(0, "npc") + unit(1, "line"), just = "left", gp = gpar(fontsize = 10, fontface = "italic")),
-#   heights = c(1, 0.1)  # Adjust heights as needed
-# )
 
 print(annotation2)
 
@@ -734,12 +730,19 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
                                       month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
                                       month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
                                       month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
-                                      month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
-                                      month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25")) %>%
+                                      month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24"))
+  
+  historic_latest_contracted_uoa <- historic_data %>% 
+    group_by(month, financial_year) %>% 
+    summarise(final_contracted_UOAs = sum(annual_contracted_UOA, na.rm = TRUE)) %>% 
+    filter(month(month) == 3)
+           
+  historic_data <- historic_data %>% 
     group_by(financial_year) %>%
-    summarise(full_year_UOA_delivery = sum(UOA_delivered, na.rm = TRUE),
-              full_year_contracted_UOAs = sum(annual_contracted_UOA, na.rm = TRUE) / 12) %>%
-    mutate(perc_UOA_delivered = full_year_UOA_delivery * 100 / full_year_contracted_UOAs)
+    summarise(full_year_UOA_delivery = sum(UOA_delivered, na.rm = TRUE)) %>%
+    left_join(historic_latest_contracted_uoa, by = "financial_year") %>% 
+    mutate(perc_UOA_delivered = full_year_UOA_delivery * 100 / final_contracted_UOAs) %>% 
+    filter(!is.na(financial_year))
 
   #get current FY data ready
   data_try <- data %>%
@@ -747,28 +750,24 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     summarise(UOA_delivery = sum(UOA_delivered, na.rm = TRUE),
               contracted_UOAs = sum(annual_contracted_UOA, na.rm = TRUE)) %>%
     # only include current FY data -- calculate percentage of UDA delivered -- standardized by no of working days
-    filter(month >= as.Date ("2023-04-01")) %>% ## this needs to be updated every FY
+    filter(month >= as.Date ("2024-04-01")) %>% ## this needs to be updated every FY
     left_join(working_days,by=c('month')) %>% 
     mutate(perc_UOA_delivered =100* (UOA_delivery / (contracted_UOAs*(`no workdays`/`total workdays`)))) %>%
-    mutate(perc_UOA_delivered = round(perc_UOA_delivered, digits = 0))%>% 
-    #add month for previous FY and create a new variable called financial_year which can be used to join with historical data
-    add_row(month = seq(as.Date("2019-04-01"), as.Date("2023-03-01"), lubridate::month(1))) %>%
-    mutate(financial_year = case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
-                                      month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
-                                      month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
-                                      month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
-                                      month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
-                                      month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25")) %>%
-
-    left_join(historic_data, by = "financial_year") %>% #join this FY data with historical data 
-    mutate(perc_UOA_delivered = if_else(!is.na(perc_UOA_delivered.x), perc_UOA_delivered.x, perc_UOA_delivered.y))
+    mutate(perc_UOA_delivered = round(perc_UOA_delivered, digits = 0)) %>% 
+    bind_rows(historic_data)
   
   #divide data in to "Previous Financial Years (Averages)", "Current Financial Year"
   data <- data_try %>%
-    mutate(year_type = if_else(financial_year == "2024/25", "Current Financial Year", 
-                               "Previous Financial Years (Averages)")) %>% 
-    # filter April data for previous FY and all current FY data
-    filter((substr(month, 6, 7) == "04" & substr(month, 9, 10) == "01")| year_type == "Current Financial Year")
+    mutate(year_type = if_else(is.na(financial_year), "Current Financial Year", 
+                               "Previous Financial Years (Averages)"), 
+           month = case_when(
+             is.na(financial_year) ~ month, 
+             financial_year == "2019/20" ~ as.Date("2019-04-01"),
+             financial_year == "2020/21" ~ as.Date("2020-04-01"),
+             financial_year == "2021/22" ~ as.Date("2021-04-01"),
+             financial_year == "2022/23" ~ as.Date("2022-04-01"),
+             financial_year == "2023/24" ~ as.Date("2023-04-01") # needs adding to each financial year
+           ))
   
   data$year_type <- factor(data$year_type, levels = c("Previous Financial Years (Averages)",
                                                       "Current Financial Year"))
@@ -777,44 +776,87 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
   data<- data %>% 
     mutate(line_for_100 = 100)
   
-  ggplot() +
-    geom_line(data = data, 
+  #divide data to two datasets -- previous and current FY
+  data1 <- data %>%
+    filter(year_type=="Previous Financial Years (Averages)") 
+  
+  data2 <- data%>%
+    filter(year_type=="Current Financial Year")
+  
+  # Define plot 1
+  p1 <- ggplot() +
+    geom_line(data = data1, 
               aes(x = month,
                   y = perc_UOA_delivered),
               colour = "black") + 
-    geom_line(data = data, 
+    geom_line(data = data1, 
               aes(x = month,
                   y = line_for_100),
               colour = "blue") +
-    geom_point(data = data,
+    geom_point(data = data1,
                aes(x = month,
                    y = perc_UOA_delivered),
                colour = "steelblue") +
-    geom_text(data = filter(data, year_type == "Previous Financial Years (Averages)"),
+    ylab("Percentage of contracted UOAs delivered") + 
+    xlab(NULL) + 
+    geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
               aes(x = month + 120,
                   y = perc_UOA_delivered - 4,
                   label = financial_year),
               size = 3) +
-    geom_text(data = filter(data, year_type == "Previous Financial Years (Averages)"),
+    geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
               aes(x = month + 120,
                   y = perc_UOA_delivered + 4,
                   label = paste0(round(perc_UOA_delivered), "%")),
               size = 3) +
-    geom_text(data = filter(data, year_type == "Current Financial Year"),
-              aes(x = month,
-                  y = perc_UOA_delivered + 4,
-                  label = paste0(round(perc_UOA_delivered), "%")),
-              size = 3) +
-    facet_wrap(vars(year_type),
-               scales = "free_x") +
     theme_bw() +
-    scale_y_continuous(limits = c(0, max(c(data$perc_UOA_delivered, 95), na.rm = T) + 5),
-                       breaks = seq(0, max(c(data$perc_UOA_delivered, 95), na.rm = T) + 5, 10)) +
-    labs(title = "Monthly percentage of usual annual contracted UOAs \nstandardised by working days",
-         x = "Time period",
-         y = "Percentage of contracted UOAs delivered",
-         subtitle = subtitle) +
-    theme(axis.text.x = element_text(angle = 90, vjust=-0.0001)) 
+    scale_y_continuous(limits = c(0, max(c(data1$perc_UOA_delivered, 95), na.rm = T) + 5),
+                       breaks = seq(0, max(c(data1$perc_UOA_delivered, 95), na.rm = T) + 5, 10)) +
+    theme(axis.text.x = element_text(angle = 90, vjust=-0.0001), 
+          legend.position = "none")
+  
+  # Define plot 2
+  p2 <- ggplot() +
+    geom_line(data = data2, aes(x = month, y = perc_UOA_delivered), colour = "black") +
+    geom_line(data = data2, aes(x = month, y = line_for_100), colour = "blue") +
+    geom_point(data = data2, aes(x = month, y = perc_UOA_delivered), colour = "steelblue") +
+    ylab(NULL) +
+    xlab(NULL) +
+    ggtitle("Current Financial Year") +
+    geom_text(data = filter(data2, year_type == "Current Financial Year"),
+              aes(x = month, y = perc_UOA_delivered + 4, label = paste0(round(perc_UOA_delivered), "%")),
+              size = 3) +
+    scale_x_date(breaks = "1 month", date_labels = "%b %Y") +
+    scale_y_continuous(limits = c(0, max(c(data2$perc_UOA_delivered, 95), na.rm = T) + 5),
+                       breaks = seq(0, max(c(data2$perc_UOA_delivered, 95), na.rm = T) + 5, 10)) +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, vjust = -0.0001),
+          legend.position = "none")
+  
+  # Define title and subtitle
+  main_title <- "Monthly percentage of usual annual contracted UOAs standardised by working days"
+  
+  # Arrange and annotate figure
+  figure <- ggarrange(p1, p2, nrow = 1)
+  
+  # Add footnote
+  footnote_text <- "Note: Contracts included: GDS/PDS/PDS+ excluding contracts with no annual contracted UOAs.
+  The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher."
+  
+  # Create annotation
+  annotation <- annotate_figure(
+    figure, 
+    top = text_grob(paste(main_title, "\n", subtitle), hjust = 0, x = unit(40, "pt"), size = 14), 
+    bottom = text_grob("Time period")
+  )
+  
+  # Add footnote through annotation
+  annotation2 <- annotate_figure(
+    annotation, 
+    bottom = textGrob(footnote_text, x = unit(0, "npc"), y = unit(0, "npc") + unit(1, "line"), just = "left", gp = gpar(fontsize = 10, fontface = "italic"))
+  )
+  
+  print(annotation2)
 }
 ```
 
@@ -858,9 +900,9 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
     data <- get_delivery_data(data, UDAorUOA = "UOA", all_regions_and_STPs = all_regions_and_STPs)
     title <- "YTD UOA delivery across all contracts against annual contracted UOAs (millions)"
     ylab <- "YTD UOA delivery (millions)"
-    captionTitle <- "Contracts included: GDS/PDS/PDS+ where Total contracted UDA>100.
+    captionTitle <- "Contracts included: GDS/PDS/PDS+ with no annual contracted UOAs.
 The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher."
-    lineCol <- "steelblue"
+    lineCol <- "#CC79A7"
     labels <- c("Expected YTD delivery to meet contracted UOAs \nif delivery were equal across the financial year",
 
                 "Total annual contracted UOAs", 
@@ -993,7 +1035,7 @@ The most recent two months data will be incomplete and subject to change, partic
   
   current_yr_latest_data <- max(current_yr_latest_data$month)
   
-  prev_yr_latest_data <- lubridate::add_with_rollback(current_yr_latest_data, years(-1))
+  prev_yr_latest_data <- max(historic_data$month)
   
   data_labels <- data %>% 
     filter(month %in% c(prev_yr_latest_data, current_yr_latest_data) & measure == "YTD_delivery")

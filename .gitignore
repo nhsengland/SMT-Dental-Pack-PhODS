@@ -36,4 +36,5 @@ rsconnect/
 # Output files
 *.pdf
 *.xlsx
+*.csv
 reports/
