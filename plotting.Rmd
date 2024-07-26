@@ -2549,7 +2549,7 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
     subtitle <- "England"
   }
 
-
+#CALCULATE THE PERCENTAGE OF forms with highest BPE_Sextant_Score
   data_org <- data %>%
     group_by(Year_Month, Contract.Number) %>%
     summarise(Nforms = sum(Total.Form.Count),
@@ -2560,7 +2560,6 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
   data <- data %>% 
     filter(Total.Form.Count>0) %>%
     group_by(Year_Month, Contract.Number) %>%
-
     summarise (compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
                nlow_risk = 
                  sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
