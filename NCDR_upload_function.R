@@ -7,10 +7,15 @@ con <- dbConnect(odbc::odbc(), "NCDR")
 upload_data <- function(folder_name = "BPE", 
                         table_name = "Calendar_BPE"){
   
-  sql <- paste(
-    "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[", 
+  table_name_full <- paste(
+    "[NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[", 
     table_name,
     "]", 
+    sep = "")
+  
+  sql <- paste(
+    "SELECT * FROM ", 
+    table_name_full, 
     sep = "")
   
   provisional_table_name <- paste(
@@ -25,6 +30,14 @@ upload_data <- function(folder_name = "BPE",
   
   # read in existing table
   existing_table <- dbGetQuery(con, sql)
+  
+  # create a backup to revert to if needed
+  dbWriteTable(con, Id(catalog = "NHSE_Sandbox_PrimaryCareNHSContracts", 
+                       schema = "Dental", 
+                       table = table_name), 
+               value = existing_table, 
+               row.names = FALSE, 
+               overwrite = TRUE)
   
   # remove provisional rows
   final <- existing_table %>% 
@@ -57,12 +70,12 @@ upload_data <- function(folder_name = "BPE",
     combined <- rbind(final, new)
     
     # write combined table to NCDR
-    # dbWriteTable(con, Id(catalog="NHSE_Sandbox_PrimaryCareNHSContracts", 
+    # dbWriteTable(con, Id(catalog="NHSE_Sandbox_PrimaryCareNHSContracts",
     #                      schema="Dental",
-    #                      table=table_name), 
+    #                      table=table_name),
     #              value = combined,
-    #              row.names = FALSE, 
-    #              append = TRUE, 
+    #              row.names = FALSE,
+    #              append = TRUE,
     #              overwrite = FALSE)
     
     # write provisional table to NCDR
