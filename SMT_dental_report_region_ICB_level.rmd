@@ -38,10 +38,6 @@ options(scipen=999)
 # Suppress summarise info
 options(dplyr.summarise.inform = FALSE)
 
-source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
-source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
-source(knitr::purl("plotting.Rmd", output = tempfile()))
-source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
 
 ```
 
@@ -450,7 +446,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval = eval11}
 plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                              level = "STP",
-                                  region_STP_name = STP11Ù)
+                                  region_STP_name = STP11)
 
 ```
 
