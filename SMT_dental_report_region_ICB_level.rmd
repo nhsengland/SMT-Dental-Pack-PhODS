@@ -41,41 +41,6 @@ options(dplyr.summarise.inform = FALSE)
 
 ```
 
-
-```{r For ICB level report, we only want data after 2020.04, message =FALSE, include=FALSE}
-
-UDA_calendar_data <- UDA_calendar_data %>%
-    mutate(month = as.Date(month))%>%
-    filter(month >= as.Date ("2020-04-01"))
-
-#UOA_calendar_data <- UOA_calendar_data %>%
-#    mutate(month = as.Date(month))%>%
-#    filter(month >= as.Date ("2020-04-01"))
-
-UDA_calendar_data_FD<- UDA_calendar_data_FD %>%
-    mutate(month = as.Date(month))%>%
-    filter(month >= as.Date ("2020-04-01"))
-
-unique_patients_rolling<- get_unique_patients() %>%
-    mutate(month = as.Date(month))%>%
-    filter(month >= as.Date ("2020-04-01"))
-
-npp_data<- npp_data %>%
-    mutate(month = as.Date(month))%>%
-    filter(month >= as.Date ("2020-04-01"))
-
-DCP_data<- DCP_data %>%
-    mutate(Month = as.Date(Month))%>%
-    filter(Month >= as.Date ("2020-04-01"))
-
-BPE_data<- BPE_data %>%
-    mutate(Year_Month = as.Date(Year_Month))%>%
-    filter(Year_Month >= as.Date ("2020-04-01"))
-
-
-```
-
-
 ```{r set ICB name, include=FALSE}
 
 #get STPs for each region
@@ -288,14 +253,45 @@ if(params$region == "South West"){
 
 ```
 
+### Introduction
 
+This slide pack has been streamlined to help users to easily access the most important information. This change took effect as of June 2024 data. As part of this change we have also sought to make the slides more useful by making the following changes:
 
+-   Swapping from scheduled data (the month the dentist claimed for payment following a finished course of treatment) to calendar month data (the month the course of treatment finished). This change better reflects the activity of dentists.
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
+-   The data is available in an excel file available alongside this pack.
+
+This pack will continue to evolve and change, any questions/comments should be directed to [england.primarycare.phodsdata@nhs.net](mailto:england.primarycare.phodsdata@nhs.net)
+
+---
+
+name: contents
+### Contents
+
+- [Units of Dental Activity - Calendar activity data standardised by working days](#uda-activity)
+- [Units of Dental Activity - Calendar year to date delivery](#ytd-uda-delivery)
+- [Units of Dental Activity - Monthly activity compared to previous financial year](#monthly-uda-activity)
+- [Banded courses of treatment standardised by working days (including Foundation Dentists (FD))](#banded-CoT)
+- [Banded Courses of treatment as % of February 2020 delivery (including FD)](#banded-CoT-Feb2020)
+- [Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance](#DCP-CoT)
+- [Percentage of total UDAs delivered which had DCP assistance by band](#DCP-UDA)
+- [Unique dental patients seen](#unique-patients)
+- [Unique dental patients seen as a percentage of February 2020 figures](#unique-patients-Feb2020)
+- [Patients seen under the New Patient Premium definition](#NPP)
+- [Eligible contracts that have seen new patients](#NPP-contracts)
+- [Units of Orthodontic Activity - Calendar activity data standardised by working days](#UOA)
+- [Units of Orthodontic Activity - Calendar year to date delivery](#YTD-UOA-delivery)
+- [Oral health risk assessment](#BPE)
+
+---
+
+name: uda-activity
 ### UDA activity- treatment data standardised by working days
 
 ```{r xaringan-panelset-UDA_delivery_wd, echo=FALSE}
 xaringanExtra::use_panelset()
 ```
- <font size="1">
+ <font size="2">
 .panelset[
 
 .panel[.panel-name[`r region`]
@@ -307,7 +303,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -320,7 +316,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -332,7 +328,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
                                   region_STP_name = STP2)
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -345,7 +341,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -358,7 +354,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -371,7 +367,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -384,7 +380,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -397,7 +393,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -410,7 +406,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -423,7 +419,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -436,7 +432,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -450,7 +446,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ```
 
--   These graphs show, the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
+-   These graphs show the percentage of UDAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UDAs\* Monthly working days/working days per year.
 -   For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
 -   Over the course of the financial year this graph allows us to see patterns of delivery.
 
@@ -460,6 +456,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 
 ---
 
+name: ytd-uda-delivery
 ### YTD UDA delivery
 
 ```{r xaringan-panelset-YTD_UDA_delivery, echo=FALSE}
@@ -479,6 +476,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
  
 
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -492,10 +490,11 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           all_regions_and_STPs = FALSE)
 
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
-.panel[.panel-name[`r STP2``]
+.panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data, 
                           UDAorUOA = "UDA", 
@@ -504,6 +503,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -516,6 +516,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -528,6 +529,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -540,6 +542,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -552,6 +555,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -564,6 +568,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -576,6 +581,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -588,6 +594,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -600,6 +607,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -612,6 +620,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
                           plotChart = TRUE, 
                           all_regions_and_STPs = FALSE)
 ```
+
 -   This graph shows the progress towards delivering against contracted UDAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 ]
@@ -619,6 +628,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
 
 ---
 
+name: monthly-uda-activity
 ### Units of Dental Activity - Monthly activity compared to previous financial year
 
 ```{r xaringan-panelset-UDA_COM, echo=FALSE}
@@ -662,7 +672,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 
 ]
-.panel[.panel-name[`r STP2``]
+.panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot <- plot_monthly_uda_delivered(data = UDA_calendar_data, 
                                   level = "STP", 
@@ -837,6 +847,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ---
 
+name: banded-CoT
 ### Banded courses of treatment standardised by working days (including Foundation Dentists (FD))
 
 ```{r xaringan-panelset-banded_CoT, echo=FALSE}
@@ -871,7 +882,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
 
 ]
-.panel[.panel-name[`r STP2``]
+.panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_banded_CoT(data = UDA_calendar_data, 
                 level = "STP", 
@@ -1005,6 +1016,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 
 ---
 
+name: banded-CoT-Feb2020
 ### Banded Courses of Treatment as % of February 2020 delivery (including FD)
 
 ```{r xaringan-panelset-CoT_2020, echo=FALSE}
@@ -1022,7 +1034,8 @@ plot_banded_CoT(data = UDA_calendar_data,
                 all_regions_and_STPs = FALSE,
                 asIndex = TRUE)
 ```
-* This data excludes contracts with zero or one annual contracted UDAs.
+
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
 
 ]
 .panel[.panel-name[`r STP1`]
@@ -1034,10 +1047,11 @@ plot_banded_CoT(data = UDA_calendar_data,
                 all_regions_and_STPs = FALSE,
                 asIndex = TRUE)
 ```
-* This data excludes contracts with zero or one annual contracted UDAs.
+
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
 
 ]
-.panel[.panel-name[`r STP2``]
+.panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_banded_CoT(data = UDA_calendar_data, 
                 level = "STP", 
@@ -1047,7 +1061,8 @@ plot_banded_CoT(data = UDA_calendar_data,
                 asIndex = TRUE)
 ```
 
-* This data excludes contracts with zero or one annual contracted UDAs.
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
+
 ]
 .panel[.panel-name[`r STP3`]
 ```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
@@ -1059,7 +1074,8 @@ plot_banded_CoT(data = UDA_calendar_data,
                 asIndex = TRUE)
 ```
 
-* This data excludes contracts with zero or one annual contracted UDAs.
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
+
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
@@ -1070,7 +1086,8 @@ plot_banded_CoT(data = UDA_calendar_data,
                 all_regions_and_STPs = FALSE,
                 asIndex = TRUE)
 ```
-* This data excludes contracts with zero or one annual contracted UDAs.
+
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -1082,7 +1099,8 @@ plot_banded_CoT(data = UDA_calendar_data,
                 all_regions_and_STPs = FALSE,
                 asIndex = TRUE)
 ```
-* This data excludes contracts with zero or one annual contracted UDAs.
+
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -1095,7 +1113,8 @@ plot_banded_CoT(data = UDA_calendar_data,
                 asIndex = TRUE)
 ```
 
-* This data excludes contracts with zero or one annual contracted UDAs.
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
+
 ]
 .panel[.panel-name[`r STP7`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
@@ -1106,7 +1125,8 @@ plot_banded_CoT(data = UDA_calendar_data,
                 all_regions_and_STPs = FALSE,
                 asIndex = TRUE)
 ```
-* This data excludes contracts with zero or one annual contracted UDAs.
+
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
 
 ]
 .panel[.panel-name[`r STP8`]
@@ -1118,7 +1138,8 @@ plot_banded_CoT(data = UDA_calendar_data,
                 all_regions_and_STPs = FALSE,
                 asIndex = TRUE)
 ```
-* This data excludes contracts with zero or one annual contracted UDAs.
+
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -1130,7 +1151,8 @@ plot_banded_CoT(data = UDA_calendar_data,
                 all_regions_and_STPs = FALSE,
                 asIndex = TRUE)
 ```
-* This data excludes contracts with zero or one annual contracted UDAs.
+
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -1142,7 +1164,8 @@ plot_banded_CoT(data = UDA_calendar_data,
                 all_regions_and_STPs = FALSE,
                 asIndex = TRUE)
 ```
-* This data excludes contracts with zero or one annual contracted UDAs.
+
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -1154,19 +1177,187 @@ plot_banded_CoT(data = UDA_calendar_data,
                 all_regions_and_STPs = FALSE,
                 asIndex = TRUE)
 ```
-* This data excludes contracts with zero or one annual contracted UDAs.
+
+-   This graph shows time series on the the number of completed Courses of Treatment (CoTs) by band compared to pre-Covid delivery.
 
 ]
 ]
 
 ---
 
+name: DCP-CoT
 ### Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance
 
-```{r xaringan-panelset-historic_UOA_delivery_wd, echo=FALSE}
+```{r xaringan-panelset-DCP, echo=FALSE}
 xaringanExtra::use_panelset()
 ```
- <font size="1">
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "Regional",
+                  region_STP_name = region)
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+]
+
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP1)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP2)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+]
+.panel[.panel-name[`r STP3`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP3)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval4}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP4)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval5}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP5)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval6}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP6)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval7}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP7)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval8}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP8)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval9}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP9)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval10}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP10)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval11}
+plot_DCP_analysis(data = UDA_calendar_data,
+                  dcp_data = DCP_data,
+                  UDA_or_FP17 = "FP17",
+                  level = "STP",
+                  region_STP_name = STP11)
+
+```
+
+-   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+
+]
+ ]
+
+
+
+---
+
+name: DCP-UDA
+### Percentage of total UDAs delivered which had DCP assistance by band
+
+```{r xaringan-panelset-DCP2, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
 .panelset[
 
 .panel[.panel-name[`r region`]
@@ -1190,6 +1381,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP1)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 
 ]
@@ -1202,6 +1394,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP2)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 ]
 .panel[.panel-name[`r STP3`]
@@ -1213,6 +1406,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP3)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 ]
 .panel[.panel-name[`r STP4`]
@@ -1224,6 +1418,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP4)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 
 ]
@@ -1236,6 +1431,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP5)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 
 ]
@@ -1248,6 +1444,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP6)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 
 ]
@@ -1260,6 +1457,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP7)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 ]
 .panel[.panel-name[`r STP8`]
@@ -1271,6 +1469,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP8)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 
 ]
@@ -1283,6 +1482,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP9)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it. 
 
 ]
@@ -1295,6 +1495,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP10)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 
 ]
@@ -1307,6 +1508,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                                              region_STP_name = STP11)
 
 ```
+
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
 
 ]
@@ -1316,9 +1518,193 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 ---
 
-### Unique dental patients seen as a percentage of February 2020 figures
+name: unique-patients
+### Unique dental patients seen
 
 ```{r xaringan-panelset-UDP, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "Regional", 
+                             region_STP_name = region,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP1,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP2,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP3,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP4,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP5,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP6,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP7,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP8,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP9,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP10,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP11,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+]
+
+---
+
+name: unique-patients-Feb2020
+### Unique dental patients seen as a percentage of February 2020 figures
+
+```{r xaringan-panelset-UDP2, echo=FALSE}
 xaringanExtra::use_panelset()
 ```
  <font size="2">
@@ -1354,7 +1740,7 @@ plot_unique_patients_rolling(level = "STP",
 
 
 ]
-.panel[.panel-name[`r STP2``]
+.panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_unique_patients_rolling(level = "STP",
                                   region_STP_name = STP2, 
@@ -1499,6 +1885,7 @@ plot_unique_patients_rolling(level = "STP",
 
 ---
 
+name: NPP
 ### Patients seen under the New Patient Premium definition
 
 ```{r xaringan-panelset-NPP, echo=FALSE}
@@ -1525,7 +1912,7 @@ plot_npp_activity(level = "STP",
 
 
 ]
-.panel[.panel-name[`r STP2``]
+.panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_npp_activity(level = "STP",
                                   region_STP_name = STP2)
@@ -1620,6 +2007,7 @@ plot_npp_activity(level = "STP",
 
 ---
 
+name: NPP-contracts
 ### Eligible contracts that have seen new patients
 
 ```{r xaringan-panelset-NPP2, echo=FALSE}
@@ -1660,7 +2048,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 
 ]
-.panel[.panel-name[`r STP2``]
+.panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot <- plot_npp_contracts(level = "STP",
                                   region_STP_name = STP2)
@@ -1812,9 +2200,343 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ]
 ]
 
+---
+
+name: UOA
+### Units of Orthodontic Activity - Calendar activity data standardised by working days
+
+```{r xaringan-panelset-UOA, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "Regional",
+                              region_STP_name = region)
+
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP1)
+
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP2)
+
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP3)
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP4)
+
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP5)
+
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP6)
+
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP7)
+
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP8)
+
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP9)
+
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP10)
+
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
+                              level = "STP",
+                              region_STP_name = STP11)
+```
+
+- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
+- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- Over the course of the financial year this graph allows us to see patterns of delivery.
+
+]
+]
 
 ---
 
+name: YTD-UOA-delivery
+### Units of Orthodontic Activity - Calendar year to date delivery
+
+```{r xaringan-panelset-UOA_YTD, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "Regional",
+                          region_STP_name = region,
+                          all_regions_and_STPs = FALSE)
+
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP1,
+                          all_regions_and_STPs = FALSE)
+
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP2,
+                          all_regions_and_STPs = FALSE)
+
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP3,
+                          all_regions_and_STPs = FALSE)
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP4,
+                          all_regions_and_STPs = FALSE)
+
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP5,
+                          all_regions_and_STPs = FALSE)
+
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP6,
+                          all_regions_and_STPs = FALSE)
+
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP7,
+                          all_regions_and_STPs = FALSE)
+
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP8,
+                          all_regions_and_STPs = FALSE)
+
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP9,
+                          all_regions_and_STPs = FALSE)
+
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP10,
+                          all_regions_and_STPs = FALSE)
+
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
+                          UDAorUOA = "UOA",
+                          level = "STP",
+                          region_STP_name = STP11,
+                          all_regions_and_STPs = FALSE)
+```
+
+- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+
+]
+]
+
+---
+
+name: BPE
 ### Oral health risk assessment
 
 ```{r xaringan-panelset-BPE, echo=FALSE}
@@ -1847,7 +2569,7 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
 
 
 ]
-.panel[.panel-name[`r STP2``]
+.panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_BPE_no_oral_health_risk(data = BPE_data,
                              level = "STP",
