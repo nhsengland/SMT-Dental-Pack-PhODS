@@ -1336,7 +1336,7 @@ table_banded_CoT <- function(data = UDA_calendar_data_FD,
                              asIndex = FALSE){
   
   #get data into the right format for banded_CoT
-  data_to_print <- get_banded_COTs_data(data, all_regions_and_STPs = all_regions_and_STPs)
+  data_to_print <- get_banded_COTs_data(data, level = level, all_regions_and_STPs = all_regions_and_STPs)
   
   if(level == "Regional"){
     # filter for region or STP
