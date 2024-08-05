@@ -1652,6 +1652,7 @@ plot_npp_activity <- function(data = npp_data,
   
   # calculate number of patients seen
   data <- data %>% 
+    filter(month >= "2024-03-01") %>% 
     summarise(adult_total = sum(adult_count), 
               child_total = sum(child_count), 
               total = sum(total)) %>% 
@@ -1700,7 +1701,8 @@ plot_npp_contracts <- function(data = npp_data,
                                region_STP_name = NULL){
   # check if contract saw new patient or not
   data <- data %>% 
-    mutate(saw_new_patient = ifelse(total == 0, "no", "yes"))
+    mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
+    filter(month >= "2024-03-01")
   
   # group and filter based on level
   if(level == "Regional"){
@@ -1776,7 +1778,8 @@ table_npp_contracts <- function(data = npp_data,
                                 region_STP_name = NULL){
   # check if contract saw new patient or not
   data <- data %>% 
-    mutate(saw_new_patient = ifelse(total == 0, "no", "yes"))
+    mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
+    filter(month >= "2024-03-01")
   
   # group and filter based on level
   if(level == "Regional"){

@@ -259,6 +259,7 @@ data_unique <- data_Nat_unique
 
 ### New Patient Premium ###
 npp_nat <- npp_data %>% 
+  filter(month >= "2024-03-01") %>% 
   group_by(month) %>% 
   summarise(total_NPP_patients_seen = sum(total),
             adult_NPP_patients_seen = sum(adult_count), 
@@ -270,6 +271,7 @@ npp_nat <- npp_data %>%
   rename(calendar_month = month)
 
 npp_reg <- npp_data %>% 
+  filter(month >= "2024-03-01") %>% 
   group_by(month, region_name) %>% 
   summarise(total_NPP_patients_seen = sum(total),
             adult_NPP_patients_seen = sum(adult_count), 
@@ -281,6 +283,7 @@ npp_reg <- npp_data %>%
          calendar_month = month)
 
 npp_icb <- npp_data %>% 
+  filter(month >= "2024-03-01") %>% 
   group_by(month, commissioner_name) %>% 
   summarise(total_NPP_patients_seen = sum(total),
             adult_NPP_patients_seen = sum(adult_count), 
@@ -294,6 +297,7 @@ npp_icb <- npp_data %>%
 npp_total <- rbind(npp_nat, npp_reg, npp_icb)
 
 npp_contracts_nat <- npp_data %>% 
+  filter(month >= "2024-03-01") %>% 
   mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
   group_by(month, saw_new_patient) %>% 
   summarise(contracts = n_distinct(contract_number)) %>% 
@@ -310,6 +314,7 @@ npp_contracts_nat <- npp_data %>%
          eligible_contracts_for_NPP = eligible)
 
 npp_contracts_reg <- npp_data %>% 
+  filter(month >= "2024-03-01") %>% 
   mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
   group_by(month, region_name, saw_new_patient) %>% 
   summarise(contracts = n_distinct(contract_number)) %>% 
@@ -326,6 +331,7 @@ npp_contracts_reg <- npp_data %>%
          geography_name = region_name)
 
 npp_contracts_icb <- npp_data %>% 
+  filter(month >= "2024-03-01") %>% 
   mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
   group_by(month, commissioner_name, saw_new_patient) %>% 
   summarise(contracts = n_distinct(contract_number)) %>% 
