@@ -14,11 +14,11 @@ This code produces two outputs:
 
 1.  National PDF report
 2.  Excel file containing data presented in the report
+3.  ICB HTML report
 
-There are two further outputs which are not currently produced:
+There is a further output which is not currently produced:
 
-3.  Regional HTML report
-4.  ICB HTML report
+4.  Regional HTML report
 
 ### Functions
 
@@ -35,10 +35,14 @@ The following files create the outputs:
 
 1.  SMT_dental_report_National_PDF.Rmd - creates the national PDF report
 2.  ExportDataFile.R - creates the Excel data file
-3.  DRAFT_SMT_dental_report_national_regional_level.rmd - creates the regional HTML report, note this file is a work in progress
-4.  DRAFT_SMT_dental_report_region_ICB_level.rmd - creates the ICB HTML report, note this file is a work in progress
+3.  ExportDataFile_metadata.R - creates the metadata table for the Excel data file
+4.  SMT_dental_report_region_ICB_level.rmd - creates the ICB HTML report
+5.  DRAFT_SMT_dental_report_national_regional_level.rmd - creates the regional HTML report, note this file is a work in progress
 
-All other files are required to produce the outputs, for example adding the NHS England logo and setting up the format of all slides.
+### Running the reports
+The SMT_dental_report_National_PDF.Rmd file needs to be rendered separately using the 'Knit' option in RStudio. The Excel data file and ICB level HTML reports for all regions can be automatically produced by running the auto_render_SMT_report_functions.R file.
+
+All other files are required to produce the outputs, for example setting up the format of all slides and creating a table of workdays to use for standardisation.
 
 ## Licence
 
