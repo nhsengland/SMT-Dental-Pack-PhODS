@@ -1,28 +1,42 @@
+# load packages
 library(tidyverse)
 library(odbc)
 library(DBI)
 
+# connect to NCDR
 con <- dbConnect(odbc::odbc(), "NCDR")
 
+# function to upload data to NCDR
 upload_data <- function(folder_name = "BPE", 
                         table_name = "Calendar_BPE"){
   
+  # set full SQL table name
   table_name_full <- paste(
     "[NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[", 
     table_name,
     "]", 
     sep = "")
   
+  # set table name for backup
+  table_name_backup <- paste(
+    table_name, 
+    "backup", 
+    sep = "_"
+  )
+  
+  # SQL query
   sql <- paste(
     "SELECT * FROM ", 
     table_name_full, 
     sep = "")
   
+  # set table name for archive of provisional data
   provisional_table_name <- paste(
     table_name,
     "_provisional_archived", 
     sep = "")
   
+  # set file path for new data
   folder <- paste(
     "N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/BSA Calendar data/",
     folder_name,
@@ -34,7 +48,7 @@ upload_data <- function(folder_name = "BPE",
   # create a backup to revert to if needed
   dbWriteTable(con, Id(catalog = "NHSE_Sandbox_PrimaryCareNHSContracts", 
                        schema = "Dental", 
-                       table = table_name), 
+                       table = table_name_backup), 
                value = existing_table, 
                row.names = FALSE, 
                overwrite = TRUE)
@@ -70,21 +84,21 @@ upload_data <- function(folder_name = "BPE",
     combined <- rbind(final, new)
     
     # write combined table to NCDR
-    # dbWriteTable(con, Id(catalog="NHSE_Sandbox_PrimaryCareNHSContracts",
-    #                      schema="Dental",
-    #                      table=table_name),
-    #              value = combined,
-    #              row.names = FALSE,
-    #              append = TRUE,
-    #              overwrite = FALSE)
+    dbWriteTable(con, Id(catalog="NHSE_Sandbox_PrimaryCareNHSContracts",
+                         schema="Dental",
+                         table=table_name),
+                 value = combined,
+                 row.names = FALSE,
+                 append = FALSE,
+                 overwrite = TRUE)
     
     # write provisional table to NCDR
-    # dbWriteTable(con, Id(catalog="NHSE_Sandbox_PrimaryCareNHSContracts", 
-    #                      schema="Dental",
-    #                      table=provisional_table_name), 
-    #              value = provisional,
-    #              row.names = FALSE, 
-    #              append = TRUE, 
-    #              overwrite = FALSE)
+    dbWriteTable(con, Id(catalog="NHSE_Sandbox_PrimaryCareNHSContracts",
+                         schema="Dental",
+                         table=provisional_table_name),
+                 value = provisional,
+                 row.names = FALSE,
+                 append = TRUE,
+                 overwrite = FALSE)
   }
 }
