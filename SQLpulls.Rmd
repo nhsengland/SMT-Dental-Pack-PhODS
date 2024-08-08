@@ -373,6 +373,10 @@ DCP_data$Region <- str_to_title(DCP_data$Region_Name)
 DCP_data$commissioner_name <- str_to_title(DCP_data$commissioner_name)
 DCP_data$commissioner_name <- substr(DCP_data$commissioner_name,1,nchar(DCP_data$commissioner_name)-3)
 DCP_data$commissioner_name <- paste0(DCP_data$commissioner_name, rep("ICB", nrow(DCP_data)))
+
+# filter out Unknown DCP type
+DCP_data <- DCP_data %>% 
+  filter(!grepl("Unknown", DCP_description))
 ```
 
 

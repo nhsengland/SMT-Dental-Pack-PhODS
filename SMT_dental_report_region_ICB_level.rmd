@@ -256,40 +256,37 @@ if(params$region == "South West"){
 
 ```
 
-### Introduction
+#### Introduction
 
 This slide pack has been streamlined to help users to easily access the most important information. This change took effect as of June 2024 data. As part of this change we have also sought to make the slides more useful by making the following changes:
 
 -   Swapping from scheduled data (the month the dentist claimed for payment following a finished course of treatment) to calendar month data (the month the course of treatment finished). This change better reflects the activity of dentists.
 -   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
--   The data is available in an excel file available alongside this pack.
+-   The data is available in an Excel file available alongside this pack.
 
 This pack will continue to evolve and change, any questions/comments should be directed to [england.primarycare.phodsdata@nhs.net](mailto:england.primarycare.phodsdata@nhs.net)
 
 ---
 
 name: contents
-### Contents
+#### Contents
 
-- [Units of Dental Activity - Calendar activity data standardised by working days](#uda-activity)
-- [Units of Dental Activity - Calendar year to date delivery](#ytd-uda-delivery)
-- [Units of Dental Activity - Monthly activity compared to previous financial year](#monthly-uda-activity)
+- [Units of Dental Activity (UDA) - Calendar activity data standardised by working days](#uda-activity)
+- [Units of Dental Activity (UDA) - Calendar year to date delivery](#ytd-uda-delivery)
+- [Units of Dental Activity (UDA) - Monthly activity compared to previous financial year](#monthly-uda-activity)
 - [Banded courses of treatment standardised by working days (including Foundation Dentists (FD))](#banded-CoT)
 - [Banded Courses of treatment as % of February 2020 delivery (including FD)](#banded-CoT-Feb2020)
 - [Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance](#DCP-CoT)
 - [Percentage of total UDAs delivered which had DCP assistance by band](#DCP-UDA)
-- [Unique dental patients seen](#unique-patients)
-- [Unique dental patients seen as a percentage of February 2020 figures](#unique-patients-Feb2020)
 - [Patients seen under the New Patient Premium definition](#NPP)
 - [Eligible contracts that have seen new patients](#NPP-contracts)
-- [Units of Orthodontic Activity - Calendar activity data standardised by working days](#UOA)
-- [Units of Orthodontic Activity - Calendar year to date delivery](#YTD-UOA-delivery)
-- [Oral health risk assessment](#BPE)
+- [Units of Orthodontic Activity (UOA) - Calendar activity data standardised by working days](#UOA)
+- [Units of Orthodontic Activity (UOA) - Calendar year to date delivery](#YTD-UOA-delivery)
 
 ---
 
 name: uda-activity
-### UDA activity- treatment data standardised by working days
+#### UDA - Calendar activity data standardised by working days
 
 ```{r xaringan-panelset-UDA_delivery_wd, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -460,7 +457,7 @@ plot_historic_UDA_delivery_wd(data = UDA_calendar_data,
 ---
 
 name: ytd-uda-delivery
-### YTD UDA delivery
+#### UDA - Calendar year to date delivery
 
 ```{r xaringan-panelset-YTD_UDA_delivery, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -632,7 +629,7 @@ plot_YTD_UDA_UOA_delivery(data = UDA_calendar_data,
 ---
 
 name: monthly-uda-activity
-### Units of Dental Activity - Monthly activity compared to previous financial year
+#### UDA - Monthly activity compared to previous financial year
 
 ```{r xaringan-panelset-UDA_COM, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -653,7 +650,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -670,7 +667,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 
@@ -688,7 +685,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -705,7 +702,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -722,7 +719,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -739,7 +736,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -756,7 +753,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -773,7 +770,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -790,7 +787,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -807,7 +804,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -824,7 +821,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -841,7 +838,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ```
 
 - This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+- Some of the difference between months may be due to differences in the number of working days. The table shows working days by month for 2023/24 and 2024/25.
 - As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ]
@@ -851,7 +848,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ---
 
 name: banded-CoT
-### Banded courses of treatment standardised by working days (including Foundation Dentists (FD))
+#### Banded courses of treatment standardised by working days (including Foundation Dentists (FD))
 
 ```{r xaringan-panelset-banded_CoT, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -1020,7 +1017,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ---
 
 name: banded-CoT-Feb2020
-### Banded Courses of Treatment as % of February 2020 delivery (including FD)
+#### Banded Courses of Treatment as % of February 2020 delivery (including FD)
 
 ```{r xaringan-panelset-CoT_2020, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -1189,7 +1186,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ---
 
 name: DCP-CoT
-### Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance
+#### Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance
 
 ```{r xaringan-panelset-DCP, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -1355,7 +1352,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ---
 
 name: DCP-UDA
-### Percentage of total UDAs delivered which had DCP assistance by band
+#### Percentage of total UDAs delivered which had DCP assistance by band
 
 ```{r xaringan-panelset-DCP2, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -1521,375 +1518,8 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 ---
 
-name: unique-patients
-### Unique dental patients seen
-
-```{r xaringan-panelset-UDP, echo=FALSE}
-xaringanExtra::use_panelset()
-```
- <font size="2">
-.panelset[
-
-.panel[.panel-name[`r region`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_unique_patients_rolling(level = "Regional", 
-                             region_STP_name = region,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-
-]
-.panel[.panel-name[`r STP1`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP1,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-
-]
-.panel[.panel-name[`r STP2`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP2,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-]
-.panel[.panel-name[`r STP3`]
-```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP3,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-]
-.panel[.panel-name[`r STP4`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP4,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-]
-.panel[.panel-name[`r STP5`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP5,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-]
-.panel[.panel-name[`r STP6`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP6,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-]
-.panel[.panel-name[`r STP7`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP7,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-]
-.panel[.panel-name[`r STP8`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP8,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-]
-.panel[.panel-name[`r STP9`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP9,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-]
-.panel[.panel-name[`r STP10`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP10,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-]
-.panel[.panel-name[`r STP11`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
-plot_unique_patients_rolling(level = "STP", 
-                             region_STP_name = STP11,
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
-
-]
-]
-
----
-
-name: unique-patients-Feb2020
-### Unique dental patients seen as a percentage of February 2020 figures
-
-```{r xaringan-panelset-UDP2, echo=FALSE}
-xaringanExtra::use_panelset()
-```
- <font size="2">
-.panelset[
-
-.panel[.panel-name[`r region`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_unique_patients_rolling(level = "Regional",
-                              region_STP_name = region, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-
-]
-.panel[.panel-name[`r STP1`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP1, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-
-]
-.panel[.panel-name[`r STP2`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP2, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-]
-.panel[.panel-name[`r STP3`]
-```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP3, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-]
-.panel[.panel-name[`r STP4`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP4, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-]
-.panel[.panel-name[`r STP5`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP5, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-]
-.panel[.panel-name[`r STP6`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP6, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-]
-.panel[.panel-name[`r STP7`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP7, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-]
-.panel[.panel-name[`r STP8`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP8, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                              asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-]
-.panel[.panel-name[`r STP9`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP9, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-]
-.panel[.panel-name[`r STP10`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP10, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-]
-.panel[.panel-name[`r STP11`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
-plot_unique_patients_rolling(level = "STP",
-                                  region_STP_name = STP11, 
-                             plotChart = TRUE, 
-                             all_regions_and_STPs = FALSE, 
-                             asIndex = TRUE)
-```
-
--   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
--   A person seen more than once in the rolling 12/24 months would be counted only once.
--   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
-
-]
-]
-
-
----
-
 name: NPP
-### Patients seen under the New Patient Premium definition
+#### Patients seen under the New Patient Premium definition
 
 ```{r xaringan-panelset-NPP, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -1904,6 +1534,8 @@ plot_npp_activity(level = "Regional",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP1`]
@@ -1913,6 +1545,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP2`]
@@ -1922,6 +1556,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP3`]
@@ -1931,6 +1567,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP4`]
@@ -1940,6 +1578,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -1949,6 +1589,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -1958,6 +1600,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -1967,6 +1611,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP8`]
@@ -1976,6 +1622,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -1985,6 +1633,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -1994,6 +1644,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -2003,6 +1655,8 @@ plot_npp_activity(level = "STP",
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 ]
@@ -2011,7 +1665,7 @@ plot_npp_activity(level = "STP",
 ---
 
 name: NPP-contracts
-### Eligible contracts that have seen new patients
+#### Eligible contracts that have seen new patients
 
 ```{r xaringan-panelset-NPP2, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -2033,6 +1687,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP1`]
@@ -2049,6 +1705,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP2`]
@@ -2064,6 +1722,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP3`]
@@ -2079,6 +1739,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP4`]
@@ -2094,6 +1756,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -2109,6 +1773,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -2124,6 +1790,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -2139,6 +1807,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP8`]
@@ -2154,6 +1824,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -2169,6 +1841,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -2184,6 +1858,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -2199,6 +1875,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ]
 ]
@@ -2206,7 +1884,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ---
 
 name: UOA
-### Units of Orthodontic Activity - Calendar activity data standardised by working days
+#### UOA - Calendar activity data standardised by working days
 
 ```{r xaringan-panelset-UOA, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -2223,7 +1901,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2236,7 +1914,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2249,7 +1927,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2261,7 +1939,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2274,7 +1952,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2287,7 +1965,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2300,7 +1978,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2313,7 +1991,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2326,7 +2004,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2339,7 +2017,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2352,7 +2030,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2364,7 +2042,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ]
@@ -2373,7 +2051,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ---
 
 name: YTD-UOA-delivery
-### Units of Orthodontic Activity - Calendar year to date delivery
+#### UOA - Calendar year to date delivery
 
 ```{r xaringan-panelset-UOA_YTD, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -2537,158 +2215,3 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
 ]
 ]
 
----
-
-name: BPE
-### Oral health risk assessment
-
-```{r xaringan-panelset-BPE, echo=FALSE}
-xaringanExtra::use_panelset()
-```
- <font size="2">
-.panelset[
-
-.panel[.panel-name[`r region`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "Regional",
-                              region_STP_name = region)
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP1`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP1)
-
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP2`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP2)
-
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP3`]
-```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP3)
-
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP4`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP4)
-
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP5`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP5)
-
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP6`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP6)
-
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP7`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP7)
-
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP8`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP8)
-
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP9`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP9)
-
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP10`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP10)
-
-
-
-```
-
-
-]
-.panel[.panel-name[`r STP11`]
-```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
-plot_BPE_no_oral_health_risk(data = BPE_data,
-                             level = "STP",
-                                  region_STP_name = STP11)
-
-
-```
-
-
-]
-]

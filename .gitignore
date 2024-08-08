@@ -37,4 +37,5 @@ rsconnect/
 *.pdf
 *.xlsx
 *.csv
+*.html
 reports/

@@ -234,29 +234,6 @@ data_Nat_unique <- get_unique_patients() %>%
          calendar_month = month) %>% 
   arrange(desc(calendar_month))
 
-# data_icb_unique <- get_unique_patients(all_regions_and_STPs = TRUE) %>% 
-#   group_by(month, commissioner_name) %>% 
-#   dplyr::summarise(all_12m_count = sum(all_12m_count, na.rm = TRUE),
-#                    child_12m_count = sum(child_12m_count, na.rm = TRUE), 
-#                    adult_24m_count = sum(adult_24m_count, na.rm = TRUE)) %>% 
-#   mutate(month = format(as.Date(month), "%Y-%m"), 
-#          commissioner_name = str_to_title(commissioner_name), 
-#          commissioner_name = replace(commissioner_name, commissioner_name == "Icb", "ICB"),
-#          geography_level = "ICB") %>% 
-#   rename(unique_patients_seen_12_month = all_12m_count, 
-#          unique_children_seen_12_month = child_12m_count, 
-#          unique_adults_seen_24_month = adult_24m_count, 
-#          geography_name = commissioner_name, 
-#          calendar_month = month) %>% 
-#           arrange(desc(calendar_month))
-
-# change Icb to ICB so joins work
-# data_icb_unique$geography_name <- substr(data_icb_unique$geography_name, 1, 
-#                                            nchar(data_icb_unique$geography_name)-3)
-# data_icb_unique$geography_name <- paste0(data_icb_unique$geography_name, "ICB", sep = "")
-
-# data_unique <- rbind(data_Nat_unique, data_reg_unique, data_icb_unique)
-
 data_unique <- data_Nat_unique
 
 ### New Patient Premium ###
@@ -304,7 +281,8 @@ npp_contracts_nat <- npp_data %>%
   group_by(month, saw_new_patient) %>% 
   summarise(contracts = n_distinct(contract_number)) %>% 
   pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
-  mutate(yes = ifelse(is.na(yes), 0, yes), 
+  mutate(yes = ifelse(is.na(yes), 0, yes),
+         no = ifelse(is.na(no), 0, no),
          eligible = yes + no, 
          month = format(as.Date(month), "%Y-%m"), 
          geography_name = "England", 
@@ -322,6 +300,7 @@ npp_contracts_reg <- npp_data %>%
   summarise(contracts = n_distinct(contract_number)) %>% 
   pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
   mutate(yes = ifelse(is.na(yes), 0, yes), 
+         no = ifelse(is.na(no), 0, no),
          eligible = yes + no, 
          month = format(as.Date(month), "%Y-%m"),
          geography_level = "Regional") %>% 
@@ -338,8 +317,9 @@ npp_contracts_icb <- npp_data %>%
   group_by(month, commissioner_name, saw_new_patient) %>% 
   summarise(contracts = n_distinct(contract_number)) %>% 
   pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
-  mutate(eligible = yes + no, 
-         yes = ifelse(is.na(yes), 0, yes), 
+  mutate(yes = ifelse(is.na(yes), 0, yes),
+         no = ifelse(is.na(no), 0, no),
+         eligible = yes + no, 
          month = format(as.Date(month), "%Y-%m"),
          geography_level = "Regional") %>% 
   select(-no) %>% 
@@ -530,88 +510,6 @@ data_dental_activity<-data_UDA_de_co%>%
            `month` = format(as.Date(month), "%Y-%m"))%>%
     select(calendar_month=month, financial_year,geography_level,geography_name,DCP_metric,DCP_description=DCP_description.x,
            metric_count_by_DCP = numbers,metric_count_total = all_numbers,DCP_assisted_percent = asissted_percent)
-
-  
-################BPE data
-    # BPE_data
-    # 
-    # data <- BPE_data %>% 
-    #   filter(!is.na(Highest.BPE.Sextant.Score))
-    # 
-    # data[is.na(data)] <- 0
-    
-#####national level  
-    # BPE_national <- data %>% 
-    #   filter(Total.Form.Count>0) %>%
-    #   group_by(Year_Month) %>%
-    #   summarise (Nforms = sum(Total.Form.Count),
-    #              compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
-    #              nlow_risk =sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
-    #              low_risk_less1year =sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE))%>% 
-    #   mutate (percentcompYear_Montheform = formattable::percent(compYear_Monthe_forms/ Nforms, digits =0)) %>%  
-    #   mutate (percent_low_risk_whic_are1_year = formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
-    #   mutate (percentlowrisk= formattable::percent (nlow_risk/ compYear_Monthe_forms, digits =0) ) %>% 
-    #   filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
-    #   filter (percent_low_risk_whic_are1_year<2)%>% 
-    #   mutate(geography_level = "National", 
-    #          geography_name = "England", 
-    #          Year_Month = format(as.Date(Year_Month), "%Y-%m")) %>% 
-    #   arrange(desc(Year_Month)) %>% 
-    #   rename(calendar_month = Year_Month)%>% 
-    #   select(calendar_month,geography_level,geography_name,
-    #          #Nforms,compYear_Monthe_forms,
-    #          nlow_risk,low_risk_less1year,
-    #          percentcompYear_Montheform,percent_low_risk_whic_are1_year,percentlowrisk)
-    
-    
-    
-####regional level
-    # BPE_regional <- data %>% 
-    #   filter(Total.Form.Count>0) %>%
-    #   group_by(Year_Month,geography_name=Latest.Region.Description) %>%
-    #   summarise (Nforms = sum(Total.Form.Count),
-    #              compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
-    #              nlow_risk =sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
-    #              low_risk_less1year =sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE))%>% 
-    #   mutate (percentcompYear_Montheform = formattable::percent(compYear_Monthe_forms/ Nforms, digits =0)) %>%  
-    #   mutate (percent_low_risk_whic_are1_year = formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
-    #   mutate (percentlowrisk= formattable::percent (nlow_risk/ compYear_Monthe_forms, digits =0) ) %>% 
-    #   filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
-    #   filter (percent_low_risk_whic_are1_year<2)%>% 
-    #   mutate(geography_level='Regional', 
-    #          Year_Month = format(as.Date(Year_Month), "%Y-%m")) %>% 
-    #   arrange(desc(Year_Month)) %>% 
-    #   rename(calendar_month = Year_Month)%>% 
-    #   select(calendar_month,geography_level,geography_name,
-    #          #Nforms,compYear_Monthe_forms,
-    #          nlow_risk,low_risk_less1year,
-    #          percentcompYear_Montheform,percent_low_risk_whic_are1_year,percentlowrisk)
-
-    
-####ICB level
-    # BPE_ICB <- data %>% 
-    #   filter(Total.Form.Count>0) %>%
-    #   group_by(Year_Month,geography_name=commissioner_name) %>%
-    #   summarise (Nforms = sum(Total.Form.Count),
-    #              compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
-    #              nlow_risk =sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
-    #              low_risk_less1year =sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE))%>% 
-    #   mutate (percentcompYear_Montheform = formattable::percent(compYear_Monthe_forms/ Nforms, digits =0)) %>%  
-    #   mutate (percent_low_risk_whic_are1_year = formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
-    #   mutate (percentlowrisk= formattable::percent (nlow_risk/ compYear_Monthe_forms, digits =0) ) %>% 
-    #   filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
-    #   filter (percent_low_risk_whic_are1_year<2)%>% 
-    #   mutate(geography_level='Regional', 
-    #          Year_Month = format(as.Date(Year_Month), "%Y-%m")) %>% 
-    #   arrange(desc(Year_Month)) %>% 
-    #   rename(calendar_month = Year_Month)%>% 
-    #   select(calendar_month,geography_level,geography_name,
-    #          #Nforms,compYear_Monthe_forms,
-    #          nlow_risk,low_risk_less1year,
-    #          percentcompYear_Montheform,percent_low_risk_whic_are1_year,percentlowrisk)
-    
-
-    # BPE_total=rbind(BPE_national, BPE_regional, BPE_ICB)
   
 
 
@@ -627,9 +525,6 @@ writeData(output_file, "Orthodontic contract & activity", data_orthodontic_activ
 
 addWorksheet(output_file, "DCP")
 writeData(output_file, "DCP", total_dcp)
-
-# addWorksheet(output_file, "BPE")
-# writeData(output_file, "BPE", BPE_total)
 
 addWorksheet(output_file, "Metadata")
 writeData(output_file, "Metadata", metadata)
