@@ -6,7 +6,15 @@ library(DBI)
 # connect to NCDR
 con <- dbConnect(odbc::odbc(), "NCDR")
 
-# function to upload data to NCDR
+#' Upload downloaded BSA data to NCDR
+#'
+#' @param folder_name A string which gives the name of the folder in the N drive
+#' @param table_name A string which gives the table name in the NCDR sandbox and schema
+#'
+#' @return Returns a summary of all folders with TRUE if the upload has been successful
+#' 
+#' @examples upload_data(folder_name = "BPE", table_name = "Calendar_BPE")
+#' 
 upload_data <- function(folder_name = "BPE", 
                         table_name = "Calendar_BPE"){
   
