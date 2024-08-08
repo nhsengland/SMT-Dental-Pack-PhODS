@@ -42,7 +42,7 @@ The following files create the outputs:
 ### Running the reports
 The SMT_dental_report_National_PDF.Rmd file needs to be rendered separately using the 'Knit' option in RStudio. The Excel data file and ICB level HTML reports for all regions can be automatically produced by running the auto_render_SMT_report_functions.R file.
 
-All other files are required to produce the outputs, for example setting up the format of all slides and creating a table of workdays to use for standardisation.
+All other files are required to produce the outputs, for example setting up the format of all slides and creating a table of workdays to use for standardisation, or for internal set up, such as uploading the tables to the data warehouse.
 
 ## Licence
 
