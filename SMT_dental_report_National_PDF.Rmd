@@ -52,18 +52,21 @@ This slide pack has been streamlined to help users to easily access the most imp
 
 -   Swapping from scheduled data (the month the dentist claimed for payment following a finished course of treatment) to calendar month data (the month the course of treatment finished). This change better reflects the activity of dentists.
 -   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
--   A national HTML will no longer be produced, instead the data is in an excel file available alongside this pack.
+-   A national HTML will no longer be produced, instead the data is in an Excel file available alongside this pack.
 
 #### Metrics and outputs soon to be added
 
--   Orthodontics metrics
--   Oral health risk assessment
--   New Patient Premiums metrics
--   ICB level HTML packs will be available in the future, for now the data is available in the excel document.
+-   Oral health risk assessments
+
+&nbsp; <!--This is to force a line break-->
+
+ICB level data is now included in the HTML files.
+
+&nbsp; <!--This is to force a line break-->
 
 This pack will continue to evolve and change, any questions/comments should be directed to [england.primarycare.phodsdata@nhs.net](mailto:england.primarycare.phodsdata@nhs.net)
 
-## Calendar Vs scheduled data
+## Calendar vs scheduled data
 
 Analyses in this report now only use **calendar data**. Previous packs used scheduled data. An explanation on the difference is given below. The appendix also provides more detail on how the switch effects the data.
 
@@ -207,14 +210,17 @@ plot_unique_patients_rolling(level = "National",
 
 ## Patients seen under the New Patient Premium definition
 
-```{r npp activity, echo = FALSE, warning = FALSE, message = FALSE, fig.with=14, fig.height=5, fig.align='center'}
+```{r npp activity, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_npp_activity(level = "National", 
                   region_STP_name = NULL)
 ```
 
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
 ## Eligible contracts that have seen new patients
 
-```{r npp contracts, echo = FALSE, warning = FALSE, message = FALSE, fig.with=14, fig.height=5, fig.align='center'}
+```{r npp contracts, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot <- plot_npp_contracts(level = "National",
                            region_STP_name = NULL)
 
@@ -224,6 +230,9 @@ table <- table_npp_contracts(level = "National",
 grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
              layout_matrix = rbind(c(1, 1, 2)))
 ```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 # Units of Orthodontic Activity (UOA) Information
 
@@ -236,7 +245,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. For the previous financial years, annual average performance is shown.
+- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ## Units of Orthodontic Activity - Calendar year to date delivery
@@ -294,7 +303,7 @@ plot_111_referrals()
 
 Helpful reading <https://www.kingsfund.org.uk/insight-and-analysis/long-reads/dentistry-england-explained>
 
-## Impact of swapping to calendar data
+## Impact of swapping to calendar data for dentistry
 
 -   Dental activity data can be grouped into months using two different methods - by 'calendar' month or by 'scheduled' month.
 
@@ -339,5 +348,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
     -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only]
     -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Unique_rolling]
     -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_DCP]
+    -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity]
+    -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UOA_Activity]
 -   R code used to create this pack is available on Github
     -   <https://github.com/nhsengland/SMT-Dental-Pack-PhODS>

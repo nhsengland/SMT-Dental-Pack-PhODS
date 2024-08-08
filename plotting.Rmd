@@ -731,17 +731,17 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
                                       month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
                                       month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
                                       month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24"))
-  
-  historic_latest_contracted_uoa <- historic_data %>% 
-    group_by(month, financial_year) %>% 
-    summarise(final_contracted_UOAs = sum(annual_contracted_UOA, na.rm = TRUE)) %>% 
+
+  historic_latest_contracted_uoa <- historic_data %>%
+    group_by(month, financial_year) %>%
+    summarise(final_contracted_UOAs = sum(annual_contracted_UOA, na.rm = TRUE)) %>%
     filter(month(month) == 3)
-           
-  historic_data <- historic_data %>% 
+
+  historic_data <- historic_data %>%
     group_by(financial_year) %>%
     summarise(full_year_UOA_delivery = sum(UOA_delivered, na.rm = TRUE)) %>%
-    left_join(historic_latest_contracted_uoa, by = "financial_year") %>% 
-    mutate(perc_UOA_delivered = full_year_UOA_delivery * 100 / final_contracted_UOAs) %>% 
+    left_join(historic_latest_contracted_uoa, by = "financial_year") %>%
+    mutate(perc_UOA_delivered = full_year_UOA_delivery * 100 / final_contracted_UOAs) %>%
     filter(!is.na(financial_year))
 
   #get current FY data ready
@@ -753,7 +753,7 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     filter(month >= as.Date ("2024-04-01")) %>% ## this needs to be updated every FY
     left_join(working_days,by=c('month')) %>% 
     mutate(perc_UOA_delivered =100* (UOA_delivery / (contracted_UOAs*(`no workdays`/`total workdays`)))) %>%
-    mutate(perc_UOA_delivered = round(perc_UOA_delivered, digits = 0)) %>% 
+    mutate(perc_UOA_delivered = round(perc_UOA_delivered, digits = 0)) %>%
     bind_rows(historic_data)
   
   #divide data in to "Previous Financial Years (Averages)", "Current Financial Year"
@@ -777,43 +777,44 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     mutate(line_for_100 = 100)
   
   #divide data to two datasets -- previous and current FY
-  data1 <- data %>%
-    filter(year_type=="Previous Financial Years (Averages)") 
+  # data1 <- data %>%
+  #   filter(year_type=="Previous Financial Years (Averages)") 
   
   data2 <- data%>%
     filter(year_type=="Current Financial Year")
   
+  ## NOT CURRENTLY USING HISTORICAL DATA AS ONLY LATEST FINANCIAL YEAR IS AVAILABLE
   # Define plot 1
-  p1 <- ggplot() +
-    geom_line(data = data1, 
-              aes(x = month,
-                  y = perc_UOA_delivered),
-              colour = "black") + 
-    geom_line(data = data1, 
-              aes(x = month,
-                  y = line_for_100),
-              colour = "blue") +
-    geom_point(data = data1,
-               aes(x = month,
-                   y = perc_UOA_delivered),
-               colour = "steelblue") +
-    ylab("Percentage of contracted UOAs delivered") + 
-    xlab(NULL) + 
-    geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
-              aes(x = month + 120,
-                  y = perc_UOA_delivered - 4,
-                  label = financial_year),
-              size = 3) +
-    geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
-              aes(x = month + 120,
-                  y = perc_UOA_delivered + 4,
-                  label = paste0(round(perc_UOA_delivered), "%")),
-              size = 3) +
-    theme_bw() +
-    scale_y_continuous(limits = c(0, max(c(data1$perc_UOA_delivered, 95), na.rm = T) + 5),
-                       breaks = seq(0, max(c(data1$perc_UOA_delivered, 95), na.rm = T) + 5, 10)) +
-    theme(axis.text.x = element_text(angle = 90, vjust=-0.0001), 
-          legend.position = "none")
+  # p1 <- ggplot() +
+  #   geom_line(data = data1, 
+  #             aes(x = month,
+  #                 y = perc_UOA_delivered),
+  #             colour = "black") + 
+  #   geom_line(data = data1, 
+  #             aes(x = month,
+  #                 y = line_for_100),
+  #             colour = "blue") +
+  #   geom_point(data = data1,
+  #              aes(x = month,
+  #                  y = perc_UOA_delivered),
+  #              colour = "steelblue") +
+  #   ylab("Percentage of contracted UOAs delivered") + 
+  #   xlab(NULL) + 
+  #   geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
+  #             aes(x = month + 120,
+  #                 y = perc_UOA_delivered - 4,
+  #                 label = financial_year),
+  #             size = 3) +
+  #   geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
+  #             aes(x = month + 120,
+  #                 y = perc_UOA_delivered + 4,
+  #                 label = paste0(round(perc_UOA_delivered), "%")),
+  #             size = 3) +
+  #   theme_bw() +
+  #   scale_y_continuous(limits = c(0, max(c(data1$perc_UOA_delivered, 95), na.rm = T) + 5),
+  #                      breaks = seq(0, max(c(data1$perc_UOA_delivered, 95), na.rm = T) + 5, 10)) +
+  #   theme(axis.text.x = element_text(angle = 90, vjust=-0.0001), 
+  #         legend.position = "none")
   
   # Define plot 2
   p2 <- ggplot() +
@@ -837,11 +838,13 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
   main_title <- "Monthly percentage of usual annual contracted UOAs standardised by working days"
   
   # Arrange and annotate figure
-  figure <- ggarrange(p1, p2, nrow = 1)
+  figure <- ggarrange(#p1, 
+                      p2, 
+                      nrow = 1)
   
   # Add footnote
   footnote_text <- "Note: Contracts included: GDS/PDS/PDS+ excluding contracts with no annual contracted UOAs.
-  The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher."
+  All data for the latest financial year will be incomplete and subject to change as there is no restriction on when UOA information can be submitted. We expect final data to be higher."
   
   # Create annotation
   annotation <- annotate_figure(
@@ -901,7 +904,7 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
     title <- "YTD UOA delivery across all contracts against annual contracted UOAs (millions)"
     ylab <- "YTD UOA delivery (millions)"
     captionTitle <- "Contracts included: GDS/PDS/PDS+ with no annual contracted UOAs.
-The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher."
+All data for the latest financial year will be incomplete and subject to change as there is no restriction on when UOA information can be submitted. We expect final data to be higher."
     lineCol <- "#CC79A7"
     labels <- c("Expected YTD delivery to meet contracted UOAs \nif delivery were equal across the financial year",
 
