@@ -903,7 +903,7 @@ plot_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
     data <- get_delivery_data(data, UDAorUOA = "UOA", all_regions_and_STPs = all_regions_and_STPs)
     title <- "YTD UOA delivery across all contracts against annual contracted UOAs (millions)"
     ylab <- "YTD UOA delivery (millions)"
-    captionTitle <- "Contracts included: GDS/PDS/PDS+ with no annual contracted UOAs.
+    captionTitle <- "Contracts included: GDS/PDS/PDS+ excluding contracts with no annual contracted UOAs.
 All data for the latest financial year will be incomplete and subject to change as there is no restriction on when UOA information can be submitted. We expect final data to be higher."
     lineCol <- "#CC79A7"
     labels <- c("Expected YTD delivery to meet contracted UOAs \nif delivery were equal across the financial year",

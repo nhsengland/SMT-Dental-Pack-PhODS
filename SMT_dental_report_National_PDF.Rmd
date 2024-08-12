@@ -167,6 +167,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ## Percentage of total UDAs delivered which had DCP assistance by band
 
@@ -179,6 +180,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 # Patients seen
 

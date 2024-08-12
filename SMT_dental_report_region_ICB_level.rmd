@@ -1204,6 +1204,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 ]
 
 .panel[.panel-name[`r STP1`]
@@ -1217,6 +1218,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 ]
 .panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -1229,6 +1231,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 ]
 .panel[.panel-name[`r STP3`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -1241,6 +1244,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval4}
@@ -1253,6 +1257,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -1266,6 +1271,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -1279,6 +1285,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -1292,6 +1299,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval8}
@@ -1304,6 +1312,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -1317,6 +1326,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -1330,6 +1340,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -1343,6 +1354,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
 ```
 
 -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
  ]
@@ -1371,6 +1383,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 ]
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -1383,6 +1396,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP2`]
@@ -1396,6 +1410,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 ]
 .panel[.panel-name[`r STP3`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -1408,6 +1423,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval4}
@@ -1420,6 +1436,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -1433,6 +1450,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -1446,6 +1464,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -1459,6 +1478,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, eval = eval8}
@@ -1471,6 +1491,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -1484,6 +1505,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it. 
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -1497,6 +1519,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -1510,6 +1533,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 
 -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
+-   The latest data for Hygienists is currently unavailable.
 
 ]
  ]
