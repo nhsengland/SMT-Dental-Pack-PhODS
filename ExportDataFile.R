@@ -383,7 +383,7 @@ data_dental_activity<-data_UDA_de_co%>%
     mutate (DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
     select (month, commissioner_name, DCP_description, completed_courses_of_treatment,UDA_B1, UDA_B2, UDA_B3, UDA_urgent)
  
-    #calculate total FP19, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data 
+    #calculate total FP17, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data 
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
@@ -441,7 +441,7 @@ data_dental_activity<-data_UDA_de_co%>%
       select (month, DCP_description.x, DCP_metric, numbers, DCP_description.y, all_numbers)
     
     total_national <- all_lookup_national %>% 
-      mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
+      mutate (assisted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
       mutate(geography_name='England',geography_level='National') %>% 
       arrange(desc(month))
     
@@ -467,7 +467,7 @@ data_dental_activity<-data_UDA_de_co%>%
       select (month, Region,DCP_description.x, DCP_metric, numbers, DCP_description.y, all_numbers)
     
     total_regional <- all_lookup_regional %>% 
-      mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
+      mutate (assisted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
       rename(geography_name=`Region`)%>%
       mutate(geography_level='Region') %>% 
       arrange(desc(month))
@@ -493,13 +493,12 @@ data_dental_activity<-data_UDA_de_co%>%
     select (month, commissioner_name,DCP_description.x, DCP_metric, numbers, DCP_description.y, all_numbers)
   
   total_icb <- all_lookup_icb %>% 
-    mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
+    mutate (assisted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
     rename(geography_name=`commissioner_name`)%>%
     mutate(geography_level='ICB') %>% 
     arrange(desc(month))
   
   total_dcp<- rbind(total_national, total_regional, total_icb) %>% 
-    filter(DCP_metric != "completed_courses_of_treatment") %>% 
     mutate(financial_year = case_when( # needs updating each financial year
              month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
              month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
@@ -509,7 +508,7 @@ data_dental_activity<-data_UDA_de_co%>%
              month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"), 
            `month` = format(as.Date(month), "%Y-%m"))%>%
     select(calendar_month=month, financial_year,geography_level,geography_name,DCP_metric,DCP_description=DCP_description.x,
-           metric_count_by_DCP = numbers,metric_count_total = all_numbers,DCP_assisted_percent = asissted_percent)
+           metric_count_by_DCP = numbers,metric_count_total = all_numbers,DCP_assisted_percent = assisted_percent)
   
 
 
