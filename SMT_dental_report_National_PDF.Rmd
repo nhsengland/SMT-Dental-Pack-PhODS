@@ -331,9 +331,21 @@ Helpful reading <https://www.kingsfund.org.uk/insight-and-analysis/long-reads/de
 
 Switching to calendar data means that spikes in the number of claims submitted due to submission arrangements are smoothed out.
 
+```{r time series comparison UOA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
+plot <- plot_time_series_comparison(UDAorUOA = "UDA")
+table <- table_time_series_comparison(UDAorUOA = "UDA")
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+```
+
+## Comparison of monthly UOA data
+
+Spikes are also smoothed out in UOA data. UOA calendar data is incomplete for the latest financial year and we expect final data to be higher.
+
 ```{r time series comparison, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
-plot <- plot_time_series_comparison()
-table <- table_time_series_comparison()
+plot <- plot_time_series_comparison(UDAorUOA = "UOA")
+table <- table_time_series_comparison(UDAorUOA = "UOA")
 
 grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
              layout_matrix = rbind(c(1, 1, 2)))
