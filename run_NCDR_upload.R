@@ -13,8 +13,8 @@ mapply(upload_data, folder_name, table_name)
 STP_ICB_lookup_codes <- read_excel("N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/data_for_monthly_report/STP_ICB_lookup_codes.xlsx")
 
 #gets latest month 
-data_month <- lubridate::floor_date(Sys.Date()  - lubridate::weeks(6), unit = "month")
-data_month_name <- format(Sys.Date()  - lubridate::weeks(6), format = "%b%y")
+data_month <- lubridate::floor_date(Sys.Date()  - lubridate::weeks(4), unit = "month")
+data_month_name <- format(Sys.Date()  - lubridate::weeks(4), format = "%b%y")
 
 #gets paths of data to be loaded in
 raw_UDA_scheduled_data_folder_path <- "N:/_Everyone/Primary Care Group/SMT_Dental DENT 2022_23-008/raw_eDEN_dental_data/UDA_scheduled_raw_data/"
