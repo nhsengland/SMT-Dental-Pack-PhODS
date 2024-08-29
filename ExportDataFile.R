@@ -84,7 +84,8 @@ data_UDA_YTD<- rbind(data_Nat_YTD_UDA, data_reg_YTD_UDA, data_icb_YTD_UDA) %>%
 #### Banded CoTs
 data_Nat_CoT <- table_banded_CoT(data = UDA_calendar_data_FD, 
                                  level = "National", 
-                                 all_regions_and_STPs = FALSE)
+                                 all_regions_and_STPs = FALSE, 
+                                 standardised = TRUE)
 
 data_Nat_CoT <- data_Nat_CoT %>% 
   rowwise() %>% 
@@ -100,7 +101,8 @@ data_Nat_CoT <- data_Nat_CoT %>%
 
 data_reg_CoT <- table_banded_CoT(data = UDA_calendar_data_FD, 
                                  level = "Regional", 
-                                 all_regions_and_STPs = TRUE)
+                                 all_regions_and_STPs = TRUE, 
+                                 standardised = TRUE)
 
 # Convert relevant columns to numeric and handle coercion to NA for non-numeric values
 data_reg_CoT <- data_reg_CoT %>%
@@ -121,7 +123,8 @@ data_reg_CoT <- data_reg_CoT %>%
 
 data_icb_CoT <- table_banded_CoT(data = UDA_calendar_data_FD,
                                  level = "STP", 
-                                 all_regions_and_STPs = TRUE)
+                                 all_regions_and_STPs = TRUE, 
+                                 standardised = TRUE)
 
 # Convert relevant columns to numeric, handling non-numeric values by coercing them to NA
 data_icb_CoT <- data_icb_CoT %>%
@@ -143,7 +146,77 @@ data_icb_CoT <- data_icb_CoT %>%
          CoT_urgent_delivered_incl_FD_standardised = urgent) %>% 
   arrange(desc(calendar_month))
 
-data_CoT <- rbind(data_Nat_CoT, data_reg_CoT, data_icb_CoT)
+# repeat for non-standardised CoTs
+data_Nat_CoT_unstandardised <- table_banded_CoT(data = UDA_calendar_data_FD, 
+                                 level = "National", 
+                                 all_regions_and_STPs = FALSE, 
+                                 standardised = FALSE)
+
+data_Nat_CoT_unstandardised <- data_Nat_CoT_unstandardised %>% 
+  rowwise() %>% 
+  mutate(CoT_total_delivered_incl_FD = sum(band1, band2, band3, other, urgent, na.rm = TRUE)) %>%
+  mutate(geography_level='National',geography_name='England') %>% 
+  rename(calendar_month = month, 
+         CoT_band1_delivered_incl_FD = band1, 
+         CoT_band2_delivered_incl_FD = band2, 
+         CoT_band3_delivered_incl_FD = band3, 
+         CoT_other_delivered_incl_FD = other, 
+         CoT_urgent_delivered_incl_FD = urgent) %>% 
+  arrange(desc(calendar_month))
+
+data_reg_CoT_unstandardised <- table_banded_CoT(data = UDA_calendar_data_FD, 
+                                 level = "Regional", 
+                                 all_regions_and_STPs = TRUE, 
+                                 standardised = FALSE)
+
+# Convert relevant columns to numeric and handle coercion to NA for non-numeric values
+data_reg_CoT_unstandardised <- data_reg_CoT_unstandardised %>%
+  mutate(across(c(band1, band2, band3, other, urgent), ~ as.numeric(as.character(.))))
+
+# Create the Total FP17s column by summing the specified numeric columns
+data_reg_CoT_unstandardised <- data_reg_CoT_unstandardised %>%
+  mutate(CoT_total_delivered_incl_FD = rowSums(across(c(band1, band2, band3, other, urgent)), na.rm = TRUE))%>%
+  mutate(geography_level = "Regional") %>% 
+  rename(calendar_month = month,
+         geography_name = region_name,
+         CoT_band1_delivered_incl_FD = band1, 
+         CoT_band2_delivered_incl_FD = band2, 
+         CoT_band3_delivered_incl_FD = band3, 
+         CoT_other_delivered_incl_FD = other, 
+         CoT_urgent_delivered_incl_FD = urgent) %>% 
+  arrange(desc(calendar_month))
+
+data_icb_CoT_unstandardised <- table_banded_CoT(data = UDA_calendar_data_FD,
+                                 level = "STP", 
+                                 all_regions_and_STPs = TRUE, 
+                                 standardised = FALSE)
+
+# Convert relevant columns to numeric, handling non-numeric values by coercing them to NA
+data_icb_CoT_unstandardised <- data_icb_CoT_unstandardised %>%
+  mutate(across(c(band1, band2, band3, other, urgent), ~ as.numeric(as.character(.))))
+
+# If the data is grouped, ungroup it
+data_icb_CoT_unstandardised <- data_icb_CoT_unstandardised %>% ungroup()
+
+# Create the Total FP17s column by summing the specified numeric columns
+data_icb_CoT_unstandardised <- data_icb_CoT_unstandardised %>%
+  mutate(CoT_total_delivered_incl_FD = rowSums(select(., band1, band2, band3, other, urgent), na.rm = TRUE))%>%
+  mutate(geography_level = "ICB") %>% 
+  rename(calendar_month = month,
+         geography_name = commissioner_name,
+         CoT_band1_delivered_incl_FD = band1, 
+         CoT_band2_delivered_incl_FD = band2, 
+         CoT_band3_delivered_incl_FD = band3, 
+         CoT_other_delivered_incl_FD = other, 
+         CoT_urgent_delivered_incl_FD = urgent) %>% 
+  arrange(desc(calendar_month))
+
+data_CoT_standardised <- rbind(data_Nat_CoT, data_reg_CoT, data_icb_CoT)
+
+data_CoT_unstandardised <- rbind(data_Nat_CoT_unstandardised, data_reg_CoT_unstandardised, data_icb_CoT_unstandardised)
+
+data_CoT <- data_CoT_unstandardised %>% 
+  full_join(data_CoT_standardised, by = c("calendar_month", "geography_name", "geography_level"))
 
 ###### UOA #####
 #### No UOA delivered, contracted & percentage
@@ -547,5 +620,5 @@ if (!dir.exists(reports_dir)) {
 }
 
 # overwrite file if it already exists in the directory
-openxlsx::saveWorkbook(output_file, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx'), overwrite = TRUE) 
+openxlsx::saveWorkbook(output_file, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx'), overwrite = TRUE)
   

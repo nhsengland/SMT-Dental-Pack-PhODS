@@ -1336,7 +1336,8 @@ This chart includes foundation dentists so total counts will differ to other cha
 table_banded_CoT <- function(data = UDA_calendar_data_FD, 
                              level = "National", 
                              all_regions_and_STPs = FALSE, 
-                             asIndex = FALSE){
+                             asIndex = FALSE, 
+                             standardised = TRUE){
   
   #get data into the right format for banded_CoT
   data_to_print <- get_banded_COTs_data(data, level = level, all_regions_and_STPs = all_regions_and_STPs)
@@ -1353,8 +1354,8 @@ table_banded_CoT <- function(data = UDA_calendar_data_FD,
                  CoTs = as.numeric(value),
                  standardised_CoTs = CoTs*(`no workdays`/`total workdays`)) %>% 
           group_by(month, region_name, variable) %>% 
-          summarise(standardised_CoTs = sum(standardised_CoTs, na.rm = TRUE)) %>% 
-          pivot_wider(names_from = variable, values_from = standardised_CoTs)
+          summarise(standardised_CoTs = sum(standardised_CoTs, na.rm = TRUE), 
+                    CoTs = sum(CoTs, na.rm = TRUE))
 
     }else if(level == "STP"){
       
@@ -1369,8 +1370,8 @@ table_banded_CoT <- function(data = UDA_calendar_data_FD,
                  CoTs = as.numeric(value),
                  standardised_CoTs = CoTs*(`no workdays`/`total workdays`)) %>% 
           group_by(month, commissioner_name, variable) %>% 
-          summarise(standardised_CoTs = sum(standardised_CoTs, na.rm = TRUE)) %>% 
-          pivot_wider(names_from = variable, values_from = standardised_CoTs)
+          summarise(standardised_CoTs = sum(standardised_CoTs, na.rm = TRUE), 
+                    CoTs = sum(CoTs, na.rm = TRUE))
       
       }else{
         #at national level
@@ -1383,9 +1384,20 @@ table_banded_CoT <- function(data = UDA_calendar_data_FD,
                  CoTs = as.numeric(value),
                  standardised_CoTs = CoTs*(`no workdays`/`total workdays`)) %>% 
           group_by(month, variable) %>% 
-          summarise(standardised_CoTs = sum(standardised_CoTs, na.rm = TRUE)) %>% 
-          pivot_wider(names_from = variable, values_from = standardised_CoTs)
-        }
+          summarise(standardised_CoTs = sum(standardised_CoTs, na.rm = TRUE), 
+                    CoTs = sum(CoTs, na.rm = TRUE))
+      }
+  
+  # select either standardised or unstandardised CoTs
+  if(standardised == TRUE){
+    data <- data %>% 
+      select(-CoTs) %>% 
+      pivot_wider(names_from = variable, values_from = standardised_CoTs)
+  } else{
+    data <- data %>% 
+      select(-standardised_CoTs) %>% 
+      pivot_wider(names_from = variable, values_from = CoTs)
+  }
 }
 ```
 
