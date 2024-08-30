@@ -777,44 +777,43 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     mutate(line_for_100 = 100)
   
   #divide data to two datasets -- previous and current FY
-  # data1 <- data %>%
-  #   filter(year_type=="Previous Financial Years (Averages)") 
+  data1 <- data %>%
+    filter(year_type=="Previous Financial Years (Averages)")
   
   data2 <- data%>%
     filter(year_type=="Current Financial Year")
   
-  ## NOT CURRENTLY USING HISTORICAL DATA AS ONLY LATEST FINANCIAL YEAR IS AVAILABLE
   # Define plot 1
-  # p1 <- ggplot() +
-  #   geom_line(data = data1, 
-  #             aes(x = month,
-  #                 y = perc_UOA_delivered),
-  #             colour = "black") + 
-  #   geom_line(data = data1, 
-  #             aes(x = month,
-  #                 y = line_for_100),
-  #             colour = "blue") +
-  #   geom_point(data = data1,
-  #              aes(x = month,
-  #                  y = perc_UOA_delivered),
-  #              colour = "steelblue") +
-  #   ylab("Percentage of contracted UOAs delivered") + 
-  #   xlab(NULL) + 
-  #   geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
-  #             aes(x = month + 120,
-  #                 y = perc_UOA_delivered - 4,
-  #                 label = financial_year),
-  #             size = 3) +
-  #   geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
-  #             aes(x = month + 120,
-  #                 y = perc_UOA_delivered + 4,
-  #                 label = paste0(round(perc_UOA_delivered), "%")),
-  #             size = 3) +
-  #   theme_bw() +
-  #   scale_y_continuous(limits = c(0, max(c(data1$perc_UOA_delivered, 95), na.rm = T) + 5),
-  #                      breaks = seq(0, max(c(data1$perc_UOA_delivered, 95), na.rm = T) + 5, 10)) +
-  #   theme(axis.text.x = element_text(angle = 90, vjust=-0.0001), 
-  #         legend.position = "none")
+  p1 <- ggplot() +
+    geom_line(data = data1,
+              aes(x = month,
+                  y = perc_UOA_delivered),
+              colour = "black") +
+    geom_line(data = data1,
+              aes(x = month,
+                  y = line_for_100),
+              colour = "blue") +
+    geom_point(data = data1,
+               aes(x = month,
+                   y = perc_UOA_delivered),
+               colour = "steelblue") +
+    ylab("Percentage of contracted UOAs delivered") +
+    xlab(NULL) +
+    geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
+              aes(x = month + 120,
+                  y = perc_UOA_delivered - 4,
+                  label = financial_year),
+              size = 3) +
+    geom_text(data = filter(data1, year_type == "Previous Financial Years (Averages)"),
+              aes(x = month + 120,
+                  y = perc_UOA_delivered + 4,
+                  label = paste0(round(perc_UOA_delivered), "%")),
+              size = 3) +
+    theme_bw() +
+    scale_y_continuous(limits = c(0, max(c(data1$perc_UOA_delivered, 95), na.rm = T) + 5),
+                       breaks = seq(0, max(c(data1$perc_UOA_delivered, 95), na.rm = T) + 5, 10)) +
+    theme(axis.text.x = element_text(angle = 90, vjust=-0.0001),
+          legend.position = "none")
   
   # Define plot 2
   p2 <- ggplot() +
@@ -838,7 +837,7 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
   main_title <- "Monthly percentage of usual annual contracted UOAs standardised by working days"
   
   # Arrange and annotate figure
-  figure <- ggarrange(#p1, 
+  figure <- ggarrange(p1, 
                       p2, 
                       nrow = 1)
   
