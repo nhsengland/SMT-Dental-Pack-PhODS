@@ -2560,58 +2560,119 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
     subtitle <- "England"
   }
 
+  ###########################method for quantile########################
 #CALCULATE THE PERCENTAGE OF forms with highest BPE_Sextant_Score
-  data_org <- data %>%
-    group_by(Year_Month, Contract.Number) %>%
-    summarise(Nforms = sum(Total.Form.Count),
-              NcompYear_Monthedforms = sum(Forms_with_Highest_BPE_Sextant_Score)) %>% 
-    mutate (percentcompYear_Montheform = formattable::percent(NcompYear_Monthedforms/ Nforms, digits =0))
+#  data_org <- data %>%
+#    group_by(Year_Month, Contract.Number) %>%
+#    summarise(Nforms = sum(Total.Form.Count),
+#              NcompYear_Monthedforms = sum(Forms_with_Highest_BPE_Sextant_Score)) %>% 
+#    mutate (percentcompYear_Montheform = formattable::percent(NcompYear_Monthedforms/ Nforms, digits =0))
 
 
+#  data <- data %>% 
+#    filter(Total.Form.Count>0) %>%
+#    group_by(Year_Month, Contract.Number) %>%
+#    summarise (compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
+#               nlow_risk = 
+#                 sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
+#               low_risk_less1year = 
+#                 sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
+#    mutate (percent_low_risk_whic_are1_year = 
+#              formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
+#    mutate (percentlowrisk= formattable::percent (nlow_risk/ compYear_Monthe_forms, digits =0) ) %>% 
+#    filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
+#    filter (percent_low_risk_whic_are1_year<2)
+#
+#  p_meds <- data %>% 
+#    group_by(Year_Month) %>% 
+#    summarise (med = median(percent_low_risk_whic_are1_year))
+
+#  max_month <- max (data$Year_Month)
+
+#  p_meds_latest <- data %>% 
+#    group_by (Year_Month) %>% 
+#    summarise(med = median(percent_low_risk_whic_are1_year)) %>% 
+#    filter(Year_Month ==max_month)
+
+#  p_meds_latest_p <- formattable::percent (p_meds_latest$med, digits = 0)
+
+#  t <- data %>%
+#    group_by(Year_Month)%>%
+#    summarise(Minimum= quantile(percent_low_risk_whic_are1_year, probs = c(0)) ,
+#              First_Quartile= quantile(percent_low_risk_whic_are1_year, probs = c(0.25)) ,
+#              Second_Quartile= quantile(percent_low_risk_whic_are1_year, probs = c(0.5)) ,
+#              Third_Quartile= quantile(percent_low_risk_whic_are1_year, probs = c(0.75)),
+#              Maximum = quantile(percent_low_risk_whic_are1_year, probs = c(1)) )
+
+#  t<-melt(setDT(t), id.vars = c("Year_Month"), variable.name = "Perc_lowR_recall")
+#  t$`Perc_lowR_recall`<- factor(t$`Perc_lowR_recall`, levels = c("Minimum", "First_Quartile", "Second_Quartile","Third_Quartile", "Maximum"))
+#  t_a<-subset(t,`Perc_lowR_recall` != "Minimum")
+
+# if(plotChart == TRUE){
+#    p_test <- 
+#      ggplot(data = t_a, aes(x = `Year_Month` , y = `value`, group =`Perc_lowR_recall`)) +
+#      geom_line(aes(linetype=`Perc_lowR_recall`))+
+#      geom_point(aes(shape = `Perc_lowR_recall`), size =3) + scale_shape_manual(values = c(17, 19,1,8)) +
+#      labs(x = "Month",
+#           y = "",
+#           title = "Percentrage of Low Risk Patients Recalled within a Year by Contractors",
+#           subtitle = subtitle
+#      ) +
+#      scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+#      scale_x_date(date_labels = "%b-%y") +
+#      geom_text(data = subset(t,`Perc_lowR_recall`== "Second_Quartile"), aes(x = Year_Month, y = `value`, label = `value`), 
+#                size = 3.5, vjust = -.7) + theme(legend.position = "bottom",legend.title = element_blank ())
+
+#    p_test
+
+#  }else if(!is.null(quartileOutput)){
+
+    #get latest year of data
+#    numbers_calc <- data %>%  
+#      filter(Year_Month == max_month)
+
+    #output differentquartile based on input
+#    if(quartileOutput == "LQ"){
+#      quartile <- quantile(numbers_calc$percent_low_risk_whic_are1_year, prob = 0.25)
+#    }else if(quartileOutput == "UQ"){
+#      quartile <- quantile(numbers_calc$percent_low_risk_whic_are1_year, prob = 0.75)
+#    }else{
+#      quartile <- quantile(numbers_calc$percent_low_risk_whic_are1_year, prob = 0.5)
+#    }
+
+#    quartile
+#  }else{
+
+    #return max date
+#    max_month
+#  }
+  
+  ######################## method for total#######################################
   data <- data %>% 
     filter(Total.Form.Count>0) %>%
-    group_by(Year_Month, Contract.Number) %>%
-    summarise (compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
+    group_by(Year_Month) %>%
+    summarise (Nforms = sum(Total.Form.Count),
+              NcompYear_Monthedforms = sum(Forms_with_Highest_BPE_Sextant_Score),
+              compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
                nlow_risk = 
                  sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
                low_risk_less1year = 
                  sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
-    mutate (percent_low_risk_whic_are1_year = 
+    mutate (percentcompYear_Montheform = formattable::percent(NcompYear_Monthedforms/ Nforms, digits =0),
+            percent_low_risk_whic_are1_year = 
               formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
     mutate (percentlowrisk= formattable::percent (nlow_risk/ compYear_Monthe_forms, digits =0) ) %>% 
     filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
     filter (percent_low_risk_whic_are1_year<2)
 
-  p_meds <- data %>% 
-    group_by(Year_Month) %>% 
-    summarise (med = median(percent_low_risk_whic_are1_year))
-
   max_month <- max (data$Year_Month)
 
-  p_meds_latest <- data %>% 
-    group_by (Year_Month) %>% 
-    summarise(med = median(percent_low_risk_whic_are1_year)) %>% 
-    filter(Year_Month ==max_month)
 
-  p_meds_latest_p <- formattable::percent (p_meds_latest$med, digits = 0)
-
-  t <- data %>%
-    group_by(Year_Month)%>%
-    summarise(Minimum= quantile(percent_low_risk_whic_are1_year, probs = c(0)) ,
-              First_Quartile= quantile(percent_low_risk_whic_are1_year, probs = c(0.25)) ,
-              Second_Quartile= quantile(percent_low_risk_whic_are1_year, probs = c(0.5)) ,
-              Third_Quartile= quantile(percent_low_risk_whic_are1_year, probs = c(0.75)),
-              Maximum = quantile(percent_low_risk_whic_are1_year, probs = c(1)) )
-
-  t<-melt(setDT(t), id.vars = c("Year_Month"), variable.name = "Perc_lowR_recall")
-  t$`Perc_lowR_recall`<- factor(t$`Perc_lowR_recall`, levels = c("Minimum", "First_Quartile", "Second_Quartile","Third_Quartile", "Maximum"))
-  t_a<-subset(t,`Perc_lowR_recall` != "Minimum")
-
-  if(plotChart == TRUE){
+ 
     p_test <- 
-      ggplot(data = t_a, aes(x = `Year_Month` , y = `value`, group =`Perc_lowR_recall`)) +
-      geom_line(aes(linetype=`Perc_lowR_recall`))+
-      geom_point(aes(shape = `Perc_lowR_recall`), size =3) + scale_shape_manual(values = c(17, 19,1,8)) +
+      ggplot(data, aes(x = `Year_Month` , y = `percent_low_risk_whic_are1_year`)) +
+      geom_line()+
+      geom_point() +
       labs(x = "Month",
            y = "",
            title = "Percentrage of Low Risk Patients Recalled within a Year by Contractors",
@@ -2619,33 +2680,12 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
       ) +
       scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
       scale_x_date(date_labels = "%b-%y") +
-      geom_text(data = subset(t,`Perc_lowR_recall`== "Second_Quartile"), aes(x = Year_Month, y = `value`, label = `value`), 
-                size = 3.5, vjust = -.7) + theme(legend.position = "bottom",legend.title = element_blank ())
-
+      geom_text(aes(x = Year_Month, y = `percent_low_risk_whic_are1_year`, label = `percent_low_risk_whic_are1_year`), 
+            size = 2.5, vjust = -.7) + 
+  theme(legend.position = "bottom", legend.title = element_blank())
     p_test
 
-  }else if(!is.null(quartileOutput)){
-
-    #get latest year of data
-    numbers_calc <- data %>%  
-      filter(Year_Month == max_month)
-
-    #output differentquartile based on input
-    if(quartileOutput == "LQ"){
-      quartile <- quantile(numbers_calc$percent_low_risk_whic_are1_year, prob = 0.25)
-    }else if(quartileOutput == "UQ"){
-      quartile <- quantile(numbers_calc$percent_low_risk_whic_are1_year, prob = 0.75)
-    }else{
-      quartile <- quantile(numbers_calc$percent_low_risk_whic_are1_year, prob = 0.5)
-    }
-
-    quartile
-  }else{
-
-    #return max date
-    max_month
-  }
-
+ 
 }
 
 
