@@ -586,6 +586,68 @@ data_dental_activity<-data_UDA_de_co%>%
   
 
 
+#####################################BPE##########################################
+  BPE <- BPE_data %>% 
+    filter(!is.na(Highest.BPE.Sextant.Score))
+  
+  BPE[is.na(BPE)] <- 0
+    
+  BPE_national <- BPE %>% 
+    filter(Total.Form.Count>0) %>%
+    group_by(Year_Month) %>%
+    summarise (Nforms = sum(Total.Form.Count),
+               NcompYear_Monthedforms = sum(Forms_with_Highest_BPE_Sextant_Score),
+               nlow_risk = 
+                 sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
+               low_risk_less1year = 
+                 sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
+    mutate (geography_name='England',geography_level='National',
+      percentcompYear_Montheform = formattable::percent(NcompYear_Monthedforms/ Nforms, digits =0),
+            percent_low_risk_whic_are1_year = 
+              formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
+    mutate (percentlowrisk= formattable::percent (nlow_risk/ NcompYear_Monthedforms, digits =0) ) %>% 
+    filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
+    filter (percent_low_risk_whic_are1_year<2)
+  
+  BPE_regional <- BPE %>% 
+    filter(Total.Form.Count>0) %>%
+    group_by(Year_Month,geography_name=Latest.Region.Description) %>%
+    summarise (Nforms = sum(Total.Form.Count),
+               NcompYear_Monthedforms = sum(Forms_with_Highest_BPE_Sextant_Score),
+               nlow_risk = 
+                 sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
+               low_risk_less1year = 
+                 sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
+    mutate (geography_level='Region',
+            percentcompYear_Montheform = formattable::percent(NcompYear_Monthedforms/ Nforms, digits =0),
+            percent_low_risk_whic_are1_year = 
+              formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
+    mutate (percentlowrisk= formattable::percent (nlow_risk/ NcompYear_Monthedforms, digits =0) ) %>% 
+    filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
+    filter (percent_low_risk_whic_are1_year<2)
+  
+  BPE_ICB <- BPE %>% 
+    filter(Total.Form.Count>0) %>%
+    group_by(Year_Month,geography_name=commissioner_name) %>%
+    summarise (Nforms = sum(Total.Form.Count),
+               NcompYear_Monthedforms = sum(Forms_with_Highest_BPE_Sextant_Score),
+               nlow_risk = 
+                 sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
+               low_risk_less1year = 
+                 sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
+    mutate (geography_level='ICB',
+            percentcompYear_Montheform = formattable::percent(NcompYear_Monthedforms/ Nforms, digits =0),
+            percent_low_risk_whic_are1_year = 
+              formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
+    mutate (percentlowrisk= formattable::percent (nlow_risk/ NcompYear_Monthedforms, digits =0) ) %>% 
+    filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
+    filter (percent_low_risk_whic_are1_year<2)
+  
+  total_bpe<- rbind(BPE_national, BPE_regional, BPE_ICB) %>% 
+    select(calendar_month=Year_Month, geography_level,geography_name,Nforms,nlow_risk,low_risk_less1year,NcompYear_Monthedforms,
+           percentcompYear_Montheform,percentlowrisk,percent_low_risk_whic_are1_year)
+  
+
 ###### Output #####
 # create Excel file
 output_file <- createWorkbook()
