@@ -17,6 +17,7 @@ uoa <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[De
 
 dbDisconnect(con)
 
+#### TESTS ####
 test_that("No duplicated rows - NPP",{
   rows <- npp %>% 
     group_by(YEAR_MONTH) %>% 
@@ -81,6 +82,7 @@ test_that("No duplicated rows - UOA",{
   expect_equal(rows, unique_contracts)
 })
 
+#### DATA FRAME CHECKS ####
 check_contract <- contract %>% 
   group_by(YEAR_MONTH) %>% 
   summarise(n_contracts = n_distinct(CONTRACT_NUMBER),

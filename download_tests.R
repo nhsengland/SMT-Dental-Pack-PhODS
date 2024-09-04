@@ -36,6 +36,7 @@ uda_fd_months <- uda_fd %>% select(YEAR_MONTH) %>% distinct()
 unique_months <- unique %>% select(YEAR_MONTH) %>% distinct()
 uoa_months <- uoa %>% select(YEAR_MONTH) %>% distinct()
 
+#### TESTS ####
 test_that("Latest files contain three months of data",{
   expected <- 3
   
