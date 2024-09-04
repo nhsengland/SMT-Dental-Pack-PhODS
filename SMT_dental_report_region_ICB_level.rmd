@@ -278,6 +278,8 @@ name: contents
 - [Banded Courses of treatment as % of February 2020 delivery (including FD)](#banded-CoT-Feb2020)
 - [Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance](#DCP-CoT)
 - [Percentage of total UDAs delivered which had DCP assistance by band](#DCP-UDA)
+- [Unique dental patients seen](#unique-patients)
+- [Unique dental patients seen as a percentage of February 2020 figures](#unique-patients-Feb2020)
 - [Patients seen under the New Patient Premium definition](#NPP)
 - [Eligible contracts that have seen new patients](#NPP-contracts)
 - [Units of Orthodontic Activity (UOA) - Calendar activity data standardised by working days](#UOA)
@@ -1538,6 +1540,352 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ]
  ]
 
+---
+
+name: unique-patients
+### Unique dental patients seen
+
+```{r xaringan-panelset-UDP, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+
+-   Data on unique patients seen is not available at regional level.
+
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP1,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP2,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP3,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP4,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP5,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP6,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP7,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP8,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP9,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP10,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP11,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+]
+
+---
+
+name: unique-patients-Feb2020
+### Unique dental patients seen as a percentage of February 2020 figures
+
+```{r xaringan-panelset-UDP2, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+
+-   Data on unique patients seen is not available at regional level.
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP1, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP2, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP3, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP4, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP5, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP6, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP7, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP8, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                              asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP9, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP10, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP11, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+]
 
 
 ---

@@ -298,16 +298,31 @@ data_orthodontic_activity <- data_UOA_de_co %>%
 ### Unique patients seen ###
 # Unique patients rolling
 # get the right data -- sum unique patient seen for general population/adult/child 
-data_Nat_unique <- get_unique_patients() %>% 
+data_Nat_unique <- pull_unique_patients() %>% 
+  select(month, all_12m_count_ctry, child_12m_count_ctry, adult_24m_count_ctry) %>% 
+  distinct() %>% 
   mutate(month = format(as.Date(month), "%Y-%m"), 
          geography_level='National',geography_name='England') %>% 
-  rename(unique_patients_seen_12_month = all_12m_count, 
+  rename(unique_patients_seen_12_month = all_12m_count_ctry, 
+         unique_children_seen_12_month = child_12m_count_ctry, 
+         unique_adults_seen_24_month = adult_24m_count_ctry, 
+         calendar_month = month) %>% 
+  arrange(desc(calendar_month))
+
+data_ICB_unique <- pull_unique_patients() %>% 
+  select(month, commissioner_name, all_12m_count, child_12m_count, adult_24m_count) %>% 
+  mutate(commissioner_name = str_to_title(commissioner_name), 
+         commissioner_name = gsub("Icb", "ICB", commissioner_name), 
+         month = format(as.Date(month), "%Y-%m"), 
+         geography_level = "ICB") %>% 
+  rename(geography_name = commissioner_name, 
+         unique_patients_seen_12_month = all_12m_count, 
          unique_children_seen_12_month = child_12m_count, 
          unique_adults_seen_24_month = adult_24m_count, 
          calendar_month = month) %>% 
   arrange(desc(calendar_month))
 
-data_unique <- data_Nat_unique
+data_unique <- rbind(data_Nat_unique, data_ICB_unique)
 
 ### New Patient Premium ###
 npp_nat <- npp_data %>% 
