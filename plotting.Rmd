@@ -1573,6 +1573,11 @@ if(plotChart == TRUE & asIndex == FALSE){
   data_labels <- data %>% 
     filter(month == max(month))
   
+  data$name <- factor(data$name, 
+                            levels = c("Adults (24 month rolling period)", 
+                                       "Children (12 month rolling period)", 
+                                       "All (12 month rolling period)"))
+  
   #plot code
   ggplot(data, aes(x = month, 
                    y = total_unique_patients, 
