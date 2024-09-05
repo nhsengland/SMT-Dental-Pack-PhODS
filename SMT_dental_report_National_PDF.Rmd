@@ -272,8 +272,8 @@ plot_111_referrals()
 
 -   This chart shows the demand for dental services via calls to 111.
 
-<!-- # BPE Information -->
-<!-- ## Oral health risk assessment -->
+# BPE Information 
+## Oral health risk assessment 
 
 ```{r BPE boxplot-revert, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
  
