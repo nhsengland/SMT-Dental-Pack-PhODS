@@ -156,31 +156,35 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 
 # Dental Care Practitioners (DCPs) Information
 
-## Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance
+-   DCP data will be re-instated next month. 
+ 
+-   We have removed this metric this month whilst we assess how to best display the data given that since April 2024 reporting against DCPs being able to both lead and assist in dental care came into force
+
+<!-- ## Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance -->
 
 ```{r DCP1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
-plot_DCP_analysis(data = UDA_calendar_data,
-                  dcp_data = DCP_data,
-                  UDA_or_FP17 = "FP17",
-                  level = "National",
-                  region_STP_name = NULL)
+#plot_DCP_analysis(data = UDA_calendar_data,
+#                  dcp_data = DCP_data,
+#                  UDA_or_FP17 = "FP17",
+#                  level = "National",
+#                  region_STP_name = NULL)
 ```
 
--   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
--   The latest data for Hygienists is currently unavailable.
+<!-- -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it. -->
 
-## Percentage of total UDAs delivered which had DCP assistance by band
+
+<!-- ## Percentage of total UDAs delivered which had DCP assistance by band -->
 
 ```{r DCP2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
-plot_DCP_analysis_band(data = UDA_calendar_data,
-                              dcp_data = DCP_data,
-                              UDA_or_FP17 = "UDA",
-                              level = "National",
-                              region_STP_name = NULL)
+#plot_DCP_analysis_band(data = UDA_calendar_data,
+#                              dcp_data = DCP_data,
+#                              UDA_or_FP17 = "UDA",
+#                              level = "National",
+#                              region_STP_name = NULL)
 ```
 
--   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it.
--   The latest data for Hygienists is currently unavailable.
+<!-- -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it. -->
+
 
 # Patients seen
 
@@ -247,7 +251,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ```
 
 - These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. Historic data is not yet available for this chart.
+- For the current financial year, monthly performance is shown. 
 - Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ## Units of Orthodontic Activity - Calendar year to date delivery
@@ -272,15 +276,17 @@ plot_111_referrals()
 
 -   This chart shows the demand for dental services via calls to 111.
 
-# BPE Information 
-## Oral health risk assessment 
+
+
+<!-- # BPE Information -->
+<!-- ## Oral health risk assessment -->
 
 ```{r BPE boxplot-revert, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
- 
- plot_BPE_no_oral_health_risk(data = BPE_data,
-                              level = "National",
-                              region_STP_name = NULL)
-
+# 
+# plot_BPE_no_oral_health_risk(data = BPE_data,
+#                              level = "National",
+#                              region_STP_name = NULL)
+#
 ```
 
 

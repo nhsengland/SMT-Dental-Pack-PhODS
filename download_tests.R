@@ -3,9 +3,9 @@ library(testthat)
 
 ## MANUAL INPUTS ##
 # each month, add an extra month and remove the earliest month
-latest_expected_months <- c("202405", "202406", "202407")
+latest_expected_months <- c( "202406", "202407","202408")
 # for UOA, add a new month but do not remove the earliest month unless it is the start of a new financial year
-uoa_expected_months <- c("202404", "202405", "202406", "202407")
+uoa_expected_months <- c("202404", "202405", "202406", "202407","202408")
 
 # find filepath of latest file and read in
 read_latest_file <- function(folder_name){
