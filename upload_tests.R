@@ -141,3 +141,15 @@ check_uoa <- uoa %>%
   arrange(YEAR_MONTH) %>% 
   mutate(monthly_contract_change = n_contracts - lag(n_contracts),
          monthly_uoa_change = total_uoa_delivered - lag(total_uoa_delivered))
+
+
+check_uoa_2 <- uoa %>% 
+  filter(COMMISSIONER_CODE=='QKK')%>% 
+  group_by(YEAR_MONTH) %>% 
+  summarise(n_contracts = n_distinct(CONTRACT_NUMBER), 
+            total_uoa_delivered = sum(UOA_DELIVERED, na.rm = TRUE), 
+            total_uoa_target = sum(UOA_PERF_TAR, na.rm = TRUE)) %>% 
+  arrange(YEAR_MONTH) %>% 
+  mutate(monthly_contract_change = n_contracts - lag(n_contracts),
+         monthly_uoa_change = total_uoa_delivered - lag(total_uoa_delivered),
+         monthly_uoa_target_change = total_uoa_target - lag(total_uoa_target))
