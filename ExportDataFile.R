@@ -409,7 +409,7 @@ npp_contracts_icb <- npp_data %>%
          no = ifelse(is.na(no), 0, no),
          eligible = yes + no, 
          month = format(as.Date(month), "%Y-%m"),
-         geography_level = "Regional") %>% 
+         geography_level = "ICB") %>% 
   select(-no) %>% 
   arrange(desc(month)) %>% 
   rename(calendar_month = month, 
