@@ -278,15 +278,15 @@ plot_111_referrals()
 
 
 
-<!-- # BPE Information -->
-<!-- ## Oral health risk assessment -->
+# BPE Information
+## Oral health risk assessment
 
 ```{r BPE boxplot-revert, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
-# 
-# plot_BPE_no_oral_health_risk(data = BPE_data,
-#                              level = "National",
-#                              region_STP_name = NULL)
-#
+ 
+ plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "National",
+                              region_STP_name = NULL)
+
 ```
 
 
