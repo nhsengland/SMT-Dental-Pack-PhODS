@@ -282,6 +282,7 @@ name: contents
 - [Unique dental patients seen as a percentage of February 2020 figures](#unique-patients-Feb2020)
 - [Patients seen under the New Patient Premium definition](#NPP)
 - [Eligible contracts that have seen new patients](#NPP-contracts)
+- [Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%](#BPE-contracts)
 - [Units of Orthodontic Activity (UOA) - Calendar activity data standardised by working days](#UOA)
 - [Units of Orthodontic Activity (UOA) - Calendar year to date delivery](#YTD-UOA-delivery)
 
@@ -2289,6 +2290,134 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
 -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+]
+
+---
+name: BPE-contracts
+#### Percentrage of Contracts with Low Risk Patients Recalled within a Year < 50%
+
+
+```{r xaringan-panelset-BPE, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "Regional",
+                              region_STP_name = region)
+
+```
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP1)
+
+
+```
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP2)
+
+```
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP3)
+
+```
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP4)
+
+
+```
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP5)
+
+
+```
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP6)
+
+```
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP7)
+
+
+```
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP8)
+
+```
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP9)
+
+
+```
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP10)
+
+
+```
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "STP",
+                              region_STP_name = STP11)
+
+```
 
 ]
 ]

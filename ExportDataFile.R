@@ -602,65 +602,98 @@ data_dental_activity<-data_UDA_de_co%>%
 
 
 #####################################BPE##########################################
-  BPE <- BPE_data %>% 
-    filter(!is.na(Highest.BPE.Sextant.Score))
-  
-  BPE[is.na(BPE)] <- 0
-    
-  BPE_national <- BPE %>% 
+  data_national <-BPE_data %>% 
     filter(Total.Form.Count>0) %>%
+    group_by(Year_Month, Contract.Number) %>%
+    summarise (#compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
+      nlow_risk = 
+        sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
+      low_risk_less1year = 
+        sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
+    mutate (percent_low_risk_whic_are1_year = 
+              formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
+    #mutate (percentlowrisk= formattable::percent (nlow_risk/ compYear_Monthe_forms, digits =0) ) %>% 
+    filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
+    filter (percent_low_risk_whic_are1_year<2)%>%
+    mutate(threshold_percent_low_risk_whic_are1_year=ifelse(percent_low_risk_whic_are1_year >= 0.5, 'YES','NO'))
+  
+  data_total_national <- data_national %>% 
     group_by(Year_Month) %>%
-    summarise (Nforms = sum(Total.Form.Count),
-               NcompYear_Monthedforms = sum(Forms_with_Highest_BPE_Sextant_Score),
-               nlow_risk = 
-                 sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
-               low_risk_less1year = 
-                 sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
-    mutate (geography_name='England',geography_level='National',
-      percentcompYear_Montheform = formattable::percent(NcompYear_Monthedforms/ Nforms, digits =0),
-            percent_low_risk_whic_are1_year = 
-              formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
-    mutate (percentlowrisk= formattable::percent (nlow_risk/ NcompYear_Monthedforms, digits =0) ) %>% 
-    filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
-    filter (percent_low_risk_whic_are1_year<2)
+    summarise (NContractors = n_distinct(Contract.Number))
   
-  BPE_regional <- BPE %>% 
+  data_high_national <- data_national %>% 
+    filter(threshold_percent_low_risk_whic_are1_year=='YES') %>%
+    group_by(Year_Month) %>%
+    summarise (low_risk_NContractors = n_distinct(Contract.Number)) 
+  
+  BPE_all_national<-data_total_national%>%
+    left_join(data_high, by='Year_Month')%>%
+    mutate(geography_name='England',geography_level='National',
+           "Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%"=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
+
+  
+  data_region <-BPE_data %>% 
     filter(Total.Form.Count>0) %>%
-    group_by(Year_Month,geography_name=Latest.Region.Description) %>%
-    summarise (Nforms = sum(Total.Form.Count),
-               NcompYear_Monthedforms = sum(Forms_with_Highest_BPE_Sextant_Score),
+    group_by(Year_Month, Latest.Region.Description,Contract.Number) %>%
+    summarise (#compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
                nlow_risk = 
                  sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
                low_risk_less1year = 
                  sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
-    mutate (geography_level='Region',
-            percentcompYear_Montheform = formattable::percent(NcompYear_Monthedforms/ Nforms, digits =0),
-            percent_low_risk_whic_are1_year = 
+    mutate (percent_low_risk_whic_are1_year = 
               formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
-    mutate (percentlowrisk= formattable::percent (nlow_risk/ NcompYear_Monthedforms, digits =0) ) %>% 
+    #mutate (percentlowrisk= formattable::percent (nlow_risk/ compYear_Monthe_forms, digits =0) ) %>% 
     filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
-    filter (percent_low_risk_whic_are1_year<2)
+    filter (percent_low_risk_whic_are1_year<2)%>%
+    mutate(threshold_percent_low_risk_whic_are1_year=ifelse(percent_low_risk_whic_are1_year >= 0.5, 'YES','NO'))
   
-  BPE_ICB <- BPE %>% 
+  data_total_region <- data_region %>% 
+    group_by(Year_Month, geography_name=Latest.Region.Description) %>%
+    summarise (NContractors = n_distinct(Contract.Number)) 
+  
+  data_high_region<- data_region %>% 
+    filter(threshold_percent_low_risk_whic_are1_year=='YES') %>%
+    group_by(Year_Month, geography_name=Latest.Region.Description) %>%
+    summarise (low_risk_NContractors = n_distinct(Contract.Number)) 
+  
+  BPE_all_region<-data_total_region%>%
+    left_join(data_high_region, by=c('Year_Month',"geography_name"))%>%
+    mutate(geography_level='Region',
+           "Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%"=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
+  
+
+  data_ICB <-BPE_data %>% 
     filter(Total.Form.Count>0) %>%
-    group_by(Year_Month,geography_name=commissioner_name) %>%
-    summarise (Nforms = sum(Total.Form.Count),
-               NcompYear_Monthedforms = sum(Forms_with_Highest_BPE_Sextant_Score),
+    group_by(Year_Month, commissioner_name,Contract.Number) %>%
+    summarise (#compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
                nlow_risk = 
                  sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
                low_risk_less1year = 
                  sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
-    mutate (geography_level='ICB',
-            percentcompYear_Montheform = formattable::percent(NcompYear_Monthedforms/ Nforms, digits =0),
-            percent_low_risk_whic_are1_year = 
+    mutate (percent_low_risk_whic_are1_year = 
               formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
-    mutate (percentlowrisk= formattable::percent (nlow_risk/ NcompYear_Monthedforms, digits =0) ) %>% 
+    #mutate (percentlowrisk= formattable::percent (nlow_risk/ compYear_Monthe_forms, digits =0) ) %>% 
     filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
-    filter (percent_low_risk_whic_are1_year<2)
+    filter (percent_low_risk_whic_are1_year<2)%>%
+    mutate(threshold_percent_low_risk_whic_are1_year=ifelse(percent_low_risk_whic_are1_year >= 0.5, 'YES','NO'))
   
-  total_bpe<- rbind(BPE_national, BPE_regional, BPE_ICB) %>% 
-    select(calendar_month=Year_Month, geography_level,geography_name,Nforms,nlow_risk,low_risk_less1year,NcompYear_Monthedforms,
-           percentcompYear_Montheform,percentlowrisk,percent_low_risk_whic_are1_year)
+  data_total_ICB<- data_ICB %>% 
+    group_by(Year_Month, geography_name=commissioner_name) %>%
+    summarise (NContractors = n_distinct(Contract.Number)) 
+  
+  data_high_ICB<- data_ICB %>% 
+    filter(threshold_percent_low_risk_whic_are1_year=='YES') %>%
+    group_by(Year_Month, geography_name=commissioner_name) %>%
+    summarise (low_risk_NContractors = n_distinct(Contract.Number)) 
+  
+  BPE_all_ICB<-data_total_region%>%
+    left_join(data_high_region, by=c('Year_Month',"geography_name"))%>%
+    mutate(geography_level='ICB',
+           "Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%"=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
+  
+  total_bpe<- rbind(BPE_all_national, BPE_all_region, BPE_all_ICB) %>% 
+    select(calendar_month=Year_Month, geography_level,geography_name,no_contracts=NContractors,"no Contracts with Low Risk Patients Recalled within a Year >= 50%"=low_risk_NContractors,
+           "Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%")
   
 
 ###### Output #####
@@ -675,6 +708,9 @@ writeData(output_file, "Orthodontic contract & activity", data_orthodontic_activ
 
 addWorksheet(output_file, "DCP")
 writeData(output_file, "DCP", total_dcp)
+
+addWorksheet(output_file, "BPE")
+writeData(output_file, "BPE", total_bpe)
 
 addWorksheet(output_file, "Metadata")
 writeData(output_file, "Metadata", metadata)
