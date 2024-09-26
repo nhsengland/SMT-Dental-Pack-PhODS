@@ -156,35 +156,32 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 
 # Dental Care Practitioners (DCPs) Information
 
--   DCP data will be re-instated next month. 
- 
--   We have removed this metric this month whilst we assess how to best display the data given that since April 2024 reporting against DCPs being able to both lead and assist in dental care came into force
-
-<!-- ## Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance -->
+## Percentage of total Courses of Treatment (CoTs) delivered which had DCP assistance
 
 ```{r DCP1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
-#plot_DCP_analysis(data = UDA_calendar_data,
-#                  dcp_data = DCP_data,
-#                  UDA_or_FP17 = "FP17",
-#                  level = "National",
-#                  region_STP_name = NULL)
+plot_DCP_analysis(data = UDA_calendar_data,
+                 dcp_data = DCP_data,
+                 UDA_or_FP17 = "FP17",
+                 level = "National",
+                 region_STP_name = NULL)
 ```
 
-<!-- -   This graph shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it. -->
+-   This graph shows the percentage of CoTs carried out which benefitted from involvement by Dental Care Practitioners.
+-   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
 
 
-<!-- ## Percentage of total UDAs delivered which had DCP assistance by band -->
+## Percentage of total UDAs delivered which had DCP assistance by band
 
 ```{r DCP2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
-#plot_DCP_analysis_band(data = UDA_calendar_data,
-#                              dcp_data = DCP_data,
-#                              UDA_or_FP17 = "UDA",
-#                              level = "National",
-#                              region_STP_name = NULL)
+plot_DCP_analysis_band(data = UDA_calendar_data,
+                             dcp_data = DCP_data,
+                             UDA_or_FP17 = "UDA",
+                             level = "National",
+                             region_STP_name = NULL)
 ```
 
-<!-- -   This chart shows the percentage of UDAs carried out which benefited from assistance by Dental Care Practitioners by treatment band. DCP data has been collected since October 2022 so will likely take time for providers to improve reporting on it. -->
-
+-   This chart shows the percentage of UDAs carried out which benefitted from involvement by Dental Care Practitioners by treatment band.
+-   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
 
 # Patients seen
 

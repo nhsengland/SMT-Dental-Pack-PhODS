@@ -342,9 +342,7 @@ contractors=UDA_calendar_data%>%
   select(month,contract_number)
 
 DCP_data <-  DCP_data %>%
-  inner_join(contractors, by=c('YEAR_MONTH'='month','CONTRACT_NUMBER'='contract_number')) %>%
-  filter(DCP_DESC!="") %>%
-  filter(!is.na(DCP_DESC))
+  inner_join(contractors, by=c('YEAR_MONTH'='month','CONTRACT_NUMBER'='contract_number'))
 
 # calculate total FP17s and rename fields
 DCP_data <- DCP_data %>%
@@ -377,6 +375,16 @@ DCP_data$commissioner_name <- paste0(DCP_data$commissioner_name, rep("ICB", nrow
 # filter out Unknown DCP type
 DCP_data <- DCP_data %>% 
   filter(!grepl("Unknown", DCP_description))
+
+# reformat assisted/lead fields
+DCP_data <- DCP_data %>% 
+  mutate(DCP_DIR_DESC = case_when(
+    DCP_DIR_DESC == "Dental Therapist" ~ "Therapist",
+    DCP_DIR_DESC == "Dental Hygienist" ~ "Hygienist",
+    DCP_DIR_DESC == "Clinical Technician" ~ "Technician", 
+    DCP_DIR_DESC == "Dental Nurse" ~ "Dental_Nurse", 
+    TRUE ~ DCP_DIR_DESC
+  ))
 ```
 
 
