@@ -603,7 +603,8 @@ data_dental_activity<-data_UDA_de_co%>%
 
 #####################################BPE##########################################
   data_national <-BPE_data %>% 
-    filter(Total.Form.Count>0) %>%
+    filter(Total.Form.Count>0,
+           Year_Month>= "2023-04-01") %>%
     group_by(Year_Month, Contract.Number) %>%
     summarise (#compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
       nlow_risk = 
@@ -629,11 +630,12 @@ data_dental_activity<-data_UDA_de_co%>%
   BPE_all_national<-data_total_national%>%
     left_join(data_high, by='Year_Month')%>%
     mutate(geography_name='England',geography_level='National',
-           "Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%"=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
+           "Percentage of contracts who recall 50% or more of their low risk patients within a year"=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
 
   
   data_region <-BPE_data %>% 
-    filter(Total.Form.Count>0) %>%
+    filter(Total.Form.Count>0,
+           Year_Month>= "2023-04-01") %>%
     group_by(Year_Month, Latest.Region.Description,Contract.Number) %>%
     summarise (#compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
                nlow_risk = 
@@ -659,11 +661,12 @@ data_dental_activity<-data_UDA_de_co%>%
   BPE_all_region<-data_total_region%>%
     left_join(data_high_region, by=c('Year_Month',"geography_name"))%>%
     mutate(geography_level='Region',
-           "Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%"=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
+           "Percentage of contracts who recall 50% or more of their low risk patients within a year"=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
   
 
   data_ICB <-BPE_data %>% 
-    filter(Total.Form.Count>0) %>%
+    filter(Total.Form.Count>0,
+           Year_Month>= "2023-04-01") %>%
     group_by(Year_Month, commissioner_name,Contract.Number) %>%
     summarise (#compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
                nlow_risk = 
@@ -689,11 +692,11 @@ data_dental_activity<-data_UDA_de_co%>%
   BPE_all_ICB<-data_total_region%>%
     left_join(data_high_region, by=c('Year_Month',"geography_name"))%>%
     mutate(geography_level='ICB',
-           "Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%"=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
+           "Percentage of contracts who recall 50% or more of their low risk patients within a year%"=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
   
   total_bpe<- rbind(BPE_all_national, BPE_all_region, BPE_all_ICB) %>% 
     select(calendar_month=Year_Month, geography_level,geography_name,no_contracts=NContractors,"no Contracts with Low Risk Patients Recalled within a Year >= 50%"=low_risk_NContractors,
-           "Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%")
+           "Percentage of contracts who recall 50% or more of their low risk patients within a year")
   
 
 ###### Output #####

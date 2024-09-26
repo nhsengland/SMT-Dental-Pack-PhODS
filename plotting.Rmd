@@ -2565,7 +2565,8 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
                                          quartileOutput = "LQ"){
 
   data <- data %>% 
-    filter(!is.na(Highest.BPE.Sextant.Score))
+    filter(!is.na(Highest.BPE.Sextant.Score),
+          Year_Month>= "2023-04-01")
   
   data[is.na(data)] <- 0
 
@@ -2747,7 +2748,7 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
       geom_point() +
       labs(x = "Month",
            y = "",
-           title = "Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%",
+           title = "Percentage of contracts who recall 50% or more of their low risk patients within a year",
            subtitle = subtitle
       ) +
       scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
