@@ -6,14 +6,14 @@ library(testthat)
 # read in NCDR tables
 con <- dbConnect(odbc::odbc(), "NCDR")
 
-bpe <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_BPE]")
-contract <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts]")
-npp <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity]")
-uda <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity]")
-dcp <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_DCP]")
-uda_fd <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only]")
-unique <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Unique_rolling]")
-uoa <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UOA_Activity]")
+bpe <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_BPE_backup]")
+contract <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts_backup]")
+npp <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity_backup]")
+uda <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_backup]")
+dcp <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_DCP_backup]")
+uda_fd <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_backup]")
+unique <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Unique_rolling_backup]")
+uoa <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UOA_Activity_backup]")
 
 dbDisconnect(con)
 
