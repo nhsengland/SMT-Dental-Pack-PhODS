@@ -1,12 +1,28 @@
 source("NCDR_upload_functions.R")
 
-#### CALENDAR ####
+## MANUAL INPUTS ##
+# each month, update to the next month
+latest_expected_month <- "2024-08-01"
+
+#### CALENDAR - initial ####
 folder_name <- c("BPE", "Contract", "NPP", "UDA Activity", "UDA Activity DCP", "UDA Activity FD only", "Unique rolling", "UOA Activity")
 
 table_name <- c("Calendar_BPE", "Calendar_Contracts", "Calendar_NPP_Eligible_Activity", "Calendar_UDA_Activity", 
                  "Calendar_DCP", "Calendar_UDA_Activity_FD_only", "Calendar_Unique_rolling", "Calendar_UOA_Activity")
 
-mapply(upload_data, folder_name, table_name)
+mapply(upload_data_to_backup, folder_name, table_name)
+
+#### RUN UPLOAD TESTS ####
+# run tests in file upload_tests.R
+
+#### CALENDAR - final ####
+# Only run once you are happy with the data
+folder_name <- c("BPE", "Contract", "NPP", "UDA Activity", "UDA Activity DCP", "UDA Activity FD only", "Unique rolling", "UOA Activity")
+
+table_name <- c("Calendar_BPE", "Calendar_Contracts", "Calendar_NPP_Eligible_Activity", "Calendar_UDA_Activity", 
+                "Calendar_DCP", "Calendar_UDA_Activity_FD_only", "Calendar_Unique_rolling", "Calendar_UOA_Activity")
+
+mapply(upload_tested_data, folder_name, table_name)
 
 #### SCHEDULED ####
 #load in lookup
