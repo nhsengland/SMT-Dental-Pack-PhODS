@@ -475,13 +475,20 @@ data_dental_activity<-data_UDA_de_co%>%
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
+    filter(DCP_DIR_DESC != "Technician") %>% 
     mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"), 
            DCP_description = replace(DCP_description, DCP_description=="Dental Hygienist", "Hygienist_assisted"), 
            DCP_description = replace(DCP_description, DCP_description=="Dental Therapist", "Therapist_assisted"),
            DCP_description = replace(DCP_description, DCP_description=="Hygienist", "Hygienist_assisted"), 
-           DCP_description = replace(DCP_description, DCP_description=="Therapist", "Therapist_assisted"))
+           DCP_description = replace(DCP_description, DCP_description=="Therapist", "Therapist_assisted"), 
+           DCP_DIR_DESC = replace(DCP_DIR_DESC, DCP_DIR_DESC=="Therapist", "Therapist_led"), 
+           DCP_DIR_DESC = replace(DCP_DIR_DESC, DCP_DIR_DESC=="Hygienist", "Hygienist_led"), 
+           DCP_DIR_DESC = replace(DCP_DIR_DESC, DCP_DIR_DESC=="Nurse", "Dental_Nurse_led"))
   
   dcp_summary_national <- dcp_main_new%>% 
+    pivot_longer(cols = DCP_description:DCP_DIR_DESC, names_to = "variable", values_to = "DCP_description") %>% 
+    select(-variable) %>% 
+    filter(!DCP_description == "") %>% 
     group_by(month, DCP_description) %>%
     dplyr::summarise (completed_courses_of_treatment = sum(FP17_Current_Year_total, na.rm = TRUE),
                       UDA_B1 = sum(Band_1._UDA, na.rm = TRUE),
@@ -490,6 +497,9 @@ data_dental_activity<-data_UDA_de_co%>%
                       UDA_urgent = sum(Urgent_UDA, na.rm = TRUE))
   
   dcp_summary_regional <- dcp_main_new%>% 
+    pivot_longer(cols = DCP_description:DCP_DIR_DESC, names_to = "variable", values_to = "DCP_description") %>% 
+    select(-variable) %>% 
+    filter(!DCP_description == "") %>% 
     group_by(month, Region, DCP_description) %>%
     dplyr::summarise (completed_courses_of_treatment = sum(FP17_Current_Year_total, na.rm = TRUE),
                       UDA_B1 = sum(Band_1._UDA, na.rm = TRUE),
@@ -498,7 +508,10 @@ data_dental_activity<-data_UDA_de_co%>%
                       UDA_urgent = sum(Urgent_UDA, na.rm = TRUE))
   
   
-    dcp_summary_icb <- dcp_main_new%>% 
+  dcp_summary_icb <- dcp_main_new%>% 
+    pivot_longer(cols = DCP_description:DCP_DIR_DESC, names_to = "variable", values_to = "DCP_description") %>% 
+    select(-variable) %>% 
+    filter(!DCP_description == "") %>% 
     group_by(month, commissioner_name, DCP_description) %>%
       dplyr::summarise (completed_courses_of_treatment = sum(FP17_Current_Year_total, na.rm = TRUE),
                         UDA_B1 = sum(Band_1._UDA, na.rm = TRUE),
@@ -514,7 +527,7 @@ data_dental_activity<-data_UDA_de_co%>%
       names_prefix = "dcp",
       values_to = "numbers",
       values_drop_na = TRUE
-    ) 
+    )
     
     delivery_total_national_longer <- delivery_total_national %>% pivot_longer(
       cols =c(completed_courses_of_treatment, UDA_B1, UDA_B2, UDA_B3, UDA_urgent),
@@ -529,7 +542,7 @@ data_dental_activity<-data_UDA_de_co%>%
       select (month, DCP_description.x, DCP_metric, numbers, DCP_description.y, all_numbers)
     
     total_national <- all_lookup_national %>% 
-      mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
+      mutate (dcp_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
       mutate(geography_name='England',geography_level='National') %>% 
       arrange(desc(month))
     
@@ -555,7 +568,7 @@ data_dental_activity<-data_UDA_de_co%>%
       select (month, Region,DCP_description.x, DCP_metric, numbers, DCP_description.y, all_numbers)
     
     total_regional <- all_lookup_regional %>% 
-      mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
+      mutate (dcp_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
       rename(geography_name=`Region`)%>%
       mutate(geography_level='Region') %>% 
       arrange(desc(month))
@@ -581,7 +594,7 @@ data_dental_activity<-data_UDA_de_co%>%
     select (month, commissioner_name,DCP_description.x, DCP_metric, numbers, DCP_description.y, all_numbers)
   
   total_icb <- all_lookup_icb %>% 
-    mutate (asissted_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
+    mutate (dcp_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
     rename(geography_name=`commissioner_name`)%>%
     mutate(geography_level='ICB') %>% 
     arrange(desc(month))
@@ -597,7 +610,7 @@ data_dental_activity<-data_UDA_de_co%>%
              month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"), 
            `month` = format(as.Date(month), "%Y-%m"))%>%
     select(calendar_month=month, financial_year,geography_level,geography_name,DCP_metric,DCP_description=DCP_description.x,
-           metric_count_by_DCP = numbers,metric_count_total = all_numbers,DCP_assisted_percent = asissted_percent)
+           metric_count_by_DCP = numbers,metric_count_total = all_numbers,DCP_involved_percent = dcp_percent)
   
 
 
@@ -627,7 +640,7 @@ data_dental_activity<-data_UDA_de_co%>%
     summarise (low_risk_NContractors = n_distinct(Contract.Number)) 
   
   BPE_all_national<-data_total_national%>%
-    left_join(data_high, by='Year_Month')%>%
+    left_join(data_high_national, by='Year_Month')%>%
     mutate(geography_name='England',geography_level='National',
            "Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%"=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
 

@@ -86,7 +86,7 @@ metadata <- data.frame(Tab = c("Dental contract & activity",
                                  "DCP_description", 
                                  "metric_count_by_DCP", 
                                  "metric_count_total", 
-                                 "DCP_assisted_percent"), 
+                                 "DCP_involved_percent"), 
                        Description = c("Month the activity was completed for dental course of treatment", 
                                        "Financial year the month belongs to", 
                                        "To aid filtering by National, regional and ICB level data", 
@@ -130,7 +130,7 @@ metadata <- data.frame(Tab = c("Dental contract & activity",
                                        "Dental Care Practitioner (DCP) description", 
                                        "Counts per metric and per DCP description", 
                                        "Metric totals for all delivery", 
-                                       "Percent of metric assisted by DCP description"))
+                                       "Percent of metric delivered (led) or assisted by DCP description"))
 
 
 

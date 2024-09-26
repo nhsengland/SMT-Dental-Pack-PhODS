@@ -1894,7 +1894,7 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
     subtitle <- "England"
   }
   
-  #calculate total FP19, UDA_B1, B2, B3 and urgent by month for "Total_dentist_only_and_DCP_assisted' by using UDA Calendar data
+  #calculate total FP17, UDA_B1, B2, B3 and urgent by month for "Total_dentist_only_and_DCP_assisted' by using UDA Calendar data
   delivery_total <-  data %>% 
     group_by(month) %>%
     dplyr::summarise( total_FP17 = sum(general_FP17s, na.rm = TRUE),
@@ -1906,36 +1906,40 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
     select(month, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent) %>% 
     rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
   
-  #calculate total FP19, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data
+  #calculate total FP17, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Clinical Technician') %>%
     filter(DCP_description != 'Technician') %>%
-    mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"), 
-           DCP_description = replace(DCP_description, DCP_description=="Dental Hygienist", "Hygienist_assisted"), 
-           DCP_description = replace(DCP_description, DCP_description=="Dental Therapist", "Therapist_assisted"),
-           DCP_description = replace(DCP_description, DCP_description=="Hygienist", "Hygienist_assisted"), 
-           DCP_description = replace(DCP_description, DCP_description=="Therapist", "Therapist_assisted"))
+    filter(DCP_DIR_DESC != "Technician") %>% 
+    rename(assisted = DCP_description, led = DCP_DIR_DESC)
   
-  dcp_summary <- dcp_main_new %>% 
-    filter(!is.na(DCP_description))%>%
-    group_by(month, DCP_description) %>%
-    summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
-               total_B1 = sum(Band_1._UDA, na.rm = TRUE),
-               total_B2 = sum(Band_2._UDA, na.rm = TRUE),
-               total_B3 = sum(Band_3._UDA, na.rm = TRUE),
-               total_urgent = sum(Urgent_UDA, na.rm = TRUE)) %>% 
-    rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
+  dcp_summary <- dcp_main_new %>%
+  group_by(month, assisted, led) %>%
+  summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
+             total_B1 = sum(Band_1._UDA, na.rm = TRUE),
+             total_B2 = sum(Band_2._UDA, na.rm = TRUE),
+             total_B3 = sum(Band_3._UDA, na.rm = TRUE),
+             total_urgent = sum(Urgent_UDA, na.rm = TRUE)) %>% 
+  pivot_longer(cols = assisted:led, names_to = "role", values_to = "DCP_description") %>% 
+  filter(!DCP_description == "") %>% 
+  group_by(month, role, DCP_description) %>% 
+  summarise(total_FP17 = sum(total_FP17, na.rm = TRUE),
+            total_B1 = sum(total_B1, na.rm = TRUE),
+            total_B2 = sum(total_B2, na.rm = TRUE),
+            total_B3 = sum(total_B3, na.rm = TRUE),
+            total_urgent = sum(total_urgent, na.rm = TRUE)) %>% 
+  rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
 
 #pivot delivery total and seperate dcp into long format
   dcp_summary_longer <- dcp_summary %>% 
-    pivot_longer(cols = starts_with("total"),
+    pivot_longer(cols = total_FP17:Urgent,
                  names_to = "Bands",
                  names_prefix = "dcp",
                  values_to = "numbers",
                  values_drop_na = TRUE) 
   
   delivery_total_longer <- delivery_total %>% 
-    pivot_longer(cols = starts_with("total"),
+    pivot_longer(cols = total_FP17:Urgent,
                  names_to = "Bands",
                  names_prefix = "dcp",
                  values_to = "all_numbers",
@@ -1947,7 +1951,7 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
   
   #calculate the percentage of each dcp description/total delivery 
   total <- all_lookup %>% 
-    mutate(assisted_percent = formattable::percent (numbers / all_numbers, digits=2))
+    mutate(dcp_percent = formattable::percent (numbers / all_numbers, digits=2))
   
   if(UDA_or_FP17 == "UDA"){
     
@@ -1997,10 +2001,12 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
     #UDA is only for those with 'total_FP17'
     filtered_data_FP17 <- total %>%
       filter( Bands %in% c("total_FP17")) %>% 
-      select("month", "DCP_description.x", "Bands", "assisted_percent") %>%
+      select(month, role, "DCP_description.x", Bands, dcp_percent) %>%
       mutate(month = as.Date(month)) %>%
       rename ( Percent_of_FP17 = Bands, DCP_description = DCP_description.x) %>%
-      mutate(DCP_description = str_replace_all(DCP_description, "_", " ")) 
+      mutate(DCP_description = str_replace_all(DCP_description, "_", " "), 
+             DCP_description = replace(DCP_description, DCP_description == "Nurse", "Dental Nurse"), 
+             role = ifelse(role == "assisted", "DCP assisted", "DCP led")) 
     
     #get the number for the latest month -- used for label in the plot
     latest_month <- max(filtered_data_FP17$month)
@@ -2008,16 +2014,17 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
     filter(month == latest_month)
 
     FP17_plot <- ggplot(filtered_data_FP17, 
-                        aes(x=month, y= assisted_percent)) +
+                        aes(x=month, y= dcp_percent)) +
       geom_line(aes(colour = DCP_description),
                 size = 1) +
-      geom_text_repel(data = latest_data, aes(label = assisted_percent), 
+      geom_text_repel(data = latest_data, aes(label = dcp_percent), 
                     colour = "black", size = 3.5, vjust = -0.25) + 
+      facet_wrap(vars(role)) +
       theme(legend.position="bottom") +
       theme_bw() +
       scale_x_date(date_breaks = "1 month",
                    date_labels = "%b-%y") +
-      labs(title = "Percentage of total Courses of Treatment (CoTs) delivered which had Dental Care Practitioner (DCP) assistance",
+      labs(title = "Percentage of total Courses of Treatment (CoTs) delivered which had Dental Care Practitioner (DCP) involvement",
            subtitle = subtitle,
            x = "Month",
            y = "Percentage of total CoTs delivered",
@@ -2394,46 +2401,52 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
   }else{
     subtitle <- "England"
   }
- #calculate total FP19, UDA_B1, B2, B3 and urgent by month for "Total_dentist_only_and_DCP_assisted' by using UDA Calendar data
+ #calculate total FP17, UDA_B1, B2, B3 and urgent by month for "Total_dentist_only_and_DCP_assisted' by using UDA Calendar data
   delivery_total <-  data %>% 
     group_by(month) %>%
-    dplyr::summarise(total_FP17 = sum(general_FP17s, na.rm = TRUE),
-                     total_B1 = sum(UDA_band_1, na.rm = TRUE),
-                     total_B2 = sum(UDA_band_2, na.rm = TRUE),
-                     total_B3 = sum(UDA_band_3, na.rm = TRUE),
-                     total_urgent = sum(UDA_urgent, na.rm = TRUE)) %>%
+    dplyr::summarise( total_FP17 = sum(general_FP17s, na.rm = TRUE),
+                      total_B1 = sum(UDA_band_1, na.rm = TRUE),
+                      total_B2 = sum(UDA_band_2, na.rm = TRUE),
+                      total_B3 = sum(UDA_band_3, na.rm = TRUE),
+                      total_urgent = sum(UDA_urgent, na.rm = TRUE)) %>%
     mutate(DCP_description = "Total_dentist_only_and_DCP_assisted") %>%
-    select(month, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent)
+    select(month, DCP_description, total_FP17,total_B1, total_B2, total_B3, total_urgent) %>% 
+    rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
 
-#calculate total FP19, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data
+#calculate total FP17, UDA_B1, B2, B3 and urgent by month for separate DCP description by using DCP data
   dcp_main_new <- dcp_data %>% 
     filter(DCP_description != 'Clinical Technician') %>%
-    filter(DCP_description != 'Technician') %>%
-    mutate(DCP_description = replace(DCP_description, DCP_description== "Nurse", "Dental_Nurse_assisted"), 
-           DCP_description = replace(DCP_description, DCP_description=="Dental Hygienist", "Hygienist_assisted"), 
-           DCP_description = replace(DCP_description, DCP_description=="Dental Therapist", "Therapist_assisted"),
-           DCP_description = replace(DCP_description, DCP_description=="Hygienist", "Hygienist_assisted"), 
-           DCP_description = replace(DCP_description, DCP_description=="Therapist", "Therapist_assisted"))
-
+    filter(DCP_description != 'Technician') %>% 
+    filter(DCP_DIR_DESC != "Technician") %>% 
+    rename(assisted = DCP_description, led = DCP_DIR_DESC)
 
   dcp_summary <- dcp_main_new %>%
-    group_by(month, DCP_description) %>%
-    summarise(total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
-              total_B1 = sum(Band_1._UDA, na.rm = TRUE),
-              total_B2 = sum(Band_2._UDA, na.rm = TRUE),
-              total_B3 = sum(Band_3._UDA, na.rm = TRUE),
-              total_urgent = sum(Urgent_UDA, na.rm = TRUE))
+    group_by(month, assisted, led) %>%
+    summarise (total_FP17 = sum(FP17_Current_Year_total, na.rm = TRUE),
+               total_B1 = sum(Band_1._UDA, na.rm = TRUE),
+               total_B2 = sum(Band_2._UDA, na.rm = TRUE),
+               total_B3 = sum(Band_3._UDA, na.rm = TRUE),
+               total_urgent = sum(Urgent_UDA, na.rm = TRUE)) %>% 
+    pivot_longer(cols = assisted:led, names_to = "role", values_to = "DCP_description") %>% 
+    filter(!DCP_description == "") %>% 
+    group_by(month, role, DCP_description) %>% 
+    summarise(total_FP17 = sum(total_FP17, na.rm = TRUE),
+              total_B1 = sum(total_B1, na.rm = TRUE),
+              total_B2 = sum(total_B2, na.rm = TRUE),
+              total_B3 = sum(total_B3, na.rm = TRUE),
+              total_urgent = sum(total_urgent, na.rm = TRUE)) %>% 
+    rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
 
   #change the format of total delivery and separate dcp and then get full data ready for plotting
   dcp_summary_longer <- dcp_summary %>%
-    pivot_longer(cols = starts_with("total"),
+    pivot_longer(cols = total_FP17:Urgent,
                  names_to = "Bands",
                  names_prefix = "dcp",
                  values_to = "numbers",
                  values_drop_na = TRUE) 
 
   delivery_total_longer <- delivery_total %>% 
-    pivot_longer(cols = starts_with("total"),
+    pivot_longer(cols = total_FP17:Urgent,
                  names_to = "Bands",
                  names_prefix = "dcp",
                  values_to = "all_numbers",
@@ -2444,7 +2457,7 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
                           
   #calculate the percentage of each dcp description/total delivery 
   total <- all_lookup %>% 
-    mutate(assisted_percent = formattable::percent (numbers / all_numbers, digits=2),
+    mutate(dcp_percent = formattable::percent (numbers / all_numbers, digits=2),
            Bands = replace(Bands, Bands=="total_B1", "UDA Band 1"),
            Bands = replace(Bands, Bands=="total_B2", "UDA Band 2"),
            Bands = replace(Bands, Bands=="total_B3", "UDA Band 3"),
@@ -2452,11 +2465,15 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
 
   if(UDA_or_FP17 == "UDA"){
    #UDA is only for those with 'band'
-    filtered_data_UDA = filter(total, Bands %in% c("UDA Band 1",	"UDA Band 2",	"UDA Band 3", "UDA Urgent")) %>%
-      select(month, "DCP_description.x", "Bands", "assisted_percent") %>%
-      rename(DCP_description = DCP_description.x) %>%
+    filtered_data_UDA = filter(total, Bands %in% c("Band 1",	"Band 2",	"Band 3", "Urgent")) %>%
+      select(month, role, "DCP_description.x", Bands, dcp_percent) %>%
+      rename (DCP_description = DCP_description.x) %>%
       mutate(month = as.Date(month)) %>%
-      mutate(DCP_description = str_replace_all(DCP_description, "_", " "))
+      mutate(DCP_description = str_replace_all(DCP_description, "_", " "),
+             DCP_description = replace(DCP_description, DCP_description == "Nurse", "Dental Nurse"),
+             DCP_description = paste(DCP_description, role, sep = " ")) %>% 
+      filter(DCP_description %in% c("Dental Nurse assisted", "Hygienist assisted", "Therapist assisted", "Therapist led"))
+
     
     max_month <- max(filtered_data_UDA$month)
     
@@ -2464,20 +2481,20 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
       filter(month == max_month)
 
     UDA_plot <- ggplot(filtered_data_UDA,
-                       aes(x=month, y= assisted_percent)) +
+                   aes(x=month, y= dcp_percent)) +
       facet_grid(cols = vars(DCP_description)) +
       geom_line(aes(colour = Bands),
                 size = 1) +
-      geom_text_repel(aes(label = assisted_percent), 
-                      data = data_labels, 
-                      colour = "black", 
+      geom_text_repel(data = data_labels,
+                      aes(label = dcp_percent),
+                      colour = "black",
                       position = "dodge") +
       scale_fill_manual(values = c("#009E73", "#F0E442", "#D55E00"),
                         labels = c("Dental Nurse assisted", "Hygienist assisted", "Therapist assisted")) +
       scale_x_date(date_breaks = "1 month",
                    date_labels = "%b-%y") +
       theme_bw() +
-      labs(title = "Percentage of total UDAs delivered which had Dental Care Practitioner (DCP) assistance by DCP roles",
+      labs(title = "Percentage of total UDAs delivered which had Dental Care Practitioner (DCP) involvement by DCP roles",
            subtitle = subtitle,
            x = "Month",
            y = "Percentage of total UDAs delivered",
