@@ -282,7 +282,7 @@ name: contents
 - [Unique dental patients seen as a percentage of February 2020 figures](#unique-patients-Feb2020)
 - [Patients seen under the New Patient Premium definition](#NPP)
 - [Eligible contracts that have seen new patients](#NPP-contracts)
-- [Percentrage of Contracts with Low Risk Patients Recalled within a Year >= 50%](#BPE-contracts)
+- [Oral health risk assessment](#BPE-contracts)
 - [Units of Orthodontic Activity (UOA) - Calendar activity data standardised by working days](#UOA)
 - [Units of Orthodontic Activity (UOA) - Calendar year to date delivery](#YTD-UOA-delivery)
 
@@ -2247,7 +2247,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 
 ---
 name: BPE-contracts
-#### Percentrage of Contracts with Low Risk Patients Recalled within a Year < 50%
+#### Oral health risk assessment
 
 
 ```{r xaringan-panelset-BPE, echo=FALSE}

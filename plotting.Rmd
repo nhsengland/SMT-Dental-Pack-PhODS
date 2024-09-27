@@ -2602,6 +2602,7 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
   }
 
   ###########################method1 for quantile########################
+  # METHOD NOT CURRENTLY IN USE
 #CALCULATE THE PERCENTAGE OF forms with highest BPE_Sextant_Score
 #  data_org <- data %>%
 #    group_by(Year_Month, Contract.Number) %>%
@@ -2690,6 +2691,7 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
 #  }
   
   ######################## method 2 for total#######################################
+  # METHOD NOT CURRENTLY IN USE
 #  data <- data %>% 
 #    filter(Total.Form.Count>0) %>%
 #    group_by(Year_Month) %>%
@@ -2727,17 +2729,16 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
 
 
 ########################################Method 3 50%#####################################
+  # This method calculates the percentage of contracts bringing back more 50% or more low risk patients within a year
    data <- data %>% 
     filter(Total.Form.Count>0) %>%
     group_by(Year_Month, Contract.Number) %>%
-    summarise (#compYear_Monthe_forms = sum(Forms_with_Highest_BPE_Sextant_Score), 
-               nlow_risk = 
+    summarise (nlow_risk = 
                  sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
                low_risk_less1year = 
                  sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
     mutate (percent_low_risk_whic_are1_year = 
               formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
-    #mutate (percentlowrisk= formattable::percent (nlow_risk/ compYear_Monthe_forms, digits =0) ) %>% 
     filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
     filter (percent_low_risk_whic_are1_year<2)%>%
     mutate(threshold_percent_low_risk_whic_are1_year=ifelse(percent_low_risk_whic_are1_year >= 0.5, 'YES','NO'))
@@ -2754,10 +2755,6 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
  data_all<-data_total%>%
    left_join(data_high, by='Year_Month')%>%
    mutate(pro_50=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
-    
-    max_month <- max (data_all$Year_Month)
-
-
  
     p_test <- 
       ggplot(data_all, aes(x = `Year_Month` , y = `pro_50`)) +
@@ -2768,7 +2765,8 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
            title = "Percentage of contracts who recall 50% or more of their low risk patients within a year",
            subtitle = subtitle
       ) +
-      scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+      scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
+                         limits = c(0, NA)) +
       scale_x_date(date_labels = "%b-%y") +
       geom_text(aes(x = Year_Month, y = `pro_50`, label = `pro_50`), 
             size = 2.5, vjust = -.7) + 
