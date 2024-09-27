@@ -1665,7 +1665,8 @@ if(plotChart == TRUE & asIndex == FALSE){
 ```{r npp activity}
 plot_npp_activity <- function(data = npp_data, 
                               level = "National", 
-                              region_STP_name = NULL){
+                              region_STP_name = NULL, 
+                              by_band = FALSE){
   # group and filter based on level
   if(level == "Regional"){
     data <- data %>% 
@@ -1687,9 +1688,12 @@ plot_npp_activity <- function(data = npp_data,
     subtitle <- "England"
   }
   
+  if (by_band == FALSE){
   # calculate number of patients seen
+  # filter for new_patient_tariff_amount > 0 to only count contracts seeing patients under NPP
   data <- data %>% 
-    filter(month >= "2024-03-01") %>% 
+    filter(month >= "2024-03-01" 
+           & new_patient_tariff_amount > 0) %>% 
     summarise(adult_total = sum(adult_count), 
               child_total = sum(child_count), 
               total = sum(total)) %>% 
@@ -1729,6 +1733,53 @@ plot_npp_activity <- function(data = npp_data,
          x = "Month", 
          caption = chartCaption) + 
     theme(legend.position = "bottom")
+  }
+  
+  else if (by_band == TRUE){
+    # calculate number of patients seen by band
+  # filter for new_patient_tariff_amount > 0 to only count contracts seeing patients under NPP
+  data <- data %>% 
+    filter(month >= "2024-03-01" 
+           & new_patient_tariff_amount > 0) %>% 
+    summarise(`Adults Band 1` = sum(band1_adult_count), 
+              `Adults Bands 2&3` = sum(band23_adult_count),
+              `Children Band 1` = sum(band1_child_count), 
+              `Children Bands 2&3` = sum(band23_child_count)) %>% 
+    pivot_longer(cols = `Adults Band 1`:`Children Bands 2&3`, 
+                 names_to = "variable", 
+                 values_to = "values")
+  
+  # create data labels for latest month
+  latest_month <- max(data$month)
+  
+  data_labels <- data %>% 
+    filter(month == latest_month)
+  
+  chartCaption <- "Contracts included: GDS/PDS/PDS+
+  Includes all patients seen.
+  The most recent two months data will be incomplete and subject to change, particularly for the most recent month. We expect final data to be higher."
+  
+  ggplot(data, aes(x = month,
+                   y = values, 
+                   colour = variable)) + 
+    geom_line(linewidth = 1) + 
+    geom_text_repel(aes(label = prettyNum(values, big.mark=",")), 
+                    data = data_labels, 
+                    colour = "black", 
+                    position = "dodge") +
+    theme_bw() + 
+    scale_x_date(date_breaks = "1 month",
+                 date_labels = "%b-%y") +
+    scale_colour_manual(values = get_colour_palette(), 
+                        name = "") + 
+    scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) + 
+    labs(title = "Number of eligible patients seen according to the New Patient Premium definition by band", 
+         subtitle = subtitle, 
+         y = "Eligible patients", 
+         x = "Month", 
+         caption = chartCaption) + 
+    theme(legend.position = "bottom")
+  }
 }
 ```
 
@@ -1738,7 +1789,7 @@ plot_npp_contracts <- function(data = npp_data,
                                region_STP_name = NULL){
   # check if contract saw new patient or not
   data <- data %>% 
-    mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
+    mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
     filter(month >= "2024-03-01")
   
   # group and filter based on level
@@ -1815,7 +1866,7 @@ table_npp_contracts <- function(data = npp_data,
                                 region_STP_name = NULL){
   # check if contract saw new patient or not
   data <- data %>% 
-    mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
+    mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
     filter(month >= "2024-03-01")
   
   # group and filter based on level

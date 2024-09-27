@@ -281,6 +281,7 @@ name: contents
 - [Unique dental patients seen](#unique-patients)
 - [Unique dental patients seen as a percentage of February 2020 figures](#unique-patients-Feb2020)
 - [Patients seen under the New Patient Premium definition](#NPP)
+- [Patients seen under the New Patient Premium definition by band](#NPP-band)
 - [Eligible contracts that have seen new patients](#NPP-contracts)
 - [Oral health risk assessment](#BPE-contracts)
 - [Units of Orthodontic Activity (UOA) - Calendar activity data standardised by working days](#UOA)
@@ -1894,7 +1895,8 @@ xaringanExtra::use_panelset()
 .panel[.panel-name[`r region`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_npp_activity(level = "Regional",
-                              region_STP_name = region)
+                              region_STP_name = region,
+                  by_band = FALSE)
 
 ```
 
@@ -1905,7 +1907,8 @@ plot_npp_activity(level = "Regional",
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP1)
+                                  region_STP_name = STP1,
+                  by_band = FALSE)
 
 ```
 
@@ -1916,7 +1919,8 @@ plot_npp_activity(level = "STP",
 .panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP2)
+                                  region_STP_name = STP2,
+                  by_band = FALSE)
 
 ```
 
@@ -1927,7 +1931,8 @@ plot_npp_activity(level = "STP",
 .panel[.panel-name[`r STP3`]
 ```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP3)
+                                  region_STP_name = STP3,
+                  by_band = FALSE)
 
 ```
 
@@ -1938,7 +1943,8 @@ plot_npp_activity(level = "STP",
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP4)
+                                  region_STP_name = STP4,
+                  by_band = FALSE)
 
 ```
 
@@ -1949,7 +1955,8 @@ plot_npp_activity(level = "STP",
 .panel[.panel-name[`r STP5`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP5)
+                                  region_STP_name = STP5,
+                  by_band = FALSE)
 
 ```
 
@@ -1960,7 +1967,8 @@ plot_npp_activity(level = "STP",
 .panel[.panel-name[`r STP6`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP6)
+                                  region_STP_name = STP6,
+                  by_band = FALSE)
 
 ```
 
@@ -1971,7 +1979,8 @@ plot_npp_activity(level = "STP",
 .panel[.panel-name[`r STP7`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP7)
+                                  region_STP_name = STP7,
+                  by_band = FALSE)
 
 ```
 
@@ -1982,7 +1991,8 @@ plot_npp_activity(level = "STP",
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP8)
+                                  region_STP_name = STP8,
+                  by_band = FALSE)
 
 ```
 
@@ -1993,7 +2003,8 @@ plot_npp_activity(level = "STP",
 .panel[.panel-name[`r STP9`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP9)
+                                  region_STP_name = STP9,
+                  by_band = FALSE)
 
 ```
 
@@ -2004,7 +2015,8 @@ plot_npp_activity(level = "STP",
 .panel[.panel-name[`r STP10`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP10)
+                                  region_STP_name = STP10,
+                  by_band = FALSE)
 
 ```
 
@@ -2015,7 +2027,166 @@ plot_npp_activity(level = "STP",
 .panel[.panel-name[`r STP11`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
 plot_npp_activity(level = "STP",
-                                  region_STP_name = STP11)
+                                  region_STP_name = STP11,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+]
+
+
+---
+
+name: NPP-band
+#### Patients seen under the New Patient Premium definition by band
+
+```{r xaringan-panelset-NPP-band, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "Regional",
+                              region_STP_name = region,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP1,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP2,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP3,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP4,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP5,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP6,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP7,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP8,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP9,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP10,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP11,
+                  by_band = TRUE)
 
 ```
 
