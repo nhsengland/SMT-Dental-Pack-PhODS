@@ -166,7 +166,7 @@ plot_DCP_analysis(data = UDA_calendar_data,
                  region_STP_name = NULL)
 ```
 
--   This graph shows the percentage of CoTs carried out which benefitted from involvement by Dental Care Practitioners.
+-   This graph shows the percentage of CoTs carried out which benefited from involvement by Dental Care Practitioners.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
 
 
@@ -180,7 +180,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
                              region_STP_name = NULL)
 ```
 
--   This chart shows the percentage of UDAs carried out which benefitted from involvement by Dental Care Practitioners by treatment band.
+-   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
 
 # Patients seen

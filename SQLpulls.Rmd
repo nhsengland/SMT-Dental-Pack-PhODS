@@ -409,7 +409,7 @@ BPE_data<-pull_BPE_data()%>%
   inner_join(contractual_dataset,by=c('YEAR_MONTH','CONTRACT_NUMBER'))
 
 
-# calculate total FP17s and rename fields
+# calculate and rename fields
 BPE_data<-BPE_data %>%
   rename(commissioner_name=COMMISSIONER_NAME,
          Latest.Region.Description=Region_Name,
