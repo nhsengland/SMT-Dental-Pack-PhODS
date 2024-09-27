@@ -289,8 +289,7 @@ npp_data <- pull_npp_data() %>%
   mutate(adult_count = rowSums(select(., BAND1_ADULT_COUNT, BAND23_ADULT_COUNT), na.rm = TRUE), 
          child_count = rowSums(select(., BAND1_CHILD_COUNT, BAND23_CHILD_COUNT), na.rm = TRUE), 
          total = rowSums(select(., BAND1_ADULT_COUNT, BAND23_ADULT_COUNT, BAND1_CHILD_COUNT, BAND23_CHILD_COUNT), na.rm = TRUE)) %>% 
-  select(month = YEAR_MONTH, CONTRACT_NUMBER, COMMISSIONER_CODE, Region_Name, STP_Code, COMMISSIONER_NAME = STP_Name, 
-         adult_count, child_count, total)
+  rename(month = YEAR_MONTH, COMMISSIONER_NAME = STP_Name)
 
 # reformat names and region and commissioner names
 names(npp_data) <- tolower(names(npp_data))

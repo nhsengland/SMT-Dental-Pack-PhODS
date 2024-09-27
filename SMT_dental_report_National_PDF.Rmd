@@ -215,11 +215,20 @@ plot_unique_patients_rolling(level = "National",
 
 ```{r npp activity, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_npp_activity(level = "National", 
-                  region_STP_name = NULL)
+                  region_STP_name = NULL, 
+                  by_band = FALSE)
 ```
 
 -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
 -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+## Patients seen under the New Patient Premium definition by band
+
+```{r npp activity by band, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "National", 
+                  region_STP_name = NULL, 
+                  by_band = TRUE)
+```
 
 ## Eligible contracts that have seen new patients
 

@@ -295,7 +295,7 @@ data_UOA_YTD<- rbind(data_Nat_YTD_UOA, data_reg_YTD_UOA, data_icb_YTD_UOA) %>%
 data_orthodontic_activity <- data_UOA_de_co %>% 
   full_join(data_UOA_YTD, by = c("calendar_month", "financial_year", "geography_name", "geography_level"))
 
-### Unique patients seen ###
+### Unique patients seen ####
 # Unique patients rolling
 # get the right data -- sum unique patient seen for general population/adult/child 
 data_Nat_unique <- pull_unique_patients() %>% 
@@ -324,13 +324,17 @@ data_ICB_unique <- pull_unique_patients() %>%
 
 data_unique <- rbind(data_Nat_unique, data_ICB_unique)
 
-### New Patient Premium ###
+### New Patient Premium ####
 npp_nat <- npp_data %>% 
-  filter(month >= "2024-03-01") %>% 
+  filter(month >= "2024-03-01" & new_patient_tariff_amount > 0) %>% 
   group_by(month) %>% 
   summarise(total_NPP_patients_seen = sum(total),
             adult_NPP_patients_seen = sum(adult_count), 
-            child_NPP_patients_seen = sum(child_count)) %>% 
+            child_NPP_patients_seen = sum(child_count), 
+            adult_NPP_band_1 = sum(band1_adult_count), 
+            adult_NPP_band_23 = sum(band23_adult_count), 
+            child_NPP_band_1 = sum(band1_child_count), 
+            child_NPP_band_23 = sum(band23_child_count)) %>% 
   mutate(geography_level = "National", 
          geography_name = "England", 
          month = format(as.Date(month), "%Y-%m")) %>% 
@@ -338,11 +342,15 @@ npp_nat <- npp_data %>%
   rename(calendar_month = month)
 
 npp_reg <- npp_data %>% 
-  filter(month >= "2024-03-01") %>% 
+  filter(month >= "2024-03-01" & new_patient_tariff_amount > 0) %>% 
   group_by(month, region_name) %>% 
   summarise(total_NPP_patients_seen = sum(total),
             adult_NPP_patients_seen = sum(adult_count), 
-            child_NPP_patients_seen = sum(child_count)) %>% 
+            child_NPP_patients_seen = sum(child_count), 
+            adult_NPP_band_1 = sum(band1_adult_count), 
+            adult_NPP_band_23 = sum(band23_adult_count), 
+            child_NPP_band_1 = sum(band1_child_count), 
+            child_NPP_band_23 = sum(band23_child_count)) %>% 
   mutate(geography_level = "Regional", 
          month = format(as.Date(month), "%Y-%m")) %>% 
   arrange(desc(month)) %>% 
@@ -350,11 +358,15 @@ npp_reg <- npp_data %>%
          calendar_month = month)
 
 npp_icb <- npp_data %>% 
-  filter(month >= "2024-03-01") %>% 
+  filter(month >= "2024-03-01" & new_patient_tariff_amount > 0) %>% 
   group_by(month, commissioner_name) %>% 
   summarise(total_NPP_patients_seen = sum(total),
             adult_NPP_patients_seen = sum(adult_count), 
-            child_NPP_patients_seen = sum(child_count)) %>% 
+            child_NPP_patients_seen = sum(child_count), 
+            adult_NPP_band_1 = sum(band1_adult_count), 
+            adult_NPP_band_23 = sum(band23_adult_count), 
+            child_NPP_band_1 = sum(band1_child_count), 
+            child_NPP_band_23 = sum(band23_child_count)) %>% 
   mutate(geography_level = "ICB", 
          month = format(as.Date(month), "%Y-%m")) %>% 
   arrange(desc(month)) %>% 
@@ -365,7 +377,7 @@ npp_total <- rbind(npp_nat, npp_reg, npp_icb)
 
 npp_contracts_nat <- npp_data %>% 
   filter(month >= "2024-03-01") %>% 
-  mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
+  mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
   group_by(month, saw_new_patient) %>% 
   summarise(contracts = n_distinct(contract_number)) %>% 
   pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
@@ -383,7 +395,7 @@ npp_contracts_nat <- npp_data %>%
 
 npp_contracts_reg <- npp_data %>% 
   filter(month >= "2024-03-01") %>% 
-  mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
+  mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
   group_by(month, region_name, saw_new_patient) %>% 
   summarise(contracts = n_distinct(contract_number)) %>% 
   pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
@@ -401,7 +413,7 @@ npp_contracts_reg <- npp_data %>%
 
 npp_contracts_icb <- npp_data %>% 
   filter(month >= "2024-03-01") %>% 
-  mutate(saw_new_patient = ifelse(total == 0, "no", "yes")) %>% 
+  mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
   group_by(month, commissioner_name, saw_new_patient) %>% 
   summarise(contracts = n_distinct(contract_number)) %>% 
   pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
