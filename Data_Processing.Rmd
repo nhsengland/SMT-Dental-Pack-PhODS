@@ -92,6 +92,9 @@ get_banded_COTs_data <- function(data = UDA_calendar_data_FD,
 new_data <- new_data %>%
   summarise(band1 = sum(FP17s_band_1, na.rm = T),
             band2 = sum(FP17s_band_2, na.rm = T),
+            band2a = sum(FP17s_band_2a, na.rm = T),
+            band2b = sum(FP17s_band_2b, na.rm = T),
+            band2c = sum(FP17s_band_2c, na.rm = T),
             band3 = sum(FP17s_band_3, na.rm = T),
             other = sum(FP17s_band_other, na.rm = T),
             urgent = sum(FP17s_band_urgent, na.rm = T))
