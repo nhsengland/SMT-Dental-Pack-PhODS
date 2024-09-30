@@ -1245,17 +1245,29 @@ plot_banded_CoT <- function(data = UDA_calendar_data_FD,
   
   #get data into the right format
   data_to_print <- get_banded_COTs_data(data, all_regions_and_STPs = all_regions_and_STPs)
-  data <- reshape2::melt(data_to_print, id.vars = "month")
+  data <- data_to_print %>% 
+    pivot_longer(cols = !month, names_to = "variable", values_to = "value")
+  
   data <- data %>%
     mutate(month = as.Date(month)) %>%
     rename(band = variable, CoTs = value)  %>% 
-    filter(band != "region_name")
+    filter(band != "region_name") %>% 
+    mutate(band = replace(band, band == "band1", "Band 1"),
+           band = replace(band, band == "band2", "Band 2"),
+           band = replace(band, band == "band3", "Band 3"),
+           band = replace(band, band == "other", "Other"),
+           band = replace(band, band == "urgent", "Urgent"),
+           band = replace(band, band == "band2a", "Band 2a"),
+           band = replace(band, band == "band2b", "Band 2b"),
+           band = replace(band, band == "band2c", "Band 2c"))
   
   
   if(asIndex == TRUE){
     
     #set everything as index of Feb 2020 and standardise for working days
+    # remove band 2 split
     data <- data %>%
+      filter(band %in% c("Band 1", "Band 2", "Band 3", "Other", "Urgent")) %>% 
       left_join(working_days,by=c('month')) %>% 
       mutate(standardised_CoTs = CoTs *(`no workdays`/`total workdays`), 
              month_number = substr(month, 6, 7), 
@@ -1277,7 +1289,15 @@ The most recent two months data will be incomplete and subject to change, partic
 This chart includes foundation dentists so total counts will differ to other charts."
     
   }else{ # or standardise for working days only
-    data <- data %>% left_join(working_days,by=c('month')) %>% 
+    # remove band 2 total after split introduced
+  data <- data %>%
+    pivot_wider(names_from = band, values_from = CoTs) %>% 
+    mutate(`Band 2` = ifelse(month > "2022-10-01", NA, `Band 2`),
+           `Band 2a` = ifelse(month <= "2022-10-01", NA, `Band 2a`),
+           `Band 2b` = ifelse(month <= "2022-10-01", NA, `Band 2b`),
+           `Band 2c` = ifelse(month <= "2022-10-01", NA, `Band 2c`)) %>% 
+    pivot_longer(cols = !month, names_to = "band", values_to = "CoTs") %>% 
+      left_join(working_days,by=c('month')) %>% 
       mutate(standardised_CoTs = CoTs *(`no workdays`/`total workdays`)) %>%
       select(-CoTs) %>% 
       rename(CoTs = standardised_CoTs)
@@ -1311,7 +1331,7 @@ This chart includes foundation dentists so total counts will differ to other cha
                       position = "dodge") +
       scale_x_date(breaks = function(x) seq.Date(from = min(data$month), to = max(data$month), by = "1 month"), 
                    date_labels = "%b-%y") +
-      scale_colour_manual(labels = c("Band 1", "Band 2", "Band 3", "Other", "Urgent"),
+      scale_colour_manual(#labels = c("Band 1", "Band 2", "Band 2a", "Band 2b", "Band 2c", "Band 3", "Other", "Urgent"),
                           values = get_colour_palette()) +
       scale_y_continuous(breaks = scales::breaks_pretty(),
                          labels = function(x) format(x, big.mark = ",", scientific = FALSE)) +

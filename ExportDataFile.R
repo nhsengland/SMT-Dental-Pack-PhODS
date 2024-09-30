@@ -93,7 +93,10 @@ data_Nat_CoT <- data_Nat_CoT %>%
   mutate(geography_level='National',geography_name='England') %>% 
   rename(calendar_month = month, 
          CoT_band1_delivered_incl_FD_standardised = band1, 
-         CoT_band2_delivered_incl_FD_standardised = band2, 
+         CoT_band2_delivered_incl_FD_standardised = band2,
+         CoT_band2a_delivered_incl_FD_standardised = band2a,
+         CoT_band2b_delivered_incl_FD_standardised = band2b,
+         CoT_band2c_delivered_incl_FD_standardised = band2c,
          CoT_band3_delivered_incl_FD_standardised = band3, 
          CoT_other_delivered_incl_FD_standardised = other, 
          CoT_urgent_delivered_incl_FD_standardised = urgent) %>% 
@@ -106,7 +109,7 @@ data_reg_CoT <- table_banded_CoT(data = UDA_calendar_data_FD,
 
 # Convert relevant columns to numeric and handle coercion to NA for non-numeric values
 data_reg_CoT <- data_reg_CoT %>%
-  mutate(across(c(band1, band2, band3, other, urgent), ~ as.numeric(as.character(.))))
+  mutate(across(c(band1, band2, band2a, band2b, band2c, band3, other, urgent), ~ as.numeric(as.character(.))))
 
 # Create the Total FP17s column by summing the specified numeric columns
 data_reg_CoT <- data_reg_CoT %>%
@@ -116,6 +119,9 @@ data_reg_CoT <- data_reg_CoT %>%
          geography_name = region_name,
          CoT_band1_delivered_incl_FD_standardised = band1, 
          CoT_band2_delivered_incl_FD_standardised = band2, 
+         CoT_band2a_delivered_incl_FD_standardised = band2a,
+         CoT_band2b_delivered_incl_FD_standardised = band2b,
+         CoT_band2c_delivered_incl_FD_standardised = band2c,
          CoT_band3_delivered_incl_FD_standardised = band3, 
          CoT_other_delivered_incl_FD_standardised = other, 
          CoT_urgent_delivered_incl_FD_standardised = urgent) %>% 
@@ -128,7 +134,7 @@ data_icb_CoT <- table_banded_CoT(data = UDA_calendar_data_FD,
 
 # Convert relevant columns to numeric, handling non-numeric values by coercing them to NA
 data_icb_CoT <- data_icb_CoT %>%
-  mutate(across(c(band1, band2, band3, other, urgent), ~ as.numeric(as.character(.))))
+  mutate(across(c(band1, band2, band2a, band2b, band2c, band3, other, urgent), ~ as.numeric(as.character(.))))
 
 # If the data is grouped, ungroup it
 data_icb_CoT <- data_icb_CoT %>% ungroup()
@@ -140,7 +146,10 @@ data_icb_CoT <- data_icb_CoT %>%
   rename(calendar_month = month,
          geography_name = commissioner_name,
          CoT_band1_delivered_incl_FD_standardised = band1, 
-         CoT_band2_delivered_incl_FD_standardised = band2, 
+         CoT_band2_delivered_incl_FD_standardised = band2,  
+         CoT_band2a_delivered_incl_FD_standardised = band2a,
+         CoT_band2b_delivered_incl_FD_standardised = band2b,
+         CoT_band2c_delivered_incl_FD_standardised = band2c,
          CoT_band3_delivered_incl_FD_standardised = band3, 
          CoT_other_delivered_incl_FD_standardised = other, 
          CoT_urgent_delivered_incl_FD_standardised = urgent) %>% 
@@ -158,7 +167,10 @@ data_Nat_CoT_unstandardised <- data_Nat_CoT_unstandardised %>%
   mutate(geography_level='National',geography_name='England') %>% 
   rename(calendar_month = month, 
          CoT_band1_delivered_incl_FD = band1, 
-         CoT_band2_delivered_incl_FD = band2, 
+         CoT_band2_delivered_incl_FD = band2,  
+         CoT_band2a_delivered_incl_FD = band2a,
+         CoT_band2b_delivered_incl_FD = band2b,
+         CoT_band2c_delivered_incl_FD = band2c,
          CoT_band3_delivered_incl_FD = band3, 
          CoT_other_delivered_incl_FD = other, 
          CoT_urgent_delivered_incl_FD = urgent) %>% 
@@ -171,7 +183,7 @@ data_reg_CoT_unstandardised <- table_banded_CoT(data = UDA_calendar_data_FD,
 
 # Convert relevant columns to numeric and handle coercion to NA for non-numeric values
 data_reg_CoT_unstandardised <- data_reg_CoT_unstandardised %>%
-  mutate(across(c(band1, band2, band3, other, urgent), ~ as.numeric(as.character(.))))
+  mutate(across(c(band1, band2, band2a, band2b, band2c, band3, other, urgent), ~ as.numeric(as.character(.))))
 
 # Create the Total FP17s column by summing the specified numeric columns
 data_reg_CoT_unstandardised <- data_reg_CoT_unstandardised %>%
@@ -180,7 +192,10 @@ data_reg_CoT_unstandardised <- data_reg_CoT_unstandardised %>%
   rename(calendar_month = month,
          geography_name = region_name,
          CoT_band1_delivered_incl_FD = band1, 
-         CoT_band2_delivered_incl_FD = band2, 
+         CoT_band2_delivered_incl_FD = band2,  
+         CoT_band2a_delivered_incl_FD = band2a,
+         CoT_band2b_delivered_incl_FD = band2b,
+         CoT_band2c_delivered_incl_FD = band2c, 
          CoT_band3_delivered_incl_FD = band3, 
          CoT_other_delivered_incl_FD = other, 
          CoT_urgent_delivered_incl_FD = urgent) %>% 
@@ -193,7 +208,7 @@ data_icb_CoT_unstandardised <- table_banded_CoT(data = UDA_calendar_data_FD,
 
 # Convert relevant columns to numeric, handling non-numeric values by coercing them to NA
 data_icb_CoT_unstandardised <- data_icb_CoT_unstandardised %>%
-  mutate(across(c(band1, band2, band3, other, urgent), ~ as.numeric(as.character(.))))
+  mutate(across(c(band1, band2, band2a, band2b, band2c, band3, other, urgent), ~ as.numeric(as.character(.))))
 
 # If the data is grouped, ungroup it
 data_icb_CoT_unstandardised <- data_icb_CoT_unstandardised %>% ungroup()
@@ -205,7 +220,10 @@ data_icb_CoT_unstandardised <- data_icb_CoT_unstandardised %>%
   rename(calendar_month = month,
          geography_name = commissioner_name,
          CoT_band1_delivered_incl_FD = band1, 
-         CoT_band2_delivered_incl_FD = band2, 
+         CoT_band2_delivered_incl_FD = band2,  
+         CoT_band2a_delivered_incl_FD = band2a,
+         CoT_band2b_delivered_incl_FD = band2b,
+         CoT_band2c_delivered_incl_FD = band2c, 
          CoT_band3_delivered_incl_FD = band3, 
          CoT_other_delivered_incl_FD = other, 
          CoT_urgent_delivered_incl_FD = urgent) %>% 
