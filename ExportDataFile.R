@@ -750,40 +750,43 @@ data_dental_activity<-data_UDA_de_co%>%
 
 ###### Output #####
 # create Excel file
-output_file <- createWorkbook()
-
-addWorksheet(output_file, "Dental contract & activity")
-writeData(output_file, "Dental contract & activity", data_dental_activity)
-
-addWorksheet(output_file, "Orthodontic contract & activity")
-writeData(output_file, "Orthodontic contract & activity", data_orthodontic_activity)
-
-addWorksheet(output_file, "DCP")
-writeData(output_file, "DCP", total_dcp)
-
-addWorksheet(output_file, "Oral health risk assessment")
-writeData(output_file, "Oral health risk assessment", total_bpe)
-
-addWorksheet(output_file, "Metadata")
-writeData(output_file, "Metadata", metadata)
-setColWidths(output_file, "Metadata", cols = 1:3, widths = "auto")
-
-# we will first create a folder to save our output
-# Print the current working directory
-current_wd <- getwd()
-print(paste("Current working directory:", current_wd))
-
-# Check if the reports directory exists
-reports_dir <- file.path(current_wd, "reports")
-if (!dir.exists(reports_dir)) {
-  # Try to create the directory
-  dir.create(reports_dir)
-  # Verify if the directory was successfully created
-  if (!dir.exists(reports_dir)) {
-    stop("Failed to create 'reports' directory")
-  }
-}
-
-# overwrite file if it already exists in the directory
-openxlsx::saveWorkbook(output_file, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx'), overwrite = TRUE)
+# create function to run the output
   
+create_export_file <- function(){
+  output_file <- createWorkbook()
+  
+  addWorksheet(output_file, "Dental contract & activity")
+  writeData(output_file, "Dental contract & activity", data_dental_activity)
+  
+  addWorksheet(output_file, "Orthodontic contract & activity")
+  writeData(output_file, "Orthodontic contract & activity", data_orthodontic_activity)
+  
+  addWorksheet(output_file, "DCP")
+  writeData(output_file, "DCP", total_dcp)
+  
+  addWorksheet(output_file, "Oral health risk assessment")
+  writeData(output_file, "Oral health risk assessment", total_bpe)
+  
+  addWorksheet(output_file, "Metadata")
+  writeData(output_file, "Metadata", metadata)
+  setColWidths(output_file, "Metadata", cols = 1:3, widths = "auto")
+  
+  # we will first create a folder to save our output
+  # Print the current working directory
+  current_wd <- getwd()
+  print(paste("Current working directory:", current_wd))
+  
+  # Check if the reports directory exists
+  reports_dir <- file.path(current_wd, "reports")
+  if (!dir.exists(reports_dir)) {
+    # Try to create the directory
+    dir.create(reports_dir)
+    # Verify if the directory was successfully created
+    if (!dir.exists(reports_dir)) {
+      stop("Failed to create 'reports' directory")
+    }
+  }
+  
+  # overwrite file if it already exists in the directory
+  openxlsx::saveWorkbook(output_file, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx'), overwrite = TRUE)
+}

@@ -29,7 +29,7 @@ source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
 
 # produce data file
 source("ExportDataFile.R")
-
+create_export_file()
 
 # Define a function to render the report for a specific region
 render_report = function(region) {
