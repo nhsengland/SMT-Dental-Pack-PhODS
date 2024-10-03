@@ -38,10 +38,74 @@ source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
 source(knitr::purl("plotting.Rmd", output = tempfile()))
 source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
+source("ExportDataFile.R")
 ```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r variables for summary, include = FALSE}
+latest_month <- max(UOA_calendar_data$month)
+
+latest_month_formatted <- format(latest_month, "%B %Y")
+
+latest_final_month <- max(UDA_calendar_data$month[UDA_calendar_data$final_yn == "Y"])
+
+latest_final_month_formatted <- format(latest_final_month, "%B %Y")
+
+previous_month <- latest_final_month %m-% months(1)
+
+previous_month_formatted <- format(previous_month, "%B %Y")
+
+n_contracts_uda <- prettyNum(n_distinct(UDA_calendar_data$contract_number[UDA_calendar_data$month == latest_final_month]),
+                             big.mark = ",")
+
+uda_delivered <- prettyNum(data_Nat_UDA$UDAs_delivered_month[data_Nat_UDA$calendar_month == format(latest_final_month, "%Y-%m")],
+                           big.mark = ",")
+
+uda_diff <- prettyNum(data_Nat_UDA$UDAs_delivered_month[data_Nat_UDA$calendar_month == format(latest_final_month, "%Y-%m")] 
+                      - data_Nat_UDA$UDAs_delivered_month[data_Nat_UDA$calendar_month == format(previous_month, "%Y-%m")],
+                      big.mark = ",")
+
+ytd_uda_delivery <- prettyNum(data_Nat_YTD_UDA$YTD_delivery[data_Nat_YTD_UDA$calendar_month == format(latest_final_month, "%Y-%m")],
+                              big.mark = ",")
+
+uda_delivery_pct <- data_Nat_UDA$UDAs_delivered_month_percent_contracted_standardised[data_Nat_UDA$calendar_month == format(latest_final_month, "%Y-%m")]
+
+unique_adults <- prettyNum(data_Nat_unique$unique_adults_seen_24_month[data_Nat_unique$calendar_month == format(latest_final_month, "%Y-%m")],
+                           big.mark = ",")
+
+adults_diff <- prettyNum(data_Nat_unique$unique_adults_seen_24_month[data_Nat_unique$calendar_month == format(latest_final_month, "%Y-%m")] - 
+  data_Nat_unique$unique_adults_seen_24_month[data_Nat_unique$calendar_month == format(previous_month, "%Y-%m")],
+  big.mark = ",")
+
+unique_children <- prettyNum(data_Nat_unique$unique_children_seen_12_month[data_Nat_unique$calendar_month == format(latest_final_month, "%Y-%m")],
+                           big.mark = ",")
+
+children_diff <- prettyNum(data_Nat_unique$unique_children_seen_12_month[data_Nat_unique$calendar_month == format(latest_final_month, "%Y-%m")] - 
+  data_Nat_unique$unique_children_seen_12_month[data_Nat_unique$calendar_month == format(previous_month, "%Y-%m")],
+  big.mark = ",")
+
+npp_adults <- prettyNum(npp_nat$adult_NPP_patients_seen[npp_nat$calendar_month == format(latest_final_month, "%Y-%m")],
+                        big.mark = ",")
+
+npp_adult_diff <- prettyNum(npp_nat$adult_NPP_patients_seen[npp_nat$calendar_month == format(latest_final_month, "%Y-%m")] - 
+  npp_nat$adult_NPP_patients_seen[npp_nat$calendar_month == format(previous_month, "%Y-%m")],
+  big.mark = ",")
+
+npp_children <- prettyNum(npp_nat$child_NPP_patients_seen[npp_nat$calendar_month == format(latest_final_month, "%Y-%m")],
+                          big.mark = ",")
+
+npp_child_diff <- prettyNum(npp_nat$child_NPP_patients_seen[npp_nat$calendar_month == format(latest_final_month, "%Y-%m")] - 
+  npp_nat$child_NPP_patients_seen[npp_nat$calendar_month == format(previous_month, "%Y-%m")],
+  big.mark = ",")
+
+n_contracts_uoa <- prettyNum(n_distinct(UOA_calendar_data$contract_number[UOA_calendar_data$month == latest_final_month]),
+                             big.mark = ",")
+
+ytd_uoa_delivery <- prettyNum(data_Nat_YTD_UOA$YTD_delivery[data_Nat_YTD_UOA$calendar_month == format(latest_month, "%Y-%m")],
+                              big.mark = ",")
 ```
 
 # Introduction
@@ -58,13 +122,13 @@ This slide pack has been streamlined to help users to easily access the most imp
 
 -   Oral health risk assessments
 
-&nbsp; <!--This is to force a line break-->
+<!--This is to force a line break-->
 
 ICB level data is now included in the HTML files.
 
-&nbsp; <!--This is to force a line break-->
+<!--This is to force a line break-->
 
-This pack will continue to evolve and change, any questions/comments should be directed to [england.primarycare.phodsdata@nhs.net](mailto:england.primarycare.phodsdata@nhs.net)
+This pack will continue to evolve and change, any questions/comments should be directed to [england.primarycare.phodsdata\@nhs.net](mailto:england.primarycare.phodsdata@nhs.net)
 
 ## Calendar vs scheduled data
 
@@ -80,13 +144,32 @@ Analyses in this report now only use **calendar data**. Previous packs used sche
 -   Scheduled data represents the month that a Course of Treatment (CoT) was claimed for in the BSA Compass system.
 -   For scheduled data, if a CoT was completed in February but not declared till March, the financial activity would recorded as occurring in March.
 
-&nbsp; <!--This is to force a line break-->
+<!--This is to force a line break-->
 
 The swap to using calendar data allows us to more accurately see what activity is happening per month rather than what payments are being claimed per month.
 
-&nbsp; <!--This is to force a line break-->
+<!--This is to force a line break-->
 
 Note that following a finished Course of Treatment (CoT), dentists have 62 days to declare their activity via FP17 forms to the BSA Compass system. This means when using calendar data, the most recent two months data are incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
+
+# Summary
+
+## Summary
+
+#### Dental
+
+-   Count of dental contracts included: `r n_contracts_uda`.
+-   UDA delivery for most recent final month (`r latest_final_month_formatted`): `r uda_delivered`, a change of `r uda_diff` from previous month (`r previous_month_formatted`), standardised to allow for differing month lengths.
+-   Year to date UDA delivery for most recent final month (`r latest_final_month_formatted`): `r ytd_uda_delivery` and as percentage of annual contracted UDAs: `r uda_delivery_pct`%.
+-   Unique adults seen in the last 24 months as at `r latest_final_month_formatted`: `r unique_adults`, a change of `r adults_diff` from previous month (`r previous_month_formatted`).
+-   Unique children seen in the last 12 months as at `r latest_final_month_formatted`: `r unique_children`, a change of `r children_diff` from previous month (`r previous_month_formatted`).
+-   Adults seen as part of New Patient Premium scheme as at `r latest_final_month_formatted`: `r npp_adults`, a change of `r npp_adult_diff` from previous month (`r previous_month_formatted`).
+-   Children seen as part of New Patient Premium scheme as at `r latest_final_month_formatted`: `r npp_children`, a change of `r npp_child_diff` from previous month (`r previous_month_formatted`).
+
+#### Orthodontics
+
+-   Count of orthodontic contracts included: `r n_contracts_uoa`.
+-   Orthodontic activity is subject to change within a financial year. As of `r latest_month_formatted` year to date UOA delivery is `r ytd_uoa_delivery`.
 
 # Units of Dental Activity (UDA) Information
 
@@ -128,9 +211,9 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
              layout_matrix = rbind(c(1, 1, 2)))
 ```
 
-- This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
-- Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
-- As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
+-   This graph shows the number of UDAs delivered each month for the current financial year compared with the previous financial year.
+-   Some of the difference between months may be due to differences in the number of working days. The table shows the number of working days in each month for 2023/24 and 2024/25.
+-   As dentists have 62 days to claim for their activity, the most recent two months data are incomplete. We expect final data to be higher. Figures for the latest complete month of data are presented on this graph.
 
 ## Banded courses of treatment standardised by working days (including Foundation Dentists (FD))
 
@@ -168,7 +251,6 @@ plot_DCP_analysis(data = UDA_calendar_data,
 
 -   This graph shows the percentage of CoTs carried out which benefited from involvement by Dental Care Practitioners.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
-
 
 ## Percentage of total UDAs delivered which had DCP assistance by band
 
@@ -219,7 +301,7 @@ plot_npp_activity(level = "National",
                   by_band = FALSE)
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   New Patient Premiums are part of the Dental Recovery Plan: <https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/>
 -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ## Patients seen under the New Patient Premium definition by band
@@ -243,7 +325,7 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
              layout_matrix = rbind(c(1, 1, 2)))
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   New Patient Premiums are part of the Dental Recovery Plan: <https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/>
 -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 # Units of Orthodontic Activity (UOA) Information
@@ -256,9 +338,9 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
                               region_STP_name = NULL)
 ```
 
-- These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs*Monthly working days/working days per year.
-- For the current financial year, monthly performance is shown. 
-- Over the course of the financial year this graph allows us to see patterns of delivery.
+-   These graphs show the percentage of UOAs delivered compared to the expected delivery. Expected monthly delivery is standardised by working days in the month and calculated as Target UOAs\*Monthly working days/working days per year.
+-   For the current financial year, monthly performance is shown.
+-   Over the course of the financial year this graph allows us to see patterns of delivery.
 
 ## Units of Orthodontic Activity - Calendar year to date delivery
 
@@ -270,7 +352,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
                           all_regions_and_STPs = FALSE)
 ```
 
-- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+-   This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
 
 # 111 Information
 
@@ -282,9 +364,8 @@ plot_111_referrals()
 
 -   This chart shows the demand for dental services via calls to 111.
 
-
-
 # BPE Information
+
 ## Oral health risk assessment
 
 ```{r BPE boxplot-revert, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -294,7 +375,6 @@ plot_111_referrals()
                               region_STP_name = NULL)
 
 ```
-
 
 # Appendix
 
