@@ -38,10 +38,10 @@ options(scipen=999)
 # Suppress summarise info
 options(dplyr.summarise.inform = FALSE)
 
-#source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
-#source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
-#source(knitr::purl("plotting.Rmd", output = tempfile()))
-#source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
+source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
+source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
+source(knitr::purl("plotting.Rmd", output = tempfile()))
+source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
 ```
 
 ```{r set ICB name, include=FALSE}
@@ -871,6 +871,7 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP1`]
@@ -884,6 +885,7 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP2`]
@@ -897,6 +899,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP3`]
@@ -910,6 +913,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP4`]
@@ -923,6 +927,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -936,6 +941,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -949,6 +955,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -962,6 +969,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP8`]
@@ -975,6 +983,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -988,6 +997,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -1001,6 +1011,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -1014,6 +1025,7 @@ plot_banded_CoT(data = UDA_calendar_data,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ]
 ]
@@ -1381,6 +1393,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 ]
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -1394,6 +1407,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 ]
 .panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -1407,6 +1421,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 ]
 .panel[.panel-name[`r STP3`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
@@ -1420,6 +1435,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5,eval=eval4}
@@ -1433,6 +1449,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -1447,6 +1464,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -1461,6 +1479,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -1474,6 +1493,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 ```
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5,eval=eval8}
@@ -1487,6 +1507,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -1501,6 +1522,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -1515,6 +1537,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -1529,6 +1552,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 
 ]
  ]
@@ -2891,5 +2915,6 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
     -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_DCP]
     -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity]
     -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UOA_Activity]
+    -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental]/[Calendar_BPE]
 -   R code used to create this pack is available on Github
     -   <https://github.com/nhsengland/SMT-Dental-Pack-PhODS>

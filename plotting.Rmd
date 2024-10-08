@@ -2000,6 +2000,10 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
             total_B3 = sum(total_B3, na.rm = TRUE),
             total_urgent = sum(total_urgent, na.rm = TRUE)) %>% 
   rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
+  
+  # exclude DCP led before April 2024 (direct access not introduced before then)
+  dcp_summary <- dcp_summary %>% 
+    filter(!(month <= "2024-03-01" & role == "led"))
 
 #pivot delivery total and seperate dcp into long format
   dcp_summary_longer <- dcp_summary %>% 
@@ -2041,7 +2045,8 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
 
     UDA_plot <- ggplot(filtered_data_UDA,
                        aes(x = month, y = assisted_percent)) +
-      facet_grid(cols = vars(DCP_description)) +
+      facet_grid(cols = vars(DCP_description),
+                 scales = "free_x") +
       geom_line(aes(colour = Bands),
                 size = 1) +
       geom_text_repel(aes(label = assisted_percent), 
@@ -2090,7 +2095,8 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
                 size = 1) +
       geom_text_repel(data = latest_data, aes(label = dcp_percent), 
                     colour = "black", size = 3.5, vjust = -0.25) + 
-      facet_wrap(vars(role)) +
+      facet_wrap(vars(role), 
+                 scales = "free_x") +
       theme(legend.position="bottom") +
       theme_bw() +
       scale_x_date(date_breaks = "1 month",
@@ -2507,6 +2513,10 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
               total_B3 = sum(total_B3, na.rm = TRUE),
               total_urgent = sum(total_urgent, na.rm = TRUE)) %>% 
     rename(`Band 1` = total_B1, `Band 2` = total_B2, `Band 3` = total_B3, Urgent = total_urgent)
+  
+   # exclude DCP led before April 2024 (direct access not introduced before then)
+  dcp_summary <- dcp_summary %>% 
+    filter(!(month <= "2024-03-01" & role == "led"))
 
   #change the format of total delivery and separate dcp and then get full data ready for plotting
   dcp_summary_longer <- dcp_summary %>%
@@ -2553,7 +2563,8 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
 
     UDA_plot <- ggplot(filtered_data_UDA,
                    aes(x=month, y= dcp_percent)) +
-      facet_grid(cols = vars(DCP_description)) +
+      facet_grid(cols = vars(DCP_description),
+                 scales = "free_x") +
       geom_line(aes(colour = Bands),
                 size = 1) +
       geom_text_repel(data = data_labels,
@@ -2808,8 +2819,7 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
                  sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
                low_risk_less1year = 
                  sum(as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_UDT_0_and_RRI_less_than_1_year), na.rm = TRUE)) %>%  
-    mutate (percent_low_risk_whic_are1_year = 
-              formattable::percent (low_risk_less1year/nlow_risk, digits =1)) %>% 
+    mutate (percent_low_risk_whic_are1_year = (low_risk_less1year/nlow_risk)) %>% 
     filter(!is.na(percent_low_risk_whic_are1_year)) %>% 
     filter (percent_low_risk_whic_are1_year<2)%>%
     mutate(threshold_percent_low_risk_whic_are1_year=ifelse(percent_low_risk_whic_are1_year >= 0.5, 'YES','NO'))
@@ -2825,7 +2835,7 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
  
  data_all<-data_total%>%
    left_join(data_high, by='Year_Month')%>%
-   mutate(pro_50=formattable::percent (low_risk_NContractors/ NContractors, digits =0) )
+   mutate(pro_50=(low_risk_NContractors/ NContractors) )
  
     p_test <- 
       ggplot(data_all, aes(x = `Year_Month` , y = `pro_50`)) +
@@ -2839,7 +2849,7 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
       scale_y_continuous(labels = scales::percent_format(accuracy = 1), 
                          limits = c(0, NA)) +
       scale_x_date(date_labels = "%b-%y") +
-      geom_text(aes(x = Year_Month, y = `pro_50`, label = `pro_50`), 
+      geom_text(aes(x = Year_Month, y = `pro_50`, label = scales::percent(`pro_50`, accuracy=0.1)), 
             size = 2.5, vjust = -.7) + 
   theme(legend.position = "bottom", legend.title = element_blank())
     p_test
