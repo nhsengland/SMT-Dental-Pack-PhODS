@@ -524,7 +524,10 @@ data_dental_activity<-data_UDA_de_co%>%
                       UDA_B1 = sum(Band_1._UDA, na.rm = TRUE),
                       UDA_B2 = sum(Band_2._UDA, na.rm = TRUE),
                       UDA_B3 = sum(Band_3._UDA, na.rm = TRUE),
-                      UDA_urgent = sum(Urgent_UDA, na.rm = TRUE))
+                      UDA_urgent = sum(Urgent_UDA, na.rm = TRUE)) %>% 
+    filter(!(month <= "2024-03-01" & DCP_description == "Dental_Nurse_led")) %>% 
+    filter(!(month <= "2024-03-01" & DCP_description == "Hygienist_led")) %>% 
+    filter(!(month <= "2024-03-01" & DCP_description == "Therapist_led"))
   
   dcp_summary_regional <- dcp_main_new%>% 
     pivot_longer(cols = DCP_description:DCP_DIR_DESC, names_to = "variable", values_to = "DCP_description") %>% 
@@ -535,7 +538,10 @@ data_dental_activity<-data_UDA_de_co%>%
                       UDA_B1 = sum(Band_1._UDA, na.rm = TRUE),
                       UDA_B2 = sum(Band_2._UDA, na.rm = TRUE),
                       UDA_B3 = sum(Band_3._UDA, na.rm = TRUE),
-                      UDA_urgent = sum(Urgent_UDA, na.rm = TRUE))
+                      UDA_urgent = sum(Urgent_UDA, na.rm = TRUE)) %>% 
+    filter(!(month <= "2024-03-01" & DCP_description == "Dental_Nurse_led")) %>% 
+    filter(!(month <= "2024-03-01" & DCP_description == "Hygienist_led")) %>% 
+    filter(!(month <= "2024-03-01" & DCP_description == "Therapist_led"))
   
   
   dcp_summary_icb <- dcp_main_new%>% 
@@ -547,7 +553,10 @@ data_dental_activity<-data_UDA_de_co%>%
                         UDA_B1 = sum(Band_1._UDA, na.rm = TRUE),
                         UDA_B2 = sum(Band_2._UDA, na.rm = TRUE),
                         UDA_B3 = sum(Band_3._UDA, na.rm = TRUE),
-                        UDA_urgent = sum(Urgent_UDA, na.rm = TRUE))
+                        UDA_urgent = sum(Urgent_UDA, na.rm = TRUE)) %>% 
+    filter(!(month <= "2024-03-01" & DCP_description == "Dental_Nurse_led")) %>% 
+    filter(!(month <= "2024-03-01" & DCP_description == "Hygienist_led")) %>% 
+    filter(!(month <= "2024-03-01" & DCP_description == "Therapist_led"))
     
     #change the format of total delivery and separate dcp and then get full data ready for plotting 
     # then calculate the percentage of each dcp description/total delivery 
