@@ -58,6 +58,10 @@ previous_month <- latest_final_month %m-% months(1)
 
 previous_month_formatted <- format(previous_month, "%B %Y")
 
+provisional_month1_formatted <- format(latest_final_month %m+% months(1), "%B")
+
+provisional_month2_formatted <- format(latest_final_month %m+% months(2), "%B")
+
 n_contracts_uda <- prettyNum(n_distinct(UDA_calendar_data$contract_number[UDA_calendar_data$month == latest_final_month]),
                              big.mark = ",")
 
@@ -101,7 +105,7 @@ npp_child_diff <- prettyNum(npp_nat$child_NPP_patients_seen[npp_nat$calendar_mon
   npp_nat$child_NPP_patients_seen[npp_nat$calendar_month == format(previous_month, "%Y-%m")],
   big.mark = ",")
 
-n_contracts_uoa <- prettyNum(n_distinct(UOA_calendar_data$contract_number[UOA_calendar_data$month == latest_final_month]),
+n_contracts_uoa <- prettyNum(n_distinct(UOA_calendar_data$contract_number[UOA_calendar_data$month == latest_month]),
                              big.mark = ",")
 
 ytd_uoa_delivery <- prettyNum(data_Nat_YTD_UOA$YTD_delivery[data_Nat_YTD_UOA$calendar_month == format(latest_month, "%Y-%m")],
@@ -118,15 +122,7 @@ This slide pack has been streamlined to help users to easily access the most imp
 -   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 -   A national HTML will no longer be produced, instead the data is in an Excel file available alongside this pack.
 
-#### Metrics and outputs soon to be added
-
--   Oral health risk assessments
-
-<!--This is to force a line break-->
-
-ICB level data is now included in the HTML files.
-
-<!--This is to force a line break-->
+&nbsp; <!--This is to force a line break-->
 
 This pack will continue to evolve and change, any questions/comments should be directed to [england.primarycare.phodsdata\@nhs.net](mailto:england.primarycare.phodsdata@nhs.net)
 
@@ -144,11 +140,11 @@ Analyses in this report now only use **calendar data**. Previous packs used sche
 -   Scheduled data represents the month that a Course of Treatment (CoT) was claimed for in the BSA Compass system.
 -   For scheduled data, if a CoT was completed in February but not declared till March, the financial activity would recorded as occurring in March.
 
-<!--This is to force a line break-->
+&nbsp; <!--This is to force a line break-->
 
 The swap to using calendar data allows us to more accurately see what activity is happening per month rather than what payments are being claimed per month.
 
-<!--This is to force a line break-->
+&nbsp;<!--This is to force a line break-->
 
 Note that following a finished Course of Treatment (CoT), dentists have 62 days to declare their activity via FP17 forms to the BSA Compass system. This means when using calendar data, the most recent two months data are incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
 
@@ -158,7 +154,8 @@ Note that following a finished Course of Treatment (CoT), dentists have 62 days 
 
 #### Dental
 
--   Count of dental contracts included: `r n_contracts_uda`.
+-   `r provisional_month1_formatted` and `r provisional_month2_formatted` data is subject to change for dental data. `r latest_final_month_formatted` data is referenced here in the summary.
+-   Count of dental contracts included (`r latest_final_month_formatted`): `r n_contracts_uda`.
 -   UDA delivery for most recent final month (`r latest_final_month_formatted`): `r uda_delivered`, a change of `r uda_diff` from previous month (`r previous_month_formatted`), standardised to allow for differing month lengths.
 -   Year to date UDA delivery for most recent final month (`r latest_final_month_formatted`): `r ytd_uda_delivery` and as percentage of annual contracted UDAs: `r uda_delivery_pct`%.
 -   Unique adults seen in the last 24 months as at `r latest_final_month_formatted`: `r unique_adults`, a change of `r adults_diff` from previous month (`r previous_month_formatted`).
@@ -168,7 +165,7 @@ Note that following a finished Course of Treatment (CoT), dentists have 62 days 
 
 #### Orthodontics
 
--   Count of orthodontic contracts included: `r n_contracts_uoa`.
+-   Count of orthodontic contracts included (`r latest_month_formatted`): `r n_contracts_uoa`.
 -   Orthodontic activity is subject to change within a financial year. As of `r latest_month_formatted` year to date UOA delivery is `r ytd_uoa_delivery`.
 
 # Units of Dental Activity (UDA) Information
@@ -225,6 +222,7 @@ plot_banded_CoT(data = UDA_calendar_data_FD,
 ```
 
 -   This graph shows the number of completed Courses of Treatment (CoTs) by band over time. Data has been standardised to working days to remove variation due to month length. It is calculated as completed CoTs\*Monthly working days/working days per year.
+-   From November 2022 band 2 was split into 2a, 2b and 2c. More information can be viewed here: [Units of dental activity (UDA) changes to Band 2 treatments from Friday 25 November](https://www.nhsbsa.nhs.uk/units-dental-activity-uda-changes-band-2-treatments-friday-25-november)
 
 ## Banded Courses of Treatment as % of February 2020 delivery (including FD)
 
@@ -264,6 +262,7 @@ plot_DCP_analysis_band(data = UDA_calendar_data,
 
 -   This chart shows the percentage of UDAs carried out which benefited from involvement by Dental Care Practitioners by treatment band.
 -   DCP assistance data has been collected since October 2022 and DCP lead data collected since April 2024 so will likely take time for providers to improve reporting on it.
+-   DCP lead data is only shown for Therapists as they deliver the majority of DCP-led activity.
 
 # Patients seen
 
@@ -311,6 +310,9 @@ plot_npp_activity(level = "National",
                   region_STP_name = NULL, 
                   by_band = TRUE)
 ```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: <https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/>
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
 ## Eligible contracts that have seen new patients
 
@@ -364,7 +366,7 @@ plot_111_referrals()
 
 -   This chart shows the demand for dental services via calls to 111.
 
-# BPE Information
+# Oral Health
 
 ## Oral health risk assessment
 
@@ -456,5 +458,6 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
     -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_DCP]
     -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity]
     -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UOA_Activity]
+    -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental]/[Calendar_BPE]
 -   R code used to create this pack is available on Github
     -   <https://github.com/nhsengland/SMT-Dental-Pack-PhODS>
