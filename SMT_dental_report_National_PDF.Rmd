@@ -330,6 +330,21 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 -   New Patient Premiums are part of the Dental Recovery Plan: <https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/>
 -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
+# Oral Health
+
+## Oral health risk assessment
+
+```{r BPE boxplot-revert, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+ 
+ plot_BPE_no_oral_health_risk(data = BPE_data,
+                              level = "National",
+                              region_STP_name = NULL)
+
+```
+
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
+
 # Units of Orthodontic Activity (UOA) Information
 
 ## Units of Orthodontic Activity - Calendar activity data standardised by working days
@@ -366,17 +381,6 @@ plot_111_referrals()
 
 -   This chart shows the demand for dental services via calls to 111.
 
-# Oral Health
-
-## Oral health risk assessment
-
-```{r BPE boxplot-revert, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
- 
- plot_BPE_no_oral_health_risk(data = BPE_data,
-                              level = "National",
-                              region_STP_name = NULL)
-
-```
 
 # Appendix
 
