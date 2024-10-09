@@ -2458,7 +2458,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
                               region_STP_name = region)
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
@@ -2469,7 +2470,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
 
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
@@ -2478,7 +2480,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
                               region_STP_name = STP2)
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP3`]
 ```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
@@ -2487,7 +2490,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
                               region_STP_name = STP3)
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
@@ -2497,7 +2501,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
 
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP5`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
@@ -2507,7 +2512,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
 
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP6`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
@@ -2516,7 +2522,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
                               region_STP_name = STP6)
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP7`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
@@ -2526,7 +2533,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
 
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
@@ -2535,7 +2543,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
                               region_STP_name = STP8)
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP9`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
@@ -2545,7 +2554,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
 
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP10`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
@@ -2555,7 +2565,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
 
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 .panel[.panel-name[`r STP11`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
@@ -2564,7 +2575,8 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
                               region_STP_name = STP11)
 
 ```
-
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
 ]
 ]
 
