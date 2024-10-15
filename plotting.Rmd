@@ -18,6 +18,36 @@ library(ggpubr)
 
 ```
 
+```{r set financial year dates}
+# these will need manually updating once a year when we get data for the new financial year
+current_fy_start <- "2024-04-01"
+current_fy_end <- "2025-03-01"
+current_fy <- "2024/25"
+previous_fy_start <- "2023-04-01"
+previous_fy_end <- "2024-03-01"
+previous_fy <- "2023/24"
+
+current_fy_month2 <- as.character(as.Date(current_fy_start) %m+% months(1))
+current_fy_month3 <- as.character(as.Date(current_fy_start) %m+% months(2))
+current_fy_month4 <- as.character(as.Date(current_fy_start) %m+% months(3))
+current_fy_month5 <- as.character(as.Date(current_fy_start) %m+% months(4))
+current_fy_month6 <- as.character(as.Date(current_fy_start) %m+% months(5))
+current_fy_month7 <- as.character(as.Date(current_fy_start) %m+% months(6))
+current_fy_month8 <- as.character(as.Date(current_fy_start) %m+% months(7))
+current_fy_month9 <- as.character(as.Date(current_fy_start) %m+% months(8))
+current_fy_month10 <- as.character(as.Date(current_fy_start) %m+% months(9))
+current_fy_month11 <- as.character(as.Date(current_fy_start) %m+% months(10))
+current_fy_month12 <- as.character(as.Date(current_fy_start) %m+% months(11))
+```
+
+```{r get financial year}
+get_financial_year <- function(month = month){
+  ifelse(month(test1)>3, 
+       paste(year(test1), "/", substr(year(test1)+1,start=3,stop=4), sep = ""), 
+       paste(year(test1)-1, "/", substr(year(test1),start=3,stop=4), sep = ""))
+}
+```
+
 ```{r get colour palette}
 get_colour_palette <- function(){
   
@@ -601,7 +631,7 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
     summarise(UDA_delivery = sum(UDA_delivered, na.rm = TRUE),
               contracted_UDAs = sum(annual_contracted_UDA, na.rm = TRUE)) %>%
     # only include current FY data -- calculate percentage of UDA delivered -- standardized by no of working days 
-    filter(month >= as.Date ("2024-04-01")) %>% ## this needs to be updated every FY
+    filter(month >= as.Date (current_fy_start)) %>%
     left_join(working_days,by=c('month')) %>% 
     mutate(perc_UDA_delivered = 100* (UDA_delivery /(contracted_UDAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UDA_delivered = round(perc_UDA_delivered, digits = 0)) %>% 
@@ -750,7 +780,7 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     summarise(UOA_delivery = sum(UOA_delivered, na.rm = TRUE),
               contracted_UOAs = sum(annual_contracted_UOA, na.rm = TRUE)) %>%
     # only include current FY data -- calculate percentage of UDA delivered -- standardized by no of working days
-    filter(month >= as.Date ("2024-04-01")) %>% ## this needs to be updated every FY
+    filter(month >= as.Date (current_fy_start)) %>% ## this needs to be updated every FY
     left_join(working_days,by=c('month')) %>% 
     mutate(perc_UOA_delivered =100* (UOA_delivery / (contracted_UOAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UOA_delivered = round(perc_UOA_delivered, digits = 0)) %>%
@@ -913,12 +943,12 @@ All data for the latest financial year will be incomplete and subject to change 
   
   # extract previous financial year data -- calculate cumulative sum of monthly_UDA_UOAs_delivered
   historic_data <- data %>% 
-    filter(month >= as.Date("2023-04-01") & month <= as.Date("2024-03-01")) %>% ##must be updated each financial year
+    filter(month >= as.Date(previous_fy_start) & month <= as.Date(previous_fy_end)) %>% 
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
   
   # extract current financial year data -- calculate cumulative sum of monthly_UDA_UOAs_delivered
   data <- data %>%
-    filter(month > as.Date("2024-03-01")) %>% ##must be updated each financial year
+    filter(month >= as.Date(current_fy_start)) %>% 
     mutate(YTD_delivery = cumsum(monthly_UDA_UOAs_delivered))
 
   # add latest contracted UDA/UOA as a column to use in plot
@@ -933,69 +963,69 @@ All data for the latest financial year will be incomplete and subject to change 
   # NEEDS UPDATING EACH FINANCIAL YEAR
   if(all_regions_and_STPs == FALSE & nrow(data) < 12){
   
-    if(!(as.Date("2024-05-01") %in% data$month)){
+    if(!(as.Date(current_fy_month2) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2024-05-01"),
+        add_row(month = as.Date(current_fy_month2),
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-06-01") %in% data$month)){
+    if(!(as.Date(current_fy_month3) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2024-06-01"),
+        add_row(month = as.Date(current_fy_month3),
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-07-01") %in% data$month)){
+    if(!(as.Date(current_fy_month4) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2024-07-01"),
+        add_row(month = as.Date(current_fy_month4),
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-08-01") %in% data$month)){
+    if(!(as.Date(current_fy_month5) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2024-08-01"),
+        add_row(month = as.Date(current_fy_month5),
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-09-01") %in% data$month)){
+    if(!(as.Date(current_fy_month6) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2024-09-01"), 
+        add_row(month = as.Date(current_fy_month6), 
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-10-01") %in% data$month)){
+    if(!(as.Date(current_fy_month7) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2024-10-01"),
+        add_row(month = as.Date(current_fy_month7),
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-11-01") %in% data$month)){
+    if(!(as.Date(current_fy_month8) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2024-11-01"),
+        add_row(month = as.Date(current_fy_month8),
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2024-12-01") %in% data$month)){
+    if(!(as.Date(current_fy_month9) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2024-12-01"),
+        add_row(month = as.Date(current_fy_month9),
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2025-01-01") %in% data$month)){
+    if(!(as.Date(current_fy_month10) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2025-01-01"),
+        add_row(month = as.Date(current_fy_month10),
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2025-02-01") %in% data$month)){
+    if(!(as.Date(current_fy_month11) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2025-02-01"),
+        add_row(month = as.Date(current_fy_month11),
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   
-    if(!(as.Date("2025-03-01") %in% data$month)){
+    if(!(as.Date(current_fy_month12) %in% data$month)){
       data <- data %>% 
-        add_row(month = as.Date("2025-03-01"),
+        add_row(month = as.Date(current_fy_month12),
                 latest_annual_contracted_UDA_UOAs = mean_annual_contracted_UDA_UOAs)
     }
   }
@@ -1172,10 +1202,10 @@ plot_monthly_uda_delivered <- function(data = UDA_calendar_data,
   
   # calculate UDA delivered by month
   data <- data %>% 
-    filter(month >= "2023-04-01" & month <= "2025-03-01") %>% # needs updating every financial year
+    filter(month >= previous_fy_start & month <= current_fy_end) %>% 
     group_by(month) %>% 
     summarise(uda_delivered = sum(UDA_delivered, na.rm = TRUE)) %>% 
-    mutate(financial_year = ifelse(month <= "2024-03-01", "2023/24", "2024/25"), 
+    mutate(financial_year = ifelse(month <= previous_fy_end, previous_fy, current_fy), 
            month_name = format(month, "%B"))
 
   # set month names to the right order
@@ -2629,10 +2659,9 @@ The most recent two months data will be incomplete and subject to change, partic
 ```{r working days table}
 table_working_days <- function(){
   # filter for the current and previous financial year#
-  # NEEDS UPDATING EACH FINANCIAL YEAR
   workdays <- working_days %>% 
-    filter(month >= "2023-04-01" & month <= "2025-03-01") %>% 
-    mutate(fy = ifelse(month >= "2023-04-01" & month <= "2024-03-01", "2023/24", "2024/25"), 
+    filter(month >= previous_fy_start & month <= current_fy_end) %>% 
+    mutate(fy = ifelse(month >= previous_fy_start & month <= previous_fy_end, previous_fy, current_fy), 
            month_name = format(month, "%B"))
   
   # set order of months

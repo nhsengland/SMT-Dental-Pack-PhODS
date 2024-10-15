@@ -244,11 +244,11 @@ table_time_series_comparison <- function(UDAorUOA = "UDA"){
 
   # create table for latest full financial year
   comparison_table <- total_delivered %>% 
-    filter(month >= "2023-04-01" & month <= "2024-03-01") %>% 
+    filter(month >= as.Date(previous_fy_start) & month <= as.Date(previous_fy_end)) %>% 
     pivot_wider(names_from = source, values_from = delivered) %>% 
     arrange(month) %>% 
     mutate(month = as.character(month), 
-           `Scheduled data` = prettyNum(round(`Scheduled data`, 0), big.mark = ","),, 
+           `Scheduled data` = prettyNum(round(`Scheduled data`, 0), big.mark = ","),
            `Calendar data` = prettyNum(round(`Calendar data`, 0), big.mark = ",")) %>% 
     rename(Month = month)
   
