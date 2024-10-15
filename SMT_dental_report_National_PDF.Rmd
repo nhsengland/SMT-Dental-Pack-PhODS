@@ -465,3 +465,5 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
     -   [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental]/[Calendar_BPE]
 -   R code used to create this pack is available on Github
     -   <https://github.com/nhsengland/SMT-Dental-Pack-PhODS>
+-  Data used in this pack is published on FutureNHS along with national and regional packs
+    -   <https://future.nhs.uk/DENTISTRY/view?objectID=39246768>
