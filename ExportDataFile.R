@@ -640,13 +640,7 @@ data_dental_activity<-data_UDA_de_co%>%
   
   total_dcp<- rbind(total_national, total_regional, total_icb) %>% 
     filter(DCP_metric != "completed_courses_of_treatment") %>% 
-    mutate(financial_year = case_when( # needs updating each financial year
-             month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
-             month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
-             month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
-             month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
-             month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
-             month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"), 
+    mutate(financial_year = get_financial_year(month), 
            `month` = format(as.Date(month), "%Y-%m"))%>%
     select(calendar_month=month, financial_year,geography_level,geography_name,DCP_metric,DCP_description=DCP_description.x,
            metric_count_by_DCP = numbers,metric_count_total = all_numbers,DCP_involved_percent = dcp_percent)
@@ -744,13 +738,7 @@ data_dental_activity<-data_UDA_de_co%>%
     arrange(desc(Year_Month))
   
   total_bpe<- rbind(BPE_all_national, BPE_all_region, BPE_all_ICB) %>% 
-    mutate(financial_year = case_when( # needs updating each financial year
-      Year_Month >= as.Date("2019-04-01") & Year_Month < as.Date("2020-04-01") ~ "2019/20",
-      Year_Month >= as.Date("2020-04-01") & Year_Month < as.Date("2021-04-01") ~ "2020/21",
-      Year_Month >= as.Date("2021-04-01") & Year_Month < as.Date("2022-04-01") ~ "2021/22",
-      Year_Month >= as.Date("2022-04-01") & Year_Month < as.Date("2023-04-01") ~ "2022/23",
-      Year_Month >= as.Date("2023-04-01") & Year_Month < as.Date("2024-04-01") ~ "2023/24",
-      Year_Month >= as.Date("2024-04-01") & Year_Month < as.Date("2025-04-01") ~ "2024/25"), 
+    mutate(financial_year = get_financial_year(Year_Month), 
       Year_Month = format(as.Date(Year_Month), "%Y-%m"))%>%
     select(calendar_month=Year_Month, financial_year, geography_level,geography_name,no_contracts=NContractors,
            no_contracts_recall_50pct_low_risk=low_risk_NContractors,
