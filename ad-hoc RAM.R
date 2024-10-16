@@ -11,22 +11,19 @@ library(ggpubr)
 library(ggplot2)
 library(gridExtra)
 library(dplyr)
-options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
-options(knitr.duplicate.label = 'allow')
 
-#source in all files
+
+################### prepare you own data
+# in this study, we first source all files (in SMT-Dental-Pack-PhODS github) to get source data we need
 source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
 
-
-##################plotting
-region_STP_name='North East And Yorkshire'
-
-data = UDA_calendar_data
+# then clean source data
+region_STP_name='North East And Yorkshire' ## insert the region you need
 
 # way to calculate percentage of UDA delivered which is standardized by no of working days 
-#calculate UDA_delivery & contracted_UDAs
-data1 <- data %>%
+# national level
+data1 <- UDA_calendar_data %>%
   group_by(month) %>%
   summarise(UDA_delivery = sum(UDA_delivered, na.rm = TRUE),
             contracted_UDAs = sum(annual_contracted_UDA, na.rm = TRUE)) %>%
@@ -36,7 +33,8 @@ data1 <- data %>%
   mutate(perc_UDA_delivered = round(perc_UDA_delivered, digits = 0))%>%
   mutate(region_name=region_STP_name,commissioner_name='National')
 
-data2 <- data %>%
+# region & ICB level, and then row bind with the national level data
+data2 <- UDA_calendar_data %>%
   group_by(month,region_name,commissioner_name) %>%
   summarise(UDA_delivery = sum(UDA_delivered, na.rm = TRUE),
             contracted_UDAs = sum(annual_contracted_UDA, na.rm = TRUE)) %>% 
@@ -46,26 +44,23 @@ data2 <- data %>%
   mutate(perc_UDA_delivered = round(perc_UDA_delivered, digits = 0))%>%
   rbind(data1)
 
-#filter for STP or region in need
+# filter for STP or region in need to get data ready for plotting
   data <- data2 %>%
     filter(region_name == region_STP_name)
   subtitle <- region_STP_name
 
-  # Check the unique values of commissioner_name
+##################  plotting -- ICB level changing pattern, one line chart for one region
+#set legend order (ICB order) alphabetically
+  # Check the unique values of ICB
   unique_commissioners <- unique(data$commissioner_name)
-  
   # Remove 'National' from the unique values
   other_commissioners <- unique_commissioners[unique_commissioners != "National"]
-  
   # Sort the remaining commissioners alphabetically
   sorted_commissioners <- sort(other_commissioners)
-  
   # Combine 'National' with the sorted list
   desired_order <- c("National", sorted_commissioners)
-  
   # Convert commissioner_name to a factor with the desired order
   data$commissioner_name <- factor(data$commissioner_name, levels = desired_order)
-  
   
 #set color
   STPNationalColour<- setNames(c("#000000", "#E69F00", "#009E73", "#F0E442", 
@@ -73,11 +68,8 @@ data2 <- data %>%
                                    "#999999","#FFCCFF", "#00CC00", "#FF00FF"), c("National", other_commissioners))
   STPNationalColour<-STPNationalColour[c("National",other_commissioners)]
 
-
-
-# Define plot 
-# Define title and subtitle
-p2 <- ggplot(data = data,aes_string(x = "month", y = "perc_UDA_delivered", colour = "commissioner_name")) +
+#line plot
+p1 <- ggplot(data = data,aes_string(x = "month", y = "perc_UDA_delivered", colour = "commissioner_name")) +
   geom_line(size = 1.5) +
   # Removed y-axis title and x-axis title
   xlab(NULL) +
@@ -111,42 +103,33 @@ p2 <- ggplot(data = data,aes_string(x = "month", y = "perc_UDA_delivered", colou
   theme(legend.position = "bottom", legend.title = element_blank())# +
   #labs(title = paste("Monthly percentage of usual annual contracted UDAs standardised by working days -", region_STP_name))
 
-p2
+p1
 
-# Create the narrative as a text grob (grid object)
-library(cowplot)
-#narrative <- ggdraw() + draw_label("Including only GDS/PDS/PDS+ contracts where total contracted UDAs >100. 
-#                                   \nExpected monthly delivery is standardised by working days in the month and calculated as Target UDAs* Monthly working days/working days per year.
-#\nAs the most recent two months data (August and July 24 data) are incomplete and subject to change, they are not included in this plot.
-#                                   ", size =9, hjust = 0, vjust = 0.5, fontface = "italic", color = "#231F20")+
-#  theme(plot.margin = unit(c(0, 0, 0, 0), "cm"))  # Reduce top margin
 
-# Combine the plot and narrative using plot_grid
-#final_plot <- plot_grid(p2, narrative, ncol = 1, rel_heights = c(1, 0.09))
-
-#final_plot <- ggdraw() +
-#  draw_plot(p2, 0, 0.1, 0.95, 0.9) +  # Main plot fills most of the space, leaving some room below
-#  draw_plot(narrative, 0.6, 0, 0, 0.1)
-
-#final_plot
-
-# Define plot 
-# Step 1: Filter the data to only include the latest month
-latest_month <- max(data$month)  # Identify the latest month
-data_latest <- data[data$month == latest_month, ]  # Filter data for the latest month
-
-# Step 2: Draw a bar chart for the filtered data (latest month)
-p1 <- ggplot(data = data_latest, aes_string(x = "commissioner_name", y = "perc_UDA_delivered", fill = "commissioner_name")) + 
+#bar plot
+p2 <- ggplot(data = data, aes_string(x = "commissioner_name", y = "perc_UDA_delivered", fill = "commissioner_name")) + 
   geom_bar(stat = "identity") +  # Use geom_bar with stat="identity"
-  ylab("Percentage of contracted UDAs delivered") +
+  # Removed y-axis title and x-axis title
+  ylab(NULL) +
   xlab(NULL) +
   scale_y_continuous(limits = c(0, 
-                                max(data_latest$perc_UDA_delivered, na.rm = TRUE) + 10)) +  # Adjust limits here
+                                max(data$perc_UDA_delivered, na.rm = TRUE) + 10)) +  # Adjust limits here
   scale_fill_manual(values = STPNationalColour) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   theme(legend.position = "none") +
-  labs(title = paste("Percentage of contracted UDAs delivered for the latest month -", region_STP_name))
+  # Bold and larger axes labels
+  theme(axis.title.x = element_text(face = "bold", size = 13, color = "#231F20", angle = 90, vjust = -0.0001), 
+        axis.title.y = element_text(face = "bold", size = 13, color = "#231F20"),
+        # Remove grid lines
+        panel.grid = element_blank(),
+        # Customize y-axis text
+        axis.text.y = element_text(face = "bold", size = 13, color = "#231F20"),
+        # Customize x-axis text
+        axis.text.x = element_text(face = "bold",size = 13, angle = 45, hjust = 1, vjust = 1, color = "#231F20")
+        # Larger and bolder title
+        #plot.title = element_text(face = "bold", size = 18, color = "#231F20"),
+        )# +labs(title = paste("Percentage of contracted UDAs delivered for the latest month -", region_STP_name))
 
 # Print the bar chart
-print(p1)
+print(p2)
