@@ -40,11 +40,17 @@ current_fy_month11 <- as.character(as.Date(current_fy_start) %m+% months(10))
 current_fy_month12 <- as.character(as.Date(current_fy_start) %m+% months(11))
 ```
 
-```{r get financial year}
-get_financial_year <- function(month = month){
-  ifelse(month(test1)>3, 
-       paste(year(test1), "/", substr(year(test1)+1,start=3,stop=4), sep = ""), 
-       paste(year(test1)-1, "/", substr(year(test1),start=3,stop=4), sep = ""))
+```{r get financial year dates}
+# get financial year from month
+get_financial_year <- function(month, ...){
+  ifelse(month(month)>3, 
+       paste(year(month), "/", substr(year(month)+1,start=3,stop=4), sep = ""), 
+       paste(year(month)-1, "/", substr(year(month),start=3,stop=4), sep = ""))
+}
+
+# get first month of the financial year
+get_fy_start <- function(financial_year){
+  as.Date(paste(substr(financial_year,1,4), "04-01", sep = "-"), format = "%Y-%m-%d")
 }
 ```
 
@@ -171,12 +177,7 @@ plot_UDA_UOA_delivery_wd <- function(data = UDA_calendar_data,
                          "UOAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
       
       data <- data %>% 
-        mutate(financial_year = case_when(
-               month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
-               month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
-               month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
-               month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
-               month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"))
+        mutate(financial_year = get_financial_year(month))
     }
     
     data$`month` <- format(as.Date(data$`month`), "%Y-%m")
@@ -311,12 +312,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
                          "UOAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
       
       data <- data %>% 
-        mutate(financial_year = case_when(
-               month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
-               month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
-               month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
-               month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
-               month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"))
+        mutate(financial_year = get_financial_year(month))
     }
    
     data$`month` <- format(as.Date(data$`month`), "%Y-%m")
@@ -531,12 +527,7 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
       rename(calendar_month = month)
     
     data <- data %>% 
-        mutate(financial_year = case_when(
-               calendar_month >= as.Date("2020-04-01") & calendar_month < as.Date("2021-04-01") ~ "2020/21",
-               calendar_month >= as.Date("2021-04-01") & calendar_month < as.Date("2022-04-01") ~ "2021/22",
-               calendar_month >= as.Date("2022-04-01") & calendar_month < as.Date("2023-04-01") ~ "2022/23",
-               calendar_month >= as.Date("2023-04-01") & calendar_month < as.Date("2024-04-01") ~ "2023/24",
-               calendar_month >= as.Date("2024-04-01") & calendar_month < as.Date("2025-04-01") ~ "2024/25"))
+        mutate(financial_year = get_financial_year(calendar_month))
     
     data$calendar_month <- format(as.Date(data$calendar_month), "%Y-%m")
     
@@ -603,14 +594,10 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
     select(month, contract_number, commissioner_name, region_name,
            annual_contracted_UDA, UDA_delivered)
   
-  #create a new field as financial year - NEEDS ADDING TO EACH FINANCIAL YEAR
+  #create a new field as financial year
   # calculate full year UDA delivered, contracted UDA and percentage of UDA delivered
   historic_data <- historic_data  %>%
-    mutate(financial_year = case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
-                                      month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
-                                      month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
-                                      month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
-                                      month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24"))
+    mutate(financial_year = get_financial_year(month))
   
   historic_latest_contracted_uda <- historic_data %>% 
     group_by(month, financial_year) %>% 
@@ -640,15 +627,8 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
   #divide data in to "Previous Financial Years (Averages)", "Current Financial Year"
   data <- data_try %>%
     mutate(year_type = ifelse(is.na(financial_year), "Current Financial Year", 
-                              "Previous Financial Years (Averages)"), 
-           month = case_when(
-             is.na(financial_year) ~ month,
-             financial_year == "2019/20" ~ as.Date("2019-04-01"),
-             financial_year == "2020/21" ~ as.Date("2020-04-01"),
-             financial_year == "2021/22" ~ as.Date("2021-04-01"),
-             financial_year == "2022/23" ~ as.Date("2022-04-01"),
-             financial_year == "2023/24" ~ as.Date("2023-04-01") # needs adding to each financial year
-           ))
+                              "Previous Financial Years (Averages)"),
+           month  = as.Date(ifelse(is.na(financial_year), month, get_fy_start(financial_year))))
   
   data$year_type <- factor(data$year_type, levels = c("Previous Financial Years (Averages)",
                                                       "Current Financial Year"))
@@ -753,14 +733,10 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     select(month, contract_number, commissioner_name, region_name,
            annual_contracted_UOA, UOA_delivered)
 
-  # create a new field as financial year - NEEDS ADDING EACH FINANCIAL YEAR
+  # create a new field as financial year
   # then calculate full year UDA delivered, contracted UDA and percentage of UDA delivered
   historic_data <- historic_data  %>%
-    mutate(financial_year = case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
-                                      month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
-                                      month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
-                                      month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
-                                      month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24"))
+    mutate(financial_year = get_financial_year(month))
 
   historic_latest_contracted_uoa <- historic_data %>%
     group_by(month, financial_year) %>%
@@ -780,7 +756,7 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     summarise(UOA_delivery = sum(UOA_delivered, na.rm = TRUE),
               contracted_UOAs = sum(annual_contracted_UOA, na.rm = TRUE)) %>%
     # only include current FY data -- calculate percentage of UDA delivered -- standardized by no of working days
-    filter(month >= as.Date (current_fy_start)) %>% ## this needs to be updated every FY
+    filter(month >= as.Date (current_fy_start)) %>%
     left_join(working_days,by=c('month')) %>% 
     mutate(perc_UOA_delivered =100* (UOA_delivery / (contracted_UOAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UOA_delivered = round(perc_UOA_delivered, digits = 0)) %>%
@@ -790,14 +766,7 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
   data <- data_try %>%
     mutate(year_type = if_else(is.na(financial_year), "Current Financial Year", 
                                "Previous Financial Years (Averages)"), 
-           month = case_when(
-             is.na(financial_year) ~ month, 
-             financial_year == "2019/20" ~ as.Date("2019-04-01"),
-             financial_year == "2020/21" ~ as.Date("2020-04-01"),
-             financial_year == "2021/22" ~ as.Date("2021-04-01"),
-             financial_year == "2022/23" ~ as.Date("2022-04-01"),
-             financial_year == "2023/24" ~ as.Date("2023-04-01") # needs adding to each financial year
-           ))
+           month  = as.Date(ifelse(is.na(financial_year), month, get_fy_start(financial_year))))
   
   data$year_type <- factor(data$year_type, levels = c("Previous Financial Years (Averages)",
                                                       "Current Financial Year"))
@@ -960,7 +929,6 @@ All data for the latest financial year will be incomplete and subject to change 
   mean_annual_contracted_UDA_UOAs_historic <- dplyr::last(historic_data$annual_contracted_UDA_UOA)
   
   #add in blanks for the rest of the year
-  # NEEDS UPDATING EACH FINANCIAL YEAR
   if(all_regions_and_STPs == FALSE & nrow(data) < 12){
   
     if(!(as.Date(current_fy_month2) %in% data$month)){
@@ -1137,14 +1105,8 @@ Table_YTD_UDA_UOA_delivery <- function(data = UDA_calendar_data,
   data$calendar_month <- format(as.Date(data$`month`), "%Y-%m")
   
   #create a new variable 'financial_year'
-  # NEEDS UPDATING EACH FINANCIAL YEAR
   data <- data %>% 
-    mutate(financial_year= case_when(month >= as.Date("2019-04-01") & month < as.Date("2020-04-01") ~ "2019/20",
-                                     month >= as.Date("2020-04-01") & month < as.Date("2021-04-01") ~ "2020/21",
-                                     month >= as.Date("2021-04-01") & month < as.Date("2022-04-01") ~ "2021/22",
-                                     month >= as.Date("2022-04-01") & month < as.Date("2023-04-01") ~ "2022/23",
-                                     month >= as.Date("2023-04-01") & month < as.Date("2024-04-01") ~ "2023/24",
-                                     month >= as.Date("2024-04-01") & month < as.Date("2025-04-01") ~ "2024/25"))
+    mutate(financial_year= get_financial_year(month))
   
   if(level == "Regional"){
     
