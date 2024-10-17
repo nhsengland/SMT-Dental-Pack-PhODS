@@ -1570,7 +1570,7 @@ xaringanExtra::use_panelset()
 
 .panel[.panel-name[`r region`]
 
--   Data on unique patients seen is not available at regional level.
+-   Data on unique patients seen is not available at regional level, however ICB level data is available.
 
 
 ]
@@ -1744,7 +1744,7 @@ xaringanExtra::use_panelset()
 
 .panel[.panel-name[`r region`]
 
--   Data on unique patients seen is not available at regional level.
+-   Data on unique patients seen is not available at regional level, however ICB level data is available.
 
 ]
 .panel[.panel-name[`r STP1`]

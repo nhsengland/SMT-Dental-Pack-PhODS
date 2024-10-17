@@ -12,7 +12,6 @@ library(openxlsx)
 
 source("ExportDataFile_metadata.R")
 
-
 ######UDA#####
 #### No UDA delivered, contracted & percentage
 data_Nat_UDA=plot_UDA_UOA_delivery_wd(data = UDA_calendar_data, 
@@ -731,8 +730,8 @@ data_dental_activity<-data_UDA_de_co%>%
     group_by(Year_Month, geography_name=commissioner_name) %>%
     summarise (low_risk_NContractors = n_distinct(Contract.Number)) 
   
-  BPE_all_ICB<-data_total_region%>%
-    left_join(data_high_region, by=c('Year_Month',"geography_name"))%>%
+  BPE_all_ICB<-data_total_ICB%>%
+    left_join(data_high_ICB, by=c('Year_Month',"geography_name"))%>%
     mutate(geography_level='ICB',
            pct_low_risk_recalled=formattable::percent (low_risk_NContractors/ NContractors, digits =0) ) %>% 
     arrange(desc(Year_Month))
@@ -743,7 +742,59 @@ data_dental_activity<-data_UDA_de_co%>%
     select(calendar_month=Year_Month, financial_year, geography_level,geography_name,no_contracts=NContractors,
            no_contracts_recall_50pct_low_risk=low_risk_NContractors,
            pct_contracts_recall_50pct_low_risk=pct_low_risk_recalled)
+
+#### ICB/Region Code ####
+# create table to get ICB & region codes
+con <- dbConnect(odbc::odbc(), "NCDR")
   
+icb_region_mapping <- dbGetQuery(con, "SELECT DISTINCT Region_Code AS geography_code, Region_Name AS geography_name
+                                 FROM [NHSE_Reference].[dbo].[tbl_Ref_ODS_Commissioner_Hierarchies]
+                                 WHERE STP_Code NOT IN ('DUM001', 'DUM002', 'UNK','X24')
+                                 UNION
+                                 SELECT DISTINCT STP_Code AS geography_code, STP_Name AS geography_name
+                                 FROM [NHSE_Reference].[dbo].[tbl_Ref_ODS_Commissioner_Hierarchies]
+                                 WHERE STP_Code NOT IN ('DUM001', 'DUM002', 'UNK','X24')")
+
+dbDisconnect(con)
+  
+# tidy up region & ICB names so mapping on name works
+icb_region_mapping$geography_name <- str_to_title(icb_region_mapping$geography_name)
+icb_region_mapping$geography_name <- ifelse(substr(icb_region_mapping$geography_code,1,1)=="Q", 
+                                      substr(icb_region_mapping$geography_name,1,
+                                             nchar(icb_region_mapping$geography_name)-21),
+                                      icb_region_mapping$geography_name)
+icb_region_mapping$geography_name <- ifelse(substr(icb_region_mapping$geography_code,1,1)=="Q", 
+                                      substr(icb_region_mapping$geography_name,5,
+                                             nchar(icb_region_mapping$geography_name)),
+                                      icb_region_mapping$geography_name)
+icb_region_mapping$geography_name <- ifelse(substr(icb_region_mapping$geography_code,1,1)=="Q", 
+                                      paste0(icb_region_mapping$geography_name,
+                                             rep("ICB", nrow(icb_region_mapping))),
+                                      icb_region_mapping$geography_name)
+
+# add row for national figures
+icb_region_mapping[nrow(icb_region_mapping)+1,] = c('National', 'England')
+
+# add to output tables
+data_dental_activity <- data_dental_activity %>% 
+  left_join(icb_region_mapping, by = "geography_name") %>% 
+  select(calendar_month, financial_year, geography_level, geography_name,
+         geography_code, everything())
+
+data_orthodontic_activity <- data_orthodontic_activity %>% 
+  left_join(icb_region_mapping, by = "geography_name") %>% 
+  select(calendar_month, financial_year, geography_level, geography_name,
+         geography_code, everything())
+
+total_dcp <- total_dcp %>% 
+  left_join(icb_region_mapping, by = "geography_name") %>% 
+  select(calendar_month, financial_year, geography_level, geography_name,
+         geography_code, everything())
+
+total_bpe <- total_bpe %>% 
+  left_join(icb_region_mapping, by = "geography_name") %>% 
+  select(calendar_month, financial_year, geography_level, geography_name,
+         geography_code, everything())
 
 ###### Output #####
 # create Excel file
@@ -790,7 +841,7 @@ create_export_file <- function(){
   
 create_pcdid_extract <- function(){
   output <- data_dental_activity %>% 
-    select(calendar_month, financial_year, geography_level, geography_name,
+    select(calendar_month, financial_year, geography_level, geography_name, geography_code,
            unique_children_seen_12_month, unique_adults_seen_24_month) %>% 
     filter(!is.na(unique_children_seen_12_month))
   

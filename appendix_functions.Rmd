@@ -178,6 +178,7 @@ plot_time_series_comparison <- function(UDAorUOA = "UDA"){
                   y = delivered, 
                   colour = source)) + 
     geom_line(size = 1) + 
+    geom_point() +
     theme_bw() + 
     expand_limits(y = 0) + 
     scale_x_date(date_breaks = "3 months",
