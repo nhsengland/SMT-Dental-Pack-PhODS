@@ -1316,7 +1316,7 @@ This chart includes foundation dentists so total counts will differ to other cha
       theme_bw() +
       theme(axis.text.x = element_text(angle = 90)) +
       geom_line(size = 1) +
-      geom_point(size = 1) +
+      geom_point() +
       geom_text_repel(aes(label = prettyNum(CoTs, big.mark=",")), 
                       data = data_labels, 
                       colour = "black", 
@@ -1434,6 +1434,7 @@ plot_111_referrals <- function(data = dental_data_111,
     theme(axis.text.x = element_text(angle = 90)) +
     geom_line(colour = "steelblue", 
               size = 1) +
+    geom_point(colour = "steelblue") +
     geom_text_repel(aes(label = prettyNum(monthly_case_volume, big.mark = ",")), 
                     data = data_labels, 
                     colour = "black", 
@@ -1728,6 +1729,7 @@ plot_npp_activity <- function(data = npp_data,
                    y = values, 
                    colour = variable)) + 
     geom_line(linewidth = 1) + 
+    geom_point() +
     geom_text_repel(aes(label = prettyNum(values, big.mark=",")), 
                     data = data_labels, 
                     colour = "black", 
@@ -1775,6 +1777,7 @@ plot_npp_activity <- function(data = npp_data,
                    y = values, 
                    colour = variable)) + 
     geom_line(linewidth = 1) + 
+    geom_point() +
     geom_text_repel(aes(label = prettyNum(values, big.mark=",")), 
                     data = data_labels, 
                     colour = "black", 
@@ -2041,6 +2044,7 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
                  scales = "free_x") +
       geom_line(aes(colour = Bands),
                 size = 1) +
+      geom_point(aes(colour = Bands)) +
       geom_text_repel(aes(label = assisted_percent), 
                       data = data_labels, 
                       colour = "black", 
@@ -2085,6 +2089,7 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
                         aes(x=month, y= dcp_percent)) +
       geom_line(aes(colour = DCP_description),
                 size = 1) +
+      geom_point(aes(colour = DCP_description)) +
       geom_text_repel(data = latest_data, aes(label = dcp_percent), 
                     colour = "black", size = 3.5, vjust = -0.25) + 
       facet_wrap(vars(role), 
@@ -2559,6 +2564,7 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
                  scales = "free_x") +
       geom_line(aes(colour = Bands),
                 size = 1) +
+      geom_point(aes(colour = Bands)) +
       geom_text_repel(data = data_labels,
                       aes(label = dcp_percent),
                       colour = "black",
@@ -2595,6 +2601,7 @@ The most recent two months data will be incomplete and subject to change, partic
                         aes(x=month, y= assisted_percent)) +
       geom_line(aes(colour = DCP_description),
                 size = 1) +
+      geom_point(aes(colour = DCP_description)) +
       geom_text(aes(label = assisted_percent),
                 colour = "black", size= 3.5, vjust=-0.25) +
       theme(legend.position="bottom") +
