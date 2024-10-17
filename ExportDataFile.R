@@ -787,3 +787,14 @@ create_export_file <- function(){
   # overwrite file if it already exists in the directory
   openxlsx::saveWorkbook(output_file, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx'), overwrite = TRUE)
 }
+  
+create_pcdid_extract <- function(){
+  output <- data_dental_activity %>% 
+    select(calendar_month, financial_year, geography_level, geography_name,
+           unique_children_seen_12_month, unique_adults_seen_24_month) %>% 
+    filter(!is.na(unique_children_seen_12_month))
+  
+  write.csv(output, 
+            paste0(reports_dir, '/dental_patients_extract_for_PCDID_data_up_to_', format(Sys.Date()-30, '%B%Y'), '.csv'), 
+            row.names = FALSE)
+}

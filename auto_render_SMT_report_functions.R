@@ -31,6 +31,9 @@ source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
 source("ExportDataFile.R")
 create_export_file()
 
+# produce extract for PCDID
+create_pcdid_extract()
+
 # Define a function to render the report for a specific region
 render_report = function(region) {
   rmarkdown::render(
