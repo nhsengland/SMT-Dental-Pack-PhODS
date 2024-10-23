@@ -1,9 +1,5 @@
 library(tidyverse)
-library(ggplot2)
 library(ggpubr)
-library(stringr)
-library(magrittr) # needs to be run every time you start R and want to use %>%
-library(dplyr)
 library(scales)
 library(readxl)
 library(textclean)

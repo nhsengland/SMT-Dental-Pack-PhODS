@@ -306,7 +306,7 @@ npp_data$commissioner_name <- paste0(npp_data$commissioner_name,
 
 ```{r dental 111 data}
 #get dental 111 data from local file
-dental_data_111 <- read_excel("data111/dental_data_111.xlsx")
+dental_data_111 <- read_excel("N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/111_pathways_data/dental_data_111.xlsx")
 ```
 
 
