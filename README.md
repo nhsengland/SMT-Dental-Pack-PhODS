@@ -20,6 +20,34 @@ There is a further output which is not currently produced:
 
 4.  Regional HTML report
 
+### Dependencies
+
+The process uses the following R packages:
+
+1.  tidyverse
+2.  readxl
+3.  DBI
+4.  odbc
+5.  downloadthis
+6.  lubridate
+7.  ggrepel
+8.  grid
+9.  formattable
+10. cowplot
+11. data.table
+12. ggpubr
+13. reactable
+14. knitr
+15. rmarkdown
+16. ggpubr
+17. gridExtra
+18. scales
+19. textclean
+20. openxlsx
+21. xaringanExtra
+
+To install the required packages, run `source("install_requirements.R")` in the console.
+
 ### Functions
 
 The following files define the functions used to create the reports:
@@ -40,6 +68,7 @@ The following files create the outputs:
 5.  DRAFT_SMT_dental_report_national_regional_level.rmd - creates the regional HTML report, note this file is a work in progress
 
 ### Running the reports
+
 The SMT_dental_report_National_PDF.Rmd file needs to be rendered separately using the 'Knit' option in RStudio. The Excel data file and ICB level HTML reports for all regions can be automatically produced by running the auto_render_SMT_report_functions.R file.
 
 All other files are required to produce the outputs, for example setting up the format of all slides and creating a table of workdays to use for standardisation, or for internal set up, such as uploading the tables to the data warehouse.
