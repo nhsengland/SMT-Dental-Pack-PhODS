@@ -37,6 +37,10 @@ create_pcdid_extract()
 # produce extract for UDA projections
 create_uda_projections_extract()
 
+# Render national report
+rmarkdown::render("SMT_dental_report_National_PDF.Rmd", 
+                  output_file = file.path(reports_dir, paste0("National_Report_", format(Sys.Date(), '%B%Y'), ".pdf")))
+
 # Define a function to render the report for a specific region
 render_report = function(region) {
   rmarkdown::render(
