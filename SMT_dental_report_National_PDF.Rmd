@@ -333,11 +333,9 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
 ## Oral health risk assessment
 
 ```{r BPE boxplot-revert, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
- 
- plot_BPE_no_oral_health_risk(data = BPE_data,
-                              level = "National",
-                              region_STP_name = NULL)
-
+plot_BPE_no_oral_health_risk(data = BPE_data,
+                             level = "National",
+                             region_STP_name = NULL)
 ```
 
 -   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
