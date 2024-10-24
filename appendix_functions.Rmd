@@ -145,6 +145,34 @@ plot_time_series_comparison <- function(UDAorUOA = "UDA"){
       summarise(delivered = sum(UDA_delivered, na.rm = TRUE)) %>% 
       mutate(source = "Calendar data")
     
+    # combine to use in plot
+  total_delivered <- rbind(calendar_delivered, scheduled_delivered)
+
+  # plot chart
+  p <- ggplot(total_delivered, 
+              aes(x = month, 
+                  y = delivered, 
+                  colour = source)) + 
+    geom_line(data = subset(total_delivered, month <= latest_final_month & source == "Calendar data"),
+              linetype = 1, size = 1) + 
+    geom_line(data = subset(total_delivered, source == "Scheduled data"),
+              linetype = 1, size = 1) + 
+    geom_line(data = subset(total_delivered, month >= latest_final_month & source == "Calendar data"),
+              linetype = 2, size = 1) + 
+    geom_point() +
+    theme_bw() + 
+    expand_limits(y = 0) + 
+    scale_x_date(date_breaks = "3 months",
+                 date_labels = "%b-%y") +
+    scale_y_continuous(label = scales::comma) + 
+    theme(axis.text.x = element_text(angle = 90, vjust=-0.0001)) +
+    labs(x = "Month", 
+         y = ylab, 
+         colour = "Data source", 
+         caption = caption) + 
+    ggtitle(title) + 
+    scale_color_manual(values = c("#E69F00", "#56B4E9"))
+    
   } else if(UDAorUOA == "UOA"){
     scheduled_data <- UOA_scheduled_data_append
     calendar_data <- UOA_calendar_data_append
@@ -167,9 +195,8 @@ plot_time_series_comparison <- function(UDAorUOA = "UDA"){
       group_by(month) %>% 
       summarise(delivered = sum(UOA_delivered, na.rm = TRUE)) %>% 
       mutate(source = "Calendar data")
-  }
-
-  # combine to use in plot
+    
+    # combine to use in plot
   total_delivered <- rbind(calendar_delivered, scheduled_delivered)
 
   # plot chart
@@ -177,7 +204,12 @@ plot_time_series_comparison <- function(UDAorUOA = "UDA"){
               aes(x = month, 
                   y = delivered, 
                   colour = source)) + 
-    geom_line(size = 1) + 
+    geom_line(data = subset(total_delivered, month <= current_fy_start & source == "Calendar data"),
+              linetype = 1, size = 1) + 
+    geom_line(data = subset(total_delivered, source == "Scheduled data"),
+              linetype = 1, size = 1) + 
+    geom_line(data = subset(total_delivered, month >= current_fy_start & source == "Calendar data"),
+              linetype = 2, size = 1) + 
     geom_point() +
     theme_bw() + 
     expand_limits(y = 0) + 
@@ -191,6 +223,7 @@ plot_time_series_comparison <- function(UDAorUOA = "UDA"){
          caption = caption) + 
     ggtitle(title) + 
     scale_color_manual(values = c("#E69F00", "#56B4E9"))
+  }
 
   p
 }

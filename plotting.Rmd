@@ -7,15 +7,10 @@ title: "plotting functions for SMT Dental Pack"
 library(ggrepel)
 library(grid)  # Load the grid package for textGrob
 library(tidyverse)
-##library(readxl)
-##library(DBI)
-##library(odbc)
-##library(scales)
 library(formattable)
 library(cowplot)
 library(data.table)
 library(ggpubr)
-
 ```
 
 ```{r set financial year dates}
@@ -52,6 +47,8 @@ get_financial_year <- function(month, ...){
 get_fy_start <- function(financial_year){
   as.Date(paste(substr(financial_year,1,4), "04-01", sep = "-"), format = "%Y-%m-%d")
 }
+
+latest_final_month <- max(UDA_calendar_data$month[UDA_calendar_data$final_yn == "Y"])
 ```
 
 ```{r get colour palette}
@@ -662,7 +659,10 @@ p1 <- ggplot() +
 
 # Define plot 2
 p2 <- ggplot() +
-  geom_line(data = data2, aes(x = month, y = perc_UDA_delivered), colour = "black") +
+  geom_line(data = subset(data2, month <= latest_final_month), linetype = 1, 
+            aes(x = month, y = perc_UDA_delivered), colour = "black") +
+  geom_line(data = subset(data2, month >= latest_final_month), linetype = 2,
+            aes(x = month, y = perc_UDA_delivered), colour = "black") +
   geom_line(data = data2, aes(x = month, y = line_for_100), colour = "blue") +
   geom_point(data = data2, aes(x = month, y = perc_UDA_delivered), colour = "steelblue") +
   ylab(NULL) +
@@ -816,7 +816,7 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
   
   # Define plot 2
   p2 <- ggplot() +
-    geom_line(data = data2, aes(x = month, y = perc_UOA_delivered), colour = "black") +
+    geom_line(data = data2, aes(x = month, y = perc_UOA_delivered), linetype = 2, colour = "black") +
     geom_line(data = data2, aes(x = month, y = line_for_100), colour = "blue") +
     geom_point(data = data2, aes(x = month, y = perc_UOA_delivered), colour = "steelblue") +
     ylab(NULL) +
@@ -1033,21 +1033,29 @@ All data for the latest financial year will be incomplete and subject to change 
   current_yr_latest_data <- data %>% 
     filter(measure == "YTD_delivery" & value > 0)
   
-  current_yr_latest_data <- max(current_yr_latest_data$month)
-  
   prev_yr_latest_data <- max(historic_data$month)
   
-  data_labels <- data %>% 
-    filter(month %in% c(prev_yr_latest_data, current_yr_latest_data) & measure == "YTD_delivery")
-  
   if(plotChart == TRUE){
-    #plot code
+    if(UDAorUOA == "UDA"){
+      
+    current_yr_latest_data <- latest_final_month
+    
+    data_labels <- data %>% 
+      filter(month %in% c(prev_yr_latest_data, current_yr_latest_data) & measure == "YTD_delivery")
+    
+      #plot code
     p <- ggplot(data, aes(x = month, 
                           y = value/1000000, 
                           colour = measure)) +
       theme_bw() +
-      geom_line(aes(linetype = measure),
-                size = 1) +
+      geom_line(data = subset(data, measure == "expected_delivery"), linetype = 2, size = 1) +
+      geom_line(data = subset(data, measure == "latest_annual_contracted_UDA_UOAs"), 
+                linetype = 2, size = 1) +
+      
+      geom_line(data = subset(data, measure == "YTD_delivery" & month <= latest_final_month), 
+                linetype = 1, size = 1) +
+      geom_line(data = subset(data, measure == "YTD_delivery" & month >= latest_final_month), 
+                linetype = 2, size = 1) +
       geom_point() +
       geom_text_repel(aes(label = prettyNum(value, big.mark=",")), 
                       data = data_labels, 
@@ -1074,6 +1082,51 @@ All data for the latest financial year will be incomplete and subject to change 
       theme(legend.position="bottom")
     
     p
+    } else {
+      current_yr_latest_data <- max(current_yr_latest_data$month)
+      
+      data_labels <- data %>% 
+        filter(month %in% c(prev_yr_latest_data, current_yr_latest_data) & measure == "YTD_delivery")
+      #plot code
+    p <- ggplot(data, aes(x = month, 
+                          y = value/1000000, 
+                          colour = measure)) +
+      theme_bw() +
+      geom_line(data = subset(data, measure == "expected_delivery"), linetype = 2, size = 1) +
+      geom_line(data = subset(data, measure == "latest_annual_contracted_UDA_UOAs"), 
+                linetype = 2, size = 1) +
+      
+      geom_line(data = subset(data, measure == "YTD_delivery" & month <= current_fy_start), 
+                linetype = 1, size = 1) +
+      geom_line(data = subset(data, measure == "YTD_delivery" & month >= current_fy_start), 
+                linetype = 2, size = 1) +
+      geom_point() +
+      geom_text_repel(aes(label = prettyNum(value, big.mark=",")), 
+                      data = data_labels, 
+                      colour = "black", 
+                      position = "dodge") + 
+
+      scale_x_date(date_breaks = "1 month",
+                   date_labels = "%b-%y") +
+      labs(title = title,
+           x = "Month",
+           y = ylab,
+           subtitle = subtitle,
+           caption = captionTitle,
+           colour = "",
+           linetype = "") +
+        
+      theme(axis.text.x = element_text(angle = 90, vjust=-0.0001)) +
+      facet_wrap(vars(year_type),
+                 scales = "free_x") +
+        
+      scale_colour_manual(values = c("grey", "black", lineCol), labels = labels) +
+      scale_linetype_manual(values = c("dashed", "dashed", "solid"), labels = labels,
+                            guide = "none") +
+      theme(legend.position="bottom")
+    
+    p
+    }
     
   }else{
     #if want a data table instead
@@ -1176,14 +1229,14 @@ plot_monthly_uda_delivered <- function(data = UDA_calendar_data,
                                        "November", "December", "January", "February", "March"))
   
   # create data labels for latest complete month (two months prior to most recent month)
-  latest_complete_month <- format(max(data$month)-58, "%B")
+  latest_complete_month <- format(latest_final_month, "%B")
   
   data_labels <- data %>% 
     filter(month_name == latest_complete_month)
 
   # plot chart
   ggplot(data, aes(x = month_name, y = uda_delivered, fill = financial_year)) + 
-    geom_bar(position = "dodge", stat = "identity") + 
+    geom_bar(position = "dodge", stat = "identity") +  
     geom_text(aes(label = prettyNum(uda_delivered, big.mark=",")), 
               data = data_labels,
               colour = "black",
@@ -1304,7 +1357,7 @@ This chart includes foundation dentists so total counts will differ to other cha
 
   
   data_labels <- data %>%
-    filter(month == max(month)) %>% 
+    filter(month == latest_final_month) %>% 
     mutate(CoTs = round(CoTs))
   
   if(plotChart == TRUE){
@@ -1315,7 +1368,10 @@ This chart includes foundation dentists so total counts will differ to other cha
                      colour = band)) +
       theme_bw() +
       theme(axis.text.x = element_text(angle = 90)) +
-      geom_line(size = 1) +
+      geom_line(data = subset(data, month <= latest_final_month), linetype = 1,
+                size = 1) +
+      geom_line(data = subset(data, month >= latest_final_month), linetype = 2,
+                size = 1) +
       geom_point() +
       geom_text_repel(aes(label = prettyNum(CoTs, big.mark=",")), 
                       data = data_labels, 
@@ -1582,7 +1638,7 @@ if(plotChart == TRUE & asIndex == FALSE){
   ylab <- "Unique patients"
   
   data_labels <- data %>% 
-    filter(month == max(month))
+    filter(month == latest_final_month)
   
   data$name <- factor(data$name, 
                             levels = c("Adults (24 month rolling period)", 
@@ -1594,7 +1650,8 @@ if(plotChart == TRUE & asIndex == FALSE){
                    y = total_unique_patients, 
                    colour = name)) +
     theme_bw() +
-    geom_line() +
+    geom_line(data = subset(data, month <= latest_final_month), linetype = 1) +
+    geom_line(data = subset(data, month >= latest_final_month), linetype = 2) +
     geom_point() +
     geom_text_repel(aes(label = prettyNum(total_unique_patients, big.mark=",")), 
                     data = data_labels, 
@@ -1641,7 +1698,7 @@ if(plotChart == TRUE & asIndex == FALSE){
     ylab <- "Percentage of February 2020 unique patients"
     
     data_labels <- data %>% 
-      filter(month == max(month))
+      filter(month == latest_final_month)
   
     data$variable <- factor(data$variable, 
                             levels = c("Adults (24 month rolling period)", 
@@ -1654,7 +1711,8 @@ if(plotChart == TRUE & asIndex == FALSE){
                y = value,
                colour = variable)) +
       theme_bw() +
-      geom_line() +
+      geom_line(data = subset(data, month <= latest_final_month), linetype = 1) +
+      geom_line(data = subset(data, month >= latest_final_month), linetype = 2) +
       geom_point() +
     geom_text_repel(aes(label = round(value)), 
                     data = data_labels, 
@@ -1715,10 +1773,8 @@ plot_npp_activity <- function(data = npp_data,
                  values_to = "values")
   
   # create data labels for latest month
-  latest_month <- max(data$month)
-  
   data_labels <- data %>% 
-    filter(month == latest_month)
+    filter(month == latest_final_month)
   
   chartCaption <- "Contracts included: GDS/PDS/PDS+
   Includes all patients seen.
@@ -1728,7 +1784,10 @@ plot_npp_activity <- function(data = npp_data,
   ggplot(data, aes(x = month,
                    y = values, 
                    colour = variable)) + 
-    geom_line(linewidth = 1) + 
+    geom_line(data = subset(data, month <= latest_final_month), linetype = 1,
+              linewidth = 1) + 
+    geom_line(data = subset(data, month >= latest_final_month), linetype = 2,
+              linewidth = 1) + 
     geom_point() +
     geom_text_repel(aes(label = prettyNum(values, big.mark=",")), 
                     data = data_labels, 
@@ -1764,10 +1823,8 @@ plot_npp_activity <- function(data = npp_data,
                  values_to = "values")
   
   # create data labels for latest month
-  latest_month <- max(data$month)
-  
   data_labels <- data %>% 
-    filter(month == latest_month)
+    filter(month == latest_final_month)
   
   chartCaption <- "Contracts included: GDS/PDS/PDS+
   Includes all patients seen.
@@ -1776,7 +1833,10 @@ plot_npp_activity <- function(data = npp_data,
   ggplot(data, aes(x = month,
                    y = values, 
                    colour = variable)) + 
-    geom_line(linewidth = 1) + 
+    geom_line(data = subset(data, month <= latest_final_month), linetype = 1,
+              linewidth = 1) + 
+    geom_line(data = subset(data, month >= latest_final_month), linetype = 2,
+              linewidth = 1) + 
     geom_point() +
     geom_text_repel(aes(label = prettyNum(values, big.mark=",")), 
                     data = data_labels, 
@@ -1842,10 +1902,8 @@ plot_npp_contracts <- function(data = npp_data,
                  values_to = "values")
 
   # create data labels for the latest month
-  latest_month <- max(data$month)
-
   data_labels <- data %>% 
-    filter(month == latest_month)
+    filter(month == latest_final_month)
   
   # plot chart
   ggplot(data, aes(x = month, 
@@ -2032,18 +2090,17 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
       mutate(month = as.Date(month)) %>%
       mutate(DCP_description = str_replace_all(DCP_description, "_", " "))
     
-    max_month <- max(filtered_data_UDA$month)
-    
     data_labels <- filtered_data_UDA %>% 
-      filter(month == max_month)
-
+      filter(month == latest_final_month)
 
     UDA_plot <- ggplot(filtered_data_UDA,
                        aes(x = month, y = assisted_percent)) +
       facet_grid(cols = vars(DCP_description),
                  scales = "free_x") +
-      geom_line(aes(colour = Bands),
-                size = 1) +
+      geom_line(data = subset(filtered_data_UDA, month <= latest_final_month), linetype = 1,
+                aes(colour = Bands), size = 1) +
+      geom_line(data = subset(filtered_data_UDA, month >= latest_final_month), linetype = 2,
+                aes(colour = Bands), size = 1) +
       geom_point(aes(colour = Bands)) +
       geom_text_repel(aes(label = assisted_percent), 
                       data = data_labels, 
@@ -2066,8 +2123,6 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
 
     UDA_plot
 
-
-
   }else{
     
     #UDA is only for those with 'total_FP17'
@@ -2081,14 +2136,15 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
              role = ifelse(role == "assisted", "DCP assisted", "DCP led")) 
     
     #get the number for the latest month -- used for label in the plot
-    latest_month <- max(filtered_data_FP17$month)
     latest_data <- filtered_data_FP17 %>%
-    filter(month == latest_month)
+      filter(month == latest_final_month)
 
     FP17_plot <- ggplot(filtered_data_FP17, 
                         aes(x=month, y= dcp_percent)) +
-      geom_line(aes(colour = DCP_description),
-                size = 1) +
+      geom_line(data = subset(filtered_data_FP17, month <= latest_final_month), linetype = 1,
+                aes(colour = DCP_description), size = 1) +
+      geom_line(data = subset(filtered_data_FP17, month >= latest_final_month), linetype = 2,
+                aes(colour = DCP_description), size = 1) +
       geom_point(aes(colour = DCP_description)) +
       geom_text_repel(data = latest_data, aes(label = dcp_percent), 
                     colour = "black", size = 3.5, vjust = -0.25) + 
@@ -2109,7 +2165,6 @@ plot_DCP_analysis <- function(data = UDA_calendar_data,
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001))
     
     FP17_plot
-
     
   }
 }
@@ -2551,19 +2606,18 @@ plot_DCP_analysis_band <- function(data = UDA_calendar_data,
              DCP_description = replace(DCP_description, DCP_description == "Nurse", "Dental Nurse"),
              DCP_description = paste(DCP_description, role, sep = " ")) %>% 
       filter(DCP_description %in% c("Dental Nurse assisted", "Hygienist assisted", "Therapist assisted", "Therapist led"))
-
-    
-    max_month <- max(filtered_data_UDA$month)
     
     data_labels <- filtered_data_UDA %>% 
-      filter(month == max_month)
+      filter(month == latest_final_month)
 
     UDA_plot <- ggplot(filtered_data_UDA,
                    aes(x=month, y= dcp_percent)) +
       facet_grid(cols = vars(DCP_description),
                  scales = "free_x") +
-      geom_line(aes(colour = Bands),
-                size = 1) +
+      geom_line(data = subset(filtered_data_UDA, month <= latest_final_month), linetype = 1,
+                aes(colour = Bands), size = 1) +
+      geom_line(data = subset(filtered_data_UDA, month >= latest_final_month), linetype = 2,
+                aes(colour = Bands), size = 1) +
       geom_point(aes(colour = Bands)) +
       geom_text_repel(data = data_labels,
                       aes(label = dcp_percent),
@@ -2586,7 +2640,6 @@ The most recent two months data will be incomplete and subject to change, partic
 
     UDA_plot
 
-
   }else{
 #UDA is only for those with 'total_FP17'
     filtered_data_FP17 <- total %>%
@@ -2596,11 +2649,12 @@ The most recent two months data will be incomplete and subject to change, partic
       rename ( Percent_of_FP17 = Bands, DCP_description = DCP_description.x) %>%
       mutate(DCP_description = str_replace_all(DCP_description, "_", " ")) 
 
-
     FP17_plot <- ggplot(filtered_data_FP17,
                         aes(x=month, y= assisted_percent)) +
-      geom_line(aes(colour = DCP_description),
-                size = 1) +
+      geom_line(data = subset(filtered_data_FP17, month <= latest_final_month), linetype = 1,
+                aes(colour = DCP_description), size = 1) +
+      geom_line(data = subset(filtered_data_FP17, month >= latest_final_month), linetype = 2,
+                aes(colour = DCP_description), size = 1) +
       geom_point(aes(colour = DCP_description)) +
       geom_text(aes(label = assisted_percent),
                 colour = "black", size= 3.5, vjust=-0.25) +
@@ -2619,7 +2673,6 @@ The most recent two months data will be incomplete and subject to change, partic
       theme(axis.text.x = element_text(angle = 90, vjust=-0.0001))
 
     FP17_plot
-
 
   }
 }
@@ -2837,7 +2890,8 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
  
     p_test <- 
       ggplot(data_all, aes(x = `Year_Month` , y = `pro_50`)) +
-      geom_line()+
+      geom_line(data = subset(data_all, Year_Month <= latest_final_month), linetype = 1)+
+      geom_line(data = subset(data_all, Year_Month >= latest_final_month), linetype = 2)+
       geom_point() +
       labs(x = "Month",
            y = "",
