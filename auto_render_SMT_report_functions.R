@@ -34,6 +34,9 @@ create_export_file()
 # produce extract for PCDID
 create_pcdid_extract()
 
+# produce extract for UDA projections
+create_uda_projections_extract()
+
 # Define a function to render the report for a specific region
 render_report = function(region) {
   rmarkdown::render(

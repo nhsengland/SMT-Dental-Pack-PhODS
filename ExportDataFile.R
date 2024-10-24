@@ -845,3 +845,14 @@ create_pcdid_extract <- function(){
             paste0(reports_dir, '/dental_patients_extract_for_PCDID_data_up_to_', format(Sys.Date()-30, '%B%Y'), '.csv'), 
             row.names = FALSE)
 }
+
+create_uda_projections_extract <- function(){
+  output <- data_dental_activity %>% 
+    select(calendar_month, geography_code, geography_name,
+           UDAs_annual_contracted, UDAs_delivered_month) %>% 
+    filter(calendar_month >= "2023-04") # needs updating for new financial year
+  
+  write.csv(output, 
+            paste0(reports_dir, '/SMT_pack_extract_for_UDA_projections_data_up_to_', format(Sys.Date()-30, '%B%Y'), '.csv'), 
+            row.names = FALSE)
+}
