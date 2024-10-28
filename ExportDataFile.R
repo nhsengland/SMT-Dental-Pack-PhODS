@@ -232,7 +232,12 @@ data_CoT <- data_CoT_unstandardised %>%
   full_join(data_CoT_standardised, by = c("calendar_month", "geography_name", "geography_level"))
 
 ###### UOA #####
-#### No UOA delivered, contracted & percentage
+#### No UOA delivered, contracted & percentage & start/complete
+data_start_nat <- UOA_calendar_data %>%
+  group_by(calendar_month=as.character(format(as.Date(month), "%Y-%m"))) %>%
+  summarise(UOA_started = sum(ortho_trt_started, na.rm = TRUE),
+            UOA_completed = sum(ortho_trt_completed, na.rm = TRUE))
+
 data_Nat_UOA=plot_UDA_UOA_delivery_wd(data = UOA_calendar_data,
                                      UDAorUOA = "UOA",
                                      plotChart = FALSE,
@@ -243,8 +248,14 @@ data_Nat_UOA=plot_UDA_UOA_delivery_wd(data = UOA_calendar_data,
 data_Nat_UOA<- data_Nat_UOA %>%
   select(calendar_month, financial_year,`UOAs_annual_contracted`,`UOAs_delivered_month`,`no workdays`,
          UOAs_delivered_month_percent_contracted_standardised)%>%
-  mutate(geography_level='National',geography_name='England') %>% 
+   left_join(data_start_nat,by='calendar_month')%>%
+  mutate(geography_level='National',geography_name='England') %>%
   arrange(desc(calendar_month))
+
+data_start_reg <- UOA_calendar_data %>%
+  group_by(calendar_month=as.character(format(as.Date(month), "%Y-%m")), geography_name=region_name) %>%
+  summarise(UOA_started = sum(ortho_trt_started, na.rm = TRUE),
+            UOA_completed = sum(ortho_trt_completed, na.rm = TRUE))
 
 data_reg_UOA=plot_UDA_UOA_delivery_all_regions(data = UOA_calendar_data,
                                               UDAorUOA = "UOA",
@@ -255,8 +266,16 @@ data_reg_UOA=plot_UDA_UOA_delivery_all_regions(data = UOA_calendar_data,
 data_reg_UOA <- data_reg_UOA %>%
   select(calendar_month, financial_year, geography_name=region_name,`UOAs_annual_contracted`,`UOAs_delivered_month`,`no workdays`,
          UOAs_delivered_month_percent_contracted_standardised)%>%
+  left_join(data_start_reg,by=c('calendar_month','geography_name'))%>%
   mutate(geography_level='Regional') %>% 
   arrange(desc(calendar_month))
+
+
+data_start_ICB <- UOA_calendar_data %>%
+  group_by(calendar_month=as.character(format(as.Date(month), "%Y-%m")), geography_name=commissioner_name) %>%
+  summarise(UOA_started = sum(ortho_trt_started, na.rm = TRUE),
+            UOA_completed = sum(ortho_trt_completed, na.rm = TRUE))
+
 
 data_ICB_UOA <- Table_UDA_UOA_delivery_all_ICBs(data = UOA_calendar_data,
                                                 UDAorUOA = "UOA")
@@ -265,12 +284,13 @@ data_ICB_UOA <- data_ICB_UOA %>%
   select(calendar_month, financial_year, geography_name=commissioner_name,`UOAs_annual_contracted`=annual_contracted_UDA_UOA,
          `UOAs_delivered_month`=monthly_UDA_UOAs_delivered,`no workdays`,
          UOAs_delivered_month_percent_contracted_standardised=perc_standardised_wd)%>%
+  left_join(data_start_ICB,by=c('calendar_month','geography_name'))%>%
   mutate(geography_level='ICB') %>% 
   arrange(desc(calendar_month))
 
 data_UOA_de_co<- rbind(data_Nat_UOA, data_reg_UOA, data_ICB_UOA) %>% 
  select(calendar_month, financial_year,geography_level,geography_name,UOAs_annual_contracted,UOAs_delivered_month,
-        UOAs_delivered_month_percent_contracted_standardised)
+        UOAs_delivered_month_percent_contracted_standardised,UOA_started,UOA_completed)
 
 ####YTD delivery
 data_Nat_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data,
