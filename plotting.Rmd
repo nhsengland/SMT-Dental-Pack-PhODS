@@ -619,7 +619,8 @@ plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
     left_join(working_days,by=c('month')) %>% 
     mutate(perc_UDA_delivered = 100* (UDA_delivery /(contracted_UDAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UDA_delivered = round(perc_UDA_delivered, digits = 0)) %>% 
-    bind_rows(historic_data)
+    bind_rows(historic_data) %>% 
+    filter(!is.na(month))
   
   #divide data in to "Previous Financial Years (Averages)", "Current Financial Year"
   data <- data_try %>%
@@ -760,7 +761,8 @@ plot_historic_UOA_delivery_wd <- function(data = UOA_calendar_data,
     left_join(working_days,by=c('month')) %>% 
     mutate(perc_UOA_delivered =100* (UOA_delivery / (contracted_UOAs*(`no workdays`/`total workdays`)))) %>%
     mutate(perc_UOA_delivered = round(perc_UOA_delivered, digits = 0)) %>%
-    bind_rows(historic_data)
+    bind_rows(historic_data) %>% 
+    filter(!is.na(month))
   
   #divide data in to "Previous Financial Years (Averages)", "Current Financial Year"
   data <- data_try %>%
