@@ -19,7 +19,7 @@ source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
 
 # then clean source data
-region_STP_name='North East And Yorkshire' ## insert the region you need
+region_STP_name='South West' ## insert the region you need
 
 # way to calculate percentage of UDA delivered which is standardized by no of working days 
 # national level
@@ -27,7 +27,7 @@ data1 <- UDA_calendar_data %>%
   group_by(month) %>%
   summarise(UDA_delivery = sum(UDA_delivered, na.rm = TRUE),
             contracted_UDAs = sum(annual_contracted_UDA, na.rm = TRUE)) %>%
-  filter(month >= as.Date("2023-04-01") & month <= as.Date("2024-06-01")) %>% 
+  filter(month >= as.Date("2023-04-01") & month <= as.Date("2024-07-01")) %>% 
   left_join(working_days,by=c('month')) %>% 
   mutate(perc_UDA_delivered = 100* (UDA_delivery /(contracted_UDAs*(`no workdays`/`total workdays`)))) %>%
   mutate(perc_UDA_delivered = round(perc_UDA_delivered, digits = 0))%>%
@@ -38,7 +38,7 @@ data2 <- UDA_calendar_data %>%
   group_by(month,region_name,commissioner_name) %>%
   summarise(UDA_delivery = sum(UDA_delivered, na.rm = TRUE),
             contracted_UDAs = sum(annual_contracted_UDA, na.rm = TRUE)) %>% 
-  filter(month >= as.Date("2023-04-01") & month <= as.Date("2024-06-01")) %>% 
+  filter(month >= as.Date("2023-04-01") & month <= as.Date("2024-07-01")) %>% 
   left_join(working_days,by=c('month')) %>% 
   mutate(perc_UDA_delivered = 100* (UDA_delivery /(contracted_UDAs*(`no workdays`/`total workdays`)))) %>%
   mutate(perc_UDA_delivered = round(perc_UDA_delivered, digits = 0))%>%

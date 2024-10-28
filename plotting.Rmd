@@ -2911,3 +2911,82 @@ plot_BPE_no_oral_health_risk<- function(data = BPE_data,
 
 ```
 
+
+```{r uoa start/complete}
+plot_UOA_start_complete <- function(data = UOA_calendar_data,
+                                          level = "National",
+                                          region_STP_name = NULL){
+  
+  #filter for STP or region in need
+  if(level == "Regional"){
+    data <- data %>%
+      filter(region_name == region_STP_name )
+    
+    subtitle <- region_STP_name
+    
+  }else if(level == "STP"){
+    data <- data %>%
+      filter(commissioner_name == region_STP_name)
+    
+    subtitle <- region_STP_name
+    
+  }else{
+    subtitle <- "England"
+  }
+
+
+  #get current FY data ready
+  data_try <- data %>%
+    group_by(month) %>%
+    summarise(UOA_started = sum(ortho_trt_started, na.rm = TRUE),
+              UOA_completed = sum(ortho_trt_completed, na.rm = TRUE),
+              monthly_UOAs_delivered = sum(UOA_delivered, na.rm = T)) %>%
+    filter(month >= as.Date ("2023-04-01")) 
+  
+# Reshape data into long format for UOA_started and UOA_completed
+data_long <- data_try %>%
+  pivot_longer(cols = c(UOA_started, UOA_completed), names_to = "Category", values_to = "Value")
+
+# Create a separate data frame for the line plot
+data_line <- data_try %>%
+  select(month, monthly_UOAs_delivered) %>%
+  mutate(Category = "UOAs Delivered", Value = monthly_UOAs_delivered / 20)
+
+# Combine the two data frames for plotting
+data_combined <- bind_rows(data_long, data_line)
+
+# Create the plot
+p=ggplot(data_combined, aes(x = month, y = Value, fill = Category)) +
+  geom_bar(data = data_long, stat = "identity", position = position_dodge(width = 14), width = 14) +
+  geom_text(data = data_long, aes(x = month, y = Value, label = Value), 
+            position = position_dodge(width = 0.6), vjust =12.5, size = 2) + # Bar plot
+  geom_line(data = data_line, aes(color = Category), size = 1) +  # Line plot
+  geom_point(data = data_line, aes(color = Category), size = 1.5) +  # Points on the line
+  geom_text(data = data_line, aes(x = month, y = Value, label = Value * 20), 
+            vjust = -0.5, size = 2, color = "darkblue") + 
+  scale_y_continuous(
+    name = "UOA Start/Stop",
+    sec.axis = sec_axis(~ . * 20, name = "UOAs Delivered")
+  ) +
+  scale_x_date(date_labels = "%m/%Y", date_breaks = "1 month") +
+  scale_fill_manual(values = c("UOA_started" = "skyblue", "UOA_completed" = "lightgreen")) +
+  scale_color_manual(values = c("UOAs Delivered" = "darkblue")) +
+  labs(
+    title = "UOA Delivery and UOAs Started/Completed",
+    subtitle =subtitle, 
+    x = "Treatment Month",
+    fill = "Legend",
+    color = ""
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom" 
+  )
+ 
+ p
+  
+  
+}
+```
+
