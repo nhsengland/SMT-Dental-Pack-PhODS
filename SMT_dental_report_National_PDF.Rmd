@@ -144,7 +144,7 @@ The swap to using calendar data allows us to more accurately see what activity i
 
 &nbsp;<!--This is to force a line break-->
 
-Note that following a finished Course of Treatment (CoT), dentists have 62 days to declare their activity via FP17 forms to the BSA Compass system. This means when using calendar data, the most recent two months data are incomplete and subject to change, particularly for the most recent month. We expect final data to be higher.
+Note that following a finished Course of Treatment (CoT), dentists have 62 days to declare their activity via FP17 forms to the BSA Compass system. This means when using calendar data, the most recent two months data are incomplete and subject to change. Therefore, the data that is provisional will be identified via a dashed line where possible and data labels on graphs will be for the most recent final month's data.
 
 # Summary
 
