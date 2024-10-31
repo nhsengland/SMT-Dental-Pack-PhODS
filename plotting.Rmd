@@ -13,14 +13,29 @@ library(data.table)
 library(ggpubr)
 ```
 
+```{r get financial year dates}
+# get financial year from month
+latest_final_month <- max(UDA_calendar_data$month[UDA_calendar_data$final_yn == "Y"])
+
+get_financial_year <- function(month, ...){
+  ifelse(month(month)>3, 
+       paste(year(month), "/", substr(year(month)+1,start=3,stop=4), sep = ""), 
+       paste(year(month)-1, "/", substr(year(month),start=3,stop=4), sep = ""))
+}
+
+# get first month of the financial year
+get_fy_start <- function(financial_year){
+  as.Date(paste(substr(financial_year,1,4), "04-01", sep = "-"), format = "%Y-%m-%d")
+}
+```
+
 ```{r set financial year dates}
-# these will need manually updating once a year when we get data for the new financial year
-current_fy_start <- "2024-04-01"
-current_fy_end <- "2025-03-01"
-current_fy <- "2024/25"
-previous_fy_start <- "2023-04-01"
-previous_fy_end <- "2024-03-01"
-previous_fy <- "2023/24"
+current_fy_start <- get_fy_start(latest_final_month)
+current_fy_end <- current_fy_start %m+% months(11)
+current_fy <- get_financial_year(current_fy_start)
+previous_fy_start <- current_fy_start %m-% months(12)
+previous_fy_end <- current_fy_start %m-% months(1)
+previous_fy <- get_financial_year(previous_fy_start)
 
 current_fy_month2 <- as.character(as.Date(current_fy_start) %m+% months(1))
 current_fy_month3 <- as.character(as.Date(current_fy_start) %m+% months(2))
@@ -33,22 +48,6 @@ current_fy_month9 <- as.character(as.Date(current_fy_start) %m+% months(8))
 current_fy_month10 <- as.character(as.Date(current_fy_start) %m+% months(9))
 current_fy_month11 <- as.character(as.Date(current_fy_start) %m+% months(10))
 current_fy_month12 <- as.character(as.Date(current_fy_start) %m+% months(11))
-```
-
-```{r get financial year dates}
-# get financial year from month
-get_financial_year <- function(month, ...){
-  ifelse(month(month)>3, 
-       paste(year(month), "/", substr(year(month)+1,start=3,stop=4), sep = ""), 
-       paste(year(month)-1, "/", substr(year(month),start=3,stop=4), sep = ""))
-}
-
-# get first month of the financial year
-get_fy_start <- function(financial_year){
-  as.Date(paste(substr(financial_year,1,4), "04-01", sep = "-"), format = "%Y-%m-%d")
-}
-
-latest_final_month <- max(UDA_calendar_data$month[UDA_calendar_data$final_yn == "Y"])
 ```
 
 ```{r get colour palette}
