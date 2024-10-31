@@ -374,7 +374,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           level = "National",
                           region_STP_name = NULL)
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 # 111 Information
 
