@@ -2585,7 +2585,7 @@ plot_BPE_no_oral_health_risk(data = BPE_data,
 ---
 
 name: UOA
-#### UOA - Calendar activity data standardised by working days
+#### Units of Orthodontic Activity - Calendar activity data standardised by working days
 
 ```{r xaringan-panelset-UOA, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -2752,7 +2752,7 @@ plot_historic_UOA_delivery_wd(data = UOA_calendar_data,
 ---
 
 name: YTD-UOA-delivery
-#### UOA - Calendar year to date delivery
+#### Units of Orthodontic Activity - Calendar year to date delivery
 
 ```{r xaringan-panelset-UOA_YTD, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -2920,7 +2920,7 @@ plot_YTD_UDA_UOA_delivery(data = UOA_calendar_data,
 ---
 
 name: YTD-UOA-STARTED
-#### UOA - Started/Completed
+#### Units of Orthodontic Activity - Started/Completed
 
 ```{r xaringan-panelset-UOA_YTD, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -2935,7 +2935,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           region_STP_name = region)
 
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP1`]
@@ -2945,7 +2946,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           region_STP_name = STP1)
 
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP2`]
@@ -2955,8 +2957,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           region_STP_name = STP2)
 
 ```
-
-- This graph shows the progress towards delivering against contracted UOAs in the financial year. Here, expected delivery assumes delivery is equal across all months.
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP3`]
@@ -2965,7 +2967,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           level = "STP",
                           region_STP_name = STP3)
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP4`]
@@ -2975,7 +2978,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           region_STP_name = STP4)
 
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -2985,7 +2989,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           region_STP_name = STP5)
 
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -2995,7 +3000,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           region_STP_name = STP6)
 
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -3005,7 +3011,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           region_STP_name = STP7)
 
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP8`]
@@ -3015,7 +3022,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           region_STP_name = STP8)
 
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -3025,7 +3033,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           region_STP_name = STP9)
 
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -3034,7 +3043,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           level = "STP",
                           region_STP_name = STP10)
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -3043,7 +3053,8 @@ plot_UOA_start_complete(data = UOA_calendar_data,
                           level = "STP",
                           region_STP_name = STP11)
 ```
-
+- This graph shows the number of courses of orthodontic treatment started and completed in a month plus the UOAs delivered.
+- FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
 ]

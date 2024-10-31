@@ -2943,7 +2943,7 @@ plot_UOA_start_complete <- function(data = UOA_calendar_data,
     summarise(UOA_started = sum(ortho_trt_started, na.rm = TRUE),
               UOA_completed = sum(ortho_trt_completed, na.rm = TRUE),
               monthly_UOAs_delivered = sum(UOA_delivered, na.rm = T)) %>%
-    filter(month >= as.Date ("2023-04-01")) 
+    filter(month >= previous_fy_start) 
   
 # Reshape data into long format for UOA_started and UOA_completed
 data_long <- data_try %>%
@@ -2962,7 +2962,8 @@ p=ggplot(data_combined, aes(x = month, y = Value, fill = Category)) +
   geom_bar(data = data_long, stat = "identity", position = position_dodge(width = 14), width = 14) +
   geom_text(data = data_long, aes(x = month, y = Value, label = Value), 
             position = position_dodge(width = 0.6), vjust =12.5, size = 2) + # Bar plot
-  geom_line(data = data_line, aes(color = Category), size = 1) +  # Line plot
+  geom_line(data = subset(data_line, month <= current_fy_start), linetype = 1, aes(color = Category), size = 1) +  # Line plot
+  geom_line(data = subset(data_line, month >= current_fy_start), linetype = 2, aes(color = Category), size = 1) +  # Line plot
   geom_point(data = data_line, aes(color = Category), size = 1.5) +  # Points on the line
   geom_text(data = data_line, aes(x = month, y = Value, label = Value * 20), 
             vjust = -0.5, size = 2, color = "darkblue") + 
