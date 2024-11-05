@@ -110,13 +110,18 @@ p1
 
 
 #bar plot
-p2 <- ggplot(data = data, aes_string(x = "commissioner_name", y = "perc_UDA_delivered", fill = "commissioner_name")) + 
+# Calculate the average `perc_UDA_delivered` for each `commissioner_name`
+data_avg <- data %>%
+  group_by(commissioner_name) %>%
+  summarise(perc_UDA_delivered_avg = mean(perc_UDA_delivered, na.rm = TRUE))
+
+p2 <- ggplot(data = data_avg, aes_string(x = "commissioner_name", y = "perc_UDA_delivered_avg", fill = "commissioner_name")) + 
   geom_bar(stat = "identity") +  # Use geom_bar with stat="identity"
   # Removed y-axis title and x-axis title
   ylab(NULL) +
   xlab(NULL) +
   scale_y_continuous(limits = c(0, 
-                                max(data$perc_UDA_delivered, na.rm = TRUE) + 10)) +  # Adjust limits here
+                                max(data_avg$perc_UDA_delivered_avg, na.rm = TRUE) +10)) +  # Adjust limits here
   scale_fill_manual(values = STPNationalColour) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
