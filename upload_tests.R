@@ -15,7 +15,6 @@ uda_fd <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].
 unique <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Unique_rolling_backup]")
 uoa <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UOA_Activity_backup]")
 
-dbDisconnect(con)
 
 #### TESTS ####
 test_that("No duplicated rows - NPP",{
