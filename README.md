@@ -65,7 +65,7 @@ The following files create the outputs:
 2.  ExportDataFile.R - creates the Excel data file
 3.  ExportDataFile_metadata.R - creates the metadata table for the Excel data file
 4.  SMT_dental_report_region_ICB_level.rmd - creates the ICB HTML report
-5.  DRAFT_SMT_dental_report_national_regional_level.rmd - creates the regional HTML report, note this file is a work in progress
+5.  DRAFT_SMT_dental_report_national_regional_level.rmd - creates the regional HTML report, note this file is not currently in use
 
 ### Running the reports
 
