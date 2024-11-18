@@ -10,42 +10,13 @@ library(DBI)
 
 ```{r pull NCDR data}
 sql <- "SELECT 
-          DATEPART(month,t1.YEAR_MONTH) as datemonth 
-          ,t1.YEAR_MONTH
-          ,t1.COMMISSIONER_CODE
-          ,t1.AdultNPP
-          ,t1.ChildNPP
-          ,t1.Band1NPP
-          ,t1.Band23NPP
-          ,t1.TotalNPP
-          ,t1.TotalNPPCost
-          ,t1.NPPUDAs
-          ,t1.Neligiblecontracts
-          ,t2.Neligiblecontractsseeingatleast1
-        FROM(SELECT 
-              [YEAR_MONTH]
-              ,[COMMISSIONER_CODE]
-              ,COUNT([CONTRACT_NUMBER]) AS Neligiblecontracts
-              ,SUM([NEW_PATIENT_TARIFF_AMOUNT]) AS NPPUDAs
-              ,SUM([BAND1_ADULT_COUNT]) + SUM([BAND1_CHILD_COUNT]) AS Band1NPP
-              ,SUM([BAND23_ADULT_COUNT]) + SUM([BAND23_CHILD_COUNT]) AS Band23NPP
-              ,SUM([BAND1_ADULT_COUNT]) + SUM([BAND23_ADULT_COUNT]) AS AdultNPP
-              ,SUM([BAND1_CHILD_COUNT]) + SUM([BAND23_CHILD_COUNT]) AS ChildNPP
-              ,SUM([BAND1_ADULT_COUNT]) + SUM([BAND1_CHILD_COUNT]) + SUM([BAND23_ADULT_COUNT]) + SUM([BAND23_CHILD_COUNT]) AS TotalNPP
-              ,15*SUM([BAND1_ADULT_COUNT]) + 15*SUM([BAND1_CHILD_COUNT]) + 50*SUM([BAND23_ADULT_COUNT]) + 50*SUM([BAND23_CHILD_COUNT]) AS TotalNPPCost
-            FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity]
-          WHERE EXCLUDE_FROM_NPT = 'N' AND YEAR_MONTH > '2024-02-01'
-            AND FINAL_YN = 'Y'
-          GROUP BY COMMISSIONER_CODE, YEAR_MONTH ) AS t1
-        INNER JOIN(SELECT 
-                    [YEAR_MONTH]
-                    ,COMMISSIONER_CODE
-                    ,COUNT([CONTRACT_NUMBER]) AS Neligiblecontractsseeingatleast1
-                  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity]
-                  WHERE EXCLUDE_FROM_NPT = 'N' AND [NEW_PATIENT_TARIFF_AMOUNT] > 0
-                  GROUP BY COMMISSIONER_CODE, YEAR_MONTH) AS t2 
-          ON t1.COMMISSIONER_CODE = t2.COMMISSIONER_CODE
-        WHERE t1.YEAR_MONTH = t2.YEAR_MONTH"
+  [YEAR_MONTH]
+  ,[COMMISSIONER_CODE]
+  ,SUM([NEW_PATIENT_TARIFF_AMOUNT]) AS NPPUDAs
+  ,SUM([BAND1_ADULT_COUNT]) + SUM([BAND1_CHILD_COUNT]) + SUM([BAND23_ADULT_COUNT]) + SUM([BAND23_CHILD_COUNT]) AS TotalNPP
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity]
+  WHERE EXCLUDE_FROM_NPT = 'N' AND YEAR_MONTH > '2024-02-01'AND FINAL_YN = 'Y'
+  GROUP BY COMMISSIONER_CODE, YEAR_MONTH"
 
 con <- dbConnect(odbc::odbc(), "NCDR")
 
@@ -57,88 +28,57 @@ dbDisconnect(con)
 ```{r load fixed data}
 # read in monthly average delivery pre-NPP
 # saved to N drive for time being, as it is fixed could upload to NCDR
-monthly_avg_pre <- read.csv("N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/BSA Calendar data/monthly_avg_delivery_pre_by_icb.csv") %>%
-  rename(COMMISSIONER_CODE = icb_code)
+monthly_delivered_pre <- read.csv("N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/BSA Calendar data/NPP/national_pre_intro.csv") %>% 
+  mutate(total = BAND1_ADULT_COUNT + BAND1_CHILD_COUNT + BAND23_ADULT_COUNT + BAND23_CHILD_COUNT,
+         financial_year = ifelse(TREATMENT_MONTH <= "202402",
+                                 "2023/24", "2024/25"), 
+         group = ifelse(TREATMENT_MONTH <= "202402",
+                        "Pre NPP launch (2023/24)", "Post NPP launch - unpaid (2024/25)"),
+         YEAR_MONTH = as.Date(paste(substr(TREATMENT_MONTH, 1, 4), 
+                                    substr(TREATMENT_MONTH, 5, 6), 
+                                    "01", sep = "-"))) %>% 
+  select(YEAR_MONTH, total, financial_year, group)
 ```
 
 ```{r calculate figures}
-# calculate national YTD delivery
-# filter out July data for now to allow comparison to Excel version
-nat_ytd_delivery <- data %>% 
-  filter(YEAR_MONTH != "2024-07-01") %>% 
-  summarise(ytd_delivery = sum(TotalNPP, na.rm = TRUE))
-
-# calculate ICB YTD delivery
-# filter out July data for now to allow comparison to Excel version
-icb_ytd_delivery <- data %>% 
-  filter(YEAR_MONTH != "2024-07-01") %>% 
-  group_by(COMMISSIONER_CODE) %>% 
-  summarise(ytd_delivery = sum(TotalNPP, na.rm = TRUE))
-
-# calculate number of months with final data
-# filter out July data for now to allow comparison to Excel version
-n_months <- n_distinct(data$YEAR_MONTH[data$YEAR_MONTH != "2024-07-01"])
-
-# produce ICB output table
-icb_table <- icb_ytd_delivery %>% 
-  left_join(monthly_avg_pre, by = "COMMISSIONER_CODE") %>% 
-  mutate(difference_from_expected = ytd_delivery - (monthly_average_pre*n_months))
-
-# produce national output table
-nat_table <- icb_table %>% 
-  select(-difference_from_expected) %>% 
-  summarise(ytd_delivery = sum(ytd_delivery), 
-            monthly_average_pre = sum(monthly_average_pre)) %>% 
-  mutate(difference_from_expected = ytd_delivery - (monthly_average_pre*n_months), 
-         COMMISSIONER_CODE = "England") %>% 
-  select(COMMISSIONER_CODE, everything())
-
-output_table <- rbind(icb_table, nat_table)
-
-# create national expected delivery
-expected <- data.frame(YEAR_MONTH = seq(from = as.Date("2024-03-01"), 
-                                   to = as.Date("2025-02-01"), 
-                                   by = "1 month"),
-                       expected_delivery = seq(from = 125000,
-                                               to = 1500000,
-                                               by = 125000), 
-                       n_months_passed = seq(from = 1, 
-                                             to = 12, 
-                                             by = 1))
-
-# calculate national ytd delivery by month
-nat_ytd_delivery <- data %>% 
-  filter(YEAR_MONTH != "2024-07-01") %>% 
+# calculate monthly paid delivered so far
+monthly_delivered_paid <- data %>% 
   group_by(YEAR_MONTH) %>% 
-  summarise(delivered = sum(TotalNPP, na.rm = TRUE)) %>% 
-  mutate(ytd_delivery = cumsum(delivered))
+  summarise(total = sum(TotalNPP, na.rm = TRUE)) %>% 
+  mutate(financial_year = "2024/25", 
+         group = "Post NPP launch - paid (2024/25)")
 
-# produce national expected vs actual
-nat_monthly_avg_pre <- nat_table$monthly_average_pre
-
-national_overall <- expected %>% 
-  left_join(nat_ytd_delivery, by = "YEAR_MONTH") %>% 
-  mutate(actual_delivery = ytd_delivery - (nat_monthly_avg_pre*n_months_passed)) %>% 
-  select(YEAR_MONTH, expected_delivery, actual_delivery)
-
-# pivot for plotting
-national_pivotted <- national_overall %>% 
-  pivot_longer(cols = !YEAR_MONTH, 
-               names_to = "measure", 
-               values_to = "value") %>% 
-  mutate(measure = ifelse(measure == "actual_delivery", "Actual delivery NPP paid", "Expected delivery all policies"))
+# combine pre and post intro
+monthly_delivered <- rbind(monthly_delivered_pre, monthly_delivered_paid) %>% 
+  mutate(month_name = month.name[month(YEAR_MONTH)], 
+         month_name = factor(month_name, 
+                             levels = c("March", "April", "May", "June", "July", "August", 
+                                        "September", "October", "November", "December", "January", "February")),
+         group = factor(group, 
+                        levels = c("Pre NPP launch (2023/24)", "Post NPP launch - unpaid (2024/25)", "Post NPP launch - paid (2024/25)")))
 ```
 
 ```{r plot chart}
 plot_npp_activity_monitoring <- function(){
-  plt <- ggplot(national_pivotted, aes(x = YEAR_MONTH, y = value, colour = measure)) + 
-    geom_line() + 
-    ggtitle("NPP contribution to 1.5m additional courses of treatment ambition") + 
-    xlab("Month") +
-    ylab("Net additional courses oftment above agreed baseline") + 
-    scale_y_continuous(labels = function(x) format(x, big.mark = ",", scientific = FALSE)) + 
-    theme_bw() + 
-    theme(legend.position = "bottom", 
+  plt <- ggplot(monthly_delivered, 
+                aes(x = financial_year,
+                    y = total, 
+                    fill = group)) + 
+    geom_bar(stat = "identity", position = "stack") + 
+    facet_wrap(~month_name, ncol=12, strip.position = "bottom") + 
+    xlab("Month") + 
+    ylab("Completed courses of treatment") + 
+    scale_y_continuous(labels = scales::comma) + 
+    scale_fill_manual(values = c("#003087", "#E5C9D9", "#AE2573"),
+                      labels = c("Pre NPP launch (2023/24)",
+                                 "Post NPP launch - unpaid (2024/25)",
+                                 "Post NPP launch - paid (2024/25)")) + 
+    theme(panel.border = element_blank(),
+          panel.background = element_blank(), 
+          strip.background = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          legend.position = "bottom",
           legend.title = element_blank())
   
   plt

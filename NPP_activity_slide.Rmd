@@ -1,5 +1,4 @@
 ---
-title: "NPP Activity"
 output:
   beamer_presentation:
     latex_engine: pdflatex
@@ -36,13 +35,7 @@ source(knitr::purl("NPP_activity_functions.Rmd", output = tempfile()))
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## NPP activity to date against 1.5M additional courses of treatment ambition
-
-This graph gives the current national position against the 1.5M additional courses of treatment. Currently the data below only relates to the impact of the new patient premium. Further analysis to be completed to calculate impact of £28 and (in due course) golden hellos, which will be included in future reporting.
-
-We have included lines both including and excluding courses of treatment to patients who have not been seen for two years whose treatment started before and after 1st March 2024. The numbers reported show NPP activity from March 2024 onwards compared to an April 2023-February 2024 baseline.
-
-## NPP activity to date against 1.5M additional courses of treatment ambition
+## NPP activity to date against previous year's delivery
 
 ```{r plot chart, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
 plot_npp_activity_monitoring()
