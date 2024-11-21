@@ -1,4 +1,5 @@
 ---
+title: "NPP delivery - National & Regional"
 output:
   beamer_presentation:
     latex_engine: pdflatex
@@ -38,5 +39,54 @@ knitr::opts_chunk$set(echo = FALSE)
 ## NPP activity to date against previous year's delivery
 
 ```{r plot chart, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
-plot_npp_activity_monitoring()
+plot_npp_activity_monitoring(level = "National")
+```
+
+## NPP activity to date against previous year's delivery - East Of England
+
+```{r plot chart reg1, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
+plot_npp_activity_monitoring(level = "Regional", 
+                             region_STP_name = "East Of England")
+```
+
+## NPP activity to date against previous year's delivery - London
+
+```{r plot chart reg2, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
+plot_npp_activity_monitoring(level = "Regional", 
+                             region_STP_name = "London")
+```
+
+## NPP activity to date against previous year's delivery - Midlands
+
+```{r plot chart reg3, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
+plot_npp_activity_monitoring(level = "Regional", 
+                             region_STP_name = "Midlands")
+```
+
+## NPP activity to date against previous year's delivery - North East And Yorkshire
+
+```{r plot chart reg4, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
+plot_npp_activity_monitoring(level = "Regional", 
+                             region_STP_name = "North East And Yorkshire")
+```
+
+## NPP activity to date against previous year's delivery - North West
+
+```{r plot chart reg5, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
+plot_npp_activity_monitoring(level = "Regional", 
+                             region_STP_name = "North West")
+```
+
+## NPP activity to date against previous year's delivery - South East
+
+```{r plot chart reg6, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
+plot_npp_activity_monitoring(level = "Regional", 
+                             region_STP_name = "South East")
+```
+
+## NPP activity to date against previous year's delivery - South West
+
+```{r plot chart reg7, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
+plot_npp_activity_monitoring(level = "Regional", 
+                             region_STP_name = "South West")
 ```

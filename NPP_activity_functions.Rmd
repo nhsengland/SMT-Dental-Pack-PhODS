@@ -10,25 +10,38 @@ library(DBI)
 
 ```{r pull NCDR data}
 sql <- "SELECT 
-  [YEAR_MONTH]
-  ,[COMMISSIONER_CODE]
-  ,SUM([NEW_PATIENT_TARIFF_AMOUNT]) AS NPPUDAs
-  ,SUM([BAND1_ADULT_COUNT]) + SUM([BAND1_CHILD_COUNT]) + SUM([BAND23_ADULT_COUNT]) + SUM([BAND23_CHILD_COUNT]) AS TotalNPP
-  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity]
-  WHERE EXCLUDE_FROM_NPT = 'N' AND YEAR_MONTH > '2024-02-01'
-  GROUP BY COMMISSIONER_CODE, YEAR_MONTH"
+  a.[YEAR_MONTH]
+  ,a.[COMMISSIONER_CODE]
+  ,b.[STP_Name] AS COMMISSIONER_NAME
+  ,b.Region_Name
+  ,SUM(a.[NEW_PATIENT_TARIFF_AMOUNT]) AS NPPUDAs
+  ,SUM(a.[BAND1_ADULT_COUNT]) + SUM(a.[BAND1_CHILD_COUNT]) + SUM(a.[BAND23_ADULT_COUNT]) + SUM(a.[BAND23_CHILD_COUNT]) AS TotalNPP
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_NPP_Eligible_Activity] a
+LEFT JOIN (SELECT DISTINCT
+  [Region_Name]
+  ,[STP_Name]
+  ,[STP_Code]
+  FROM [NHSE_Reference].[dbo].[tbl_Ref_ODS_Commissioner_Hierarchies]
+  WHERE STP_Code NOT IN ('DUM001', 'DUM002', 'UNK','X24')) b ON a.[COMMISSIONER_CODE] = b.[STP_Code]
+  WHERE [EXCLUDE_FROM_NPT] = 'N' AND [YEAR_MONTH] > '2024-02-01'
+  GROUP BY a.[COMMISSIONER_CODE], b.Region_Name,b.[STP_Name] , a.[YEAR_MONTH]"
 
 con <- dbConnect(odbc::odbc(), "NCDR")
 
-data <- dbGetQuery(con, sql)
+monthly_delivered_post <- dbGetQuery(con, sql)
 
 dbDisconnect(con)
+
+monthly_delivered_post$Region_Name <- str_to_title(monthly_delivered_post$Region_Name)
+monthly_delivered_post$COMMISSIONER_NAME <- str_to_title(monthly_delivered_post$COMMISSIONER_NAME)
+monthly_delivered_post$COMMISSIONER_NAME <- substr(monthly_delivered_post$COMMISSIONER_NAME, 5, nchar(monthly_delivered_post$COMMISSIONER_NAME))
+monthly_delivered_post$COMMISSIONER_NAME <- str_replace_all(monthly_delivered_post$COMMISSIONER_NAME, "Integrated Care Board", "ICB")
 ```
 
 ```{r load fixed data}
 # read in monthly average delivery pre-NPP
 # saved to N drive for time being, as it is fixed could upload to NCDR
-monthly_delivered_pre <- read.csv("N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/BSA Calendar data/NPP/national_pre_intro.csv") %>% 
+monthly_delivered_pre <- read.csv("N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/BSA Calendar data/NPP/npp_pre_intro.csv") %>% 
   mutate(total = BAND1_ADULT_COUNT + BAND1_CHILD_COUNT + BAND23_ADULT_COUNT + BAND23_CHILD_COUNT,
          financial_year = ifelse(TREATMENT_MONTH <= "202402",
                                  "2023/24", "2024/25"), 
@@ -36,30 +49,91 @@ monthly_delivered_pre <- read.csv("N:/_Everyone/Primary Care Group/SMT_Dental Ca
                         "Pre NPP launch (2023/24)", "Post NPP launch - unpaid (2024/25)"),
          YEAR_MONTH = as.Date(paste(substr(TREATMENT_MONTH, 1, 4), 
                                     substr(TREATMENT_MONTH, 5, 6), 
-                                    "01", sep = "-"))) %>% 
-  select(YEAR_MONTH, total, financial_year, group)
+                                    "01", sep = "-")))
+
+monthly_delivered_pre$REGION <- str_to_title(monthly_delivered_pre$REGION)
+monthly_delivered_pre$COMMISSIONER_NAME <- str_to_title(monthly_delivered_pre$COMMISSIONER_NAME)
+monthly_delivered_pre$COMMISSIONER_NAME <- substr(monthly_delivered_pre$COMMISSIONER_NAME, 5, nchar(monthly_delivered_pre$COMMISSIONER_NAME))
+monthly_delivered_pre$COMMISSIONER_NAME <- str_replace_all(monthly_delivered_pre$COMMISSIONER_NAME, "Integrated Care Board", "ICB")
 ```
 
 ```{r calculate figures}
 # calculate monthly paid delivered so far
-monthly_delivered_paid <- data %>% 
-  group_by(YEAR_MONTH) %>% 
-  summarise(total = sum(TotalNPP, na.rm = TRUE)) %>% 
-  mutate(financial_year = "2024/25", 
-         group = "Post NPP launch - paid (2024/25)")
-
-# combine pre and post intro
-monthly_delivered <- rbind(monthly_delivered_pre, monthly_delivered_paid) %>% 
-  mutate(month_name = month.name[month(YEAR_MONTH)], 
-         month_name = factor(month_name, 
-                             levels = c("March", "April", "May", "June", "July", "August", 
-                                        "September", "October", "November", "December", "January", "February")),
-         group = factor(group, 
-                        levels = c("Pre NPP launch (2023/24)", "Post NPP launch - unpaid (2024/25)", "Post NPP launch - paid (2024/25)")))
+get_npp_data <- function(level = level, 
+                         region_STP_name = region_STP_name){
+  if(level == "National"){
+  
+    data_pre <- monthly_delivered_pre %>% 
+      filter(REGION == "National") %>% 
+      select(YEAR_MONTH, total, financial_year, group)
+  
+    data_post <- monthly_delivered_post %>% 
+      group_by(YEAR_MONTH) %>% 
+      summarise(total = sum(TotalNPP, na.rm = TRUE)) %>% 
+      mutate(financial_year = "2024/25", 
+             group = "Post NPP launch - paid (2024/25)")
+  
+    } else if(level == "Regional"){
+  
+      data_pre <- monthly_delivered_pre %>% 
+        filter(REGION == region_STP_name) %>% 
+        group_by(REGION, TREATMENT_MONTH) %>% 
+        summarise(total = sum(total)) %>% 
+        mutate(financial_year = ifelse(TREATMENT_MONTH <= "202402",
+                                       "2023/24", "2024/25"), 
+               group = ifelse(TREATMENT_MONTH <= "202402",
+                              "Pre NPP launch (2023/24)", "Post NPP launch - unpaid (2024/25)"),
+               YEAR_MONTH = as.Date(paste(substr(TREATMENT_MONTH, 1, 4), 
+                                          substr(TREATMENT_MONTH, 5, 6), 
+                                          "01", sep = "-")))
+  
+      data_post <- monthly_delivered_post %>% 
+        filter(Region_Name == region_STP_name) %>% 
+        group_by(Region_Name, YEAR_MONTH) %>% 
+        summarise(total = sum(TotalNPP, na.rm = TRUE)) %>% 
+        mutate(financial_year = "2024/25", 
+               group = "Post NPP launch - paid (2024/25)") %>% 
+        rename(REGION = Region_Name)
+  
+      } else if(level == "ICB"){
+  
+        data_pre <- monthly_delivered_pre %>% 
+          filter(REGION == region_STP_name) %>% 
+          group_by(COMMISSIONER_NAME, TREATMENT_MONTH) %>% 
+          summarise(total = sum(total)) %>% 
+          mutate(financial_year = ifelse(TREATMENT_MONTH <= "202402",
+                                         "2023/24", "2024/25"), 
+                 group = ifelse(TREATMENT_MONTH <= "202402",
+                                "Pre NPP launch (2023/24)", "Post NPP launch - unpaid (2024/25)"),
+                 YEAR_MONTH = as.Date(paste(substr(TREATMENT_MONTH, 1, 4), 
+                                      substr(TREATMENT_MONTH, 5, 6), 
+                                      "01", sep = "-")))
+  
+        data_post <- monthly_delivered_post %>% 
+          filter(COMMISSIONER_NAME = region_STP_name) %>% 
+          group_by(COMMISSIONER_NAME, YEAR_MONTH) %>% 
+          summarise(total = sum(TotalNPP, na.rm = TRUE)) %>% 
+          mutate(financial_year = "2024/25", 
+                 group = "Post NPP launch - paid (2024/25)")
+      }
+  
+  data_combined <- rbind(data_pre, data_post) %>% 
+          mutate(month_name = month.name[month(YEAR_MONTH)], 
+                 month_name = factor(month_name, 
+                                     levels = c("March", "April", "May", "June", "July", "August", 
+                                                "September", "October", "November", "December", "January", "February")),
+                 group = factor(group, 
+                                levels = c("Pre NPP launch (2023/24)", "Post NPP launch - unpaid (2024/25)", "Post NPP launch - paid (2024/25)")))
+  }
 ```
 
 ```{r plot chart}
-plot_npp_activity_monitoring <- function(){
+plot_npp_activity_monitoring <- function(level = "National", 
+                                         region_STP_name = NULL){
+  
+  monthly_delivered <- get_npp_data(level = level, 
+                                    region_STP_name = region_STP_name)
+  
   plt <- ggplot(monthly_delivered, 
                 aes(x = financial_year,
                     y = total, 
