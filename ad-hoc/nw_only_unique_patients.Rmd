@@ -1,0 +1,1381 @@
+---
+title: "Dental Data Pack"
+subtitle: "`r params$region`"
+date: "`r paste(format(Sys.time(), '%B, %Y'), ' - Reporting up to end of', format(Sys.Date() - lubridate::weeks(4), '%B, %Y'))`"
+output:
+  xaringan::moon_reader:
+    css: [theme.css, nhsr-fonts.css]
+    self_contained: true
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+params:
+  region: "North West"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(readxl)
+library(DBI)
+library(odbc)
+library(reactable)
+library(downloadthis)
+library(lubridate)
+library(knitr)
+library(ggrepel)
+library(xaringanExtra)
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
+options(knitr.duplicate.label = 'allow')
+
+#avoid standard form
+options(scipen=999)
+
+# Suppress summarise info
+options(dplyr.summarise.inform = FALSE)
+
+source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
+source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
+source(knitr::purl("plotting.Rmd", output = tempfile()))
+source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
+```
+
+```{r set ICB name, include=FALSE}
+
+#get STPs for each region
+if(params$region == "South West"){
+  
+  region <- "South West"
+  
+  STP1 <- "Bristol, North Somerset And South Gloucestershire ICB"
+  STP2 <- "Dorset ICB"
+  STP3 <- "Bath And North East Somerset, Swindon And Wiltshire ICB"
+  STP4 <- "Somerset ICB"
+  STP5 <- "Devon ICB"
+  STP6 <- "Cornwall And The Isles Of Scilly ICB"
+  STP7 <- "Gloucestershire ICB"
+  STP8 <- NULL
+  STP9 <- NULL
+  STP10 <- NULL
+  STP11 <- NULL
+  
+  STPs <- c(STP1, STP2, STP3, STP4, STP5, STP6, STP7)
+  
+  eval4 <- TRUE
+  eval5 <- TRUE
+  eval6 <- TRUE
+  eval7 <- TRUE
+  eval8 <- FALSE
+  eval9 <- FALSE
+  eval10 <- FALSE
+  eval11 <- FALSE
+  
+}else if(params$region == "South East"){
+  
+  region <- "South East"
+  
+  STP1 <- "Sussex ICB"
+  STP2 <- "Buckinghamshire, Oxfordshire And Berkshire West ICB"
+  STP3 <- "Surrey Heartlands ICB"
+  STP4 <- "Kent And Medway ICB"
+  STP5 <- "Hampshire And Isle Of Wight ICB"
+  STP6 <- "Frimley ICB"
+  STP7 <- NULL
+  STP8 <- NULL
+  STP9 <- NULL
+  STP10 <- NULL
+  STP11 <- NULL
+  
+  STPs <- c(STP1, STP2, STP3, STP4, STP5, STP6)
+  
+  eval4 <- TRUE
+  eval5 <- TRUE
+  eval6 <- TRUE
+  eval7 <- FALSE
+  eval8 <- FALSE
+  eval9 <- FALSE
+  eval10 <- FALSE
+  eval11 <- FALSE
+  
+}else if(params$region == "North West"){
+  
+  region <- "North West"
+  
+  STP1 <- "Greater Manchester ICB"
+  STP2 <- "Cheshire And Merseyside ICB"
+  STP3 <- "Lancashire And South Cumbria ICB"
+  STP4 <- NULL
+  STP5 <- NULL
+  STP6 <- NULL
+  STP7 <- NULL
+  STP8 <- NULL
+  STP9 <- NULL
+  STP10 <- NULL
+  STP11 <- NULL
+  
+  STPs <- c(STP1, STP2, STP3)
+  
+  eval4 <- FALSE
+  eval5 <- FALSE
+  eval6 <- FALSE
+  eval7 <- FALSE
+  eval8 <- FALSE
+  eval9 <- FALSE
+  eval10 <- FALSE
+  eval11 <- FALSE
+  
+}else if(params$region == "North East And Yorkshire"){
+  
+  region <- "North East And Yorkshire"
+  
+  STP1 <- "Humber And North Yorkshire ICB"
+  STP2 <- "South Yorkshire ICB"
+  STP3 <- "North East And North Cumbria ICB"
+  STP4 <- "West Yorkshire ICB"
+  STP5 <- NULL
+  STP6 <- NULL
+  STP7 <- NULL
+  STP8 <- NULL
+  STP9 <- NULL
+  STP10 <- NULL
+  STP11 <- NULL
+  
+  STPs <- c(STP1, STP2, STP3, STP4)
+  
+  eval4 <- TRUE
+  eval5 <- FALSE
+  eval6 <- FALSE
+  eval7 <- FALSE
+  eval8 <- FALSE
+  eval9 <- FALSE
+  eval10 <- FALSE
+  eval11 <- FALSE
+  
+}else if(params$region == "London"){
+  
+  region <- "London"
+  
+  STP1 <- "North Central London ICB"
+  STP2 <- "South East London ICB"
+  STP3 <- "North East London ICB"
+  STP4 <- "South West London ICB"
+  STP5 <- "North West London ICB"
+  STP6 <- NULL
+  STP7 <- NULL
+  STP8 <- NULL
+  STP9 <- NULL
+  STP10 <- NULL
+  STP11 <- NULL
+  
+  STPs <- c(STP1, STP2, STP3, STP4, STP5)
+  
+  eval4 <- TRUE
+  eval5 <- TRUE
+  eval6 <- FALSE
+  eval7 <- FALSE
+  eval8 <- FALSE
+  eval9 <- FALSE
+  eval10 <- FALSE
+  eval11 <- FALSE
+  
+}else if(params$region == "Midlands"){
+  
+  region <- "Midlands"
+  
+  STP1 <- "Leicester, Leicestershire And Rutland ICB"
+  STP2 <- "Herefordshire And Worcestershire ICB"
+  STP3 <- "Nottingham And Nottinghamshire ICB"
+  STP4 <- "Black Country ICB"
+  STP5 <- "Staffordshire And Stoke-On-Trent ICB"
+  STP6 <- "Northamptonshire ICB"
+  STP7 <- "Shropshire, Telford And Wrekin ICB"
+  STP8 <- "Lincolnshire ICB"
+  STP9 <- "Birmingham And Solihull ICB"
+  STP10 <- "Coventry And Warwickshire ICB"
+  STP11 <- "Derby And Derbyshire ICB"
+  
+  STPs <- c(STP1, STP2, STP3, STP4, STP5, STP6, STP7, STP8, STP9, STP10, STP11)
+  
+  eval4 <- TRUE
+  eval5 <- TRUE
+  eval6 <- TRUE
+  eval7 <- TRUE
+  eval8 <- TRUE
+  eval9 <- TRUE
+  eval10 <- TRUE
+  eval11 <- TRUE
+  
+}else if(params$region == "East Of England"){
+  
+  region <- "East Of England"
+  
+  STP1 <- "Hertfordshire And West Essex ICB"
+  STP2 <- "Mid And South Essex ICB"
+  STP3 <- "Norfolk And Waveney ICB"
+  STP4 <- "Cambridgeshire And Peterborough ICB"
+  STP5 <- "Bedfordshire, Luton And Milton Keynes ICB"
+  STP6 <- "Suffolk And North East Essex ICB"
+  STP7 <- NULL
+  STP8 <- NULL
+  STP9 <- NULL
+  STP10 <- NULL
+  STP11 <- NULL
+  
+  STPs <- c(STP1, STP2, STP3, STP4, STP5, STP6)
+  
+  eval4 <- TRUE
+  eval5 <- TRUE
+  eval6 <- TRUE
+  eval7 <- FALSE
+  eval8 <- FALSE
+  eval9 <- FALSE
+  eval10 <- FALSE
+  eval11 <- FALSE
+  
+}
+
+```
+
+```{css, echo=F}
+    /* Table width = 100% max-width */
+
+    .remark-slide table{
+        width: 100%;
+    }
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(2n) {
+        background-color: white;
+    }
+
+
+```
+
+#### Introduction
+
+This slide pack has been streamlined to help users to easily access the most important information. This change took effect as of June 2024 data. As part of this change we have also sought to make the slides more useful by making the following changes:
+
+-   Swapping from scheduled data (the month the dentist claimed for payment following a finished course of treatment) to calendar month data (the month the course of treatment finished). This change better reflects the activity of dentists.
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
+-   The data is available in an Excel file available alongside this pack.
+
+This pack will continue to evolve and change, any questions/comments should be directed to [england.primarycare.phodsdata@nhs.net](mailto:england.primarycare.phodsdata@nhs.net)
+
+---
+
+name: contents
+#### Contents
+
+- [Unique dental patients seen](#unique-patients)
+- [Unique dental patients seen as a percentage of February 2020 figures](#unique-patients-Feb2020)
+- [Patients seen under the New Patient Premium definition](#NPP)
+- [Patients seen under the New Patient Premium definition by band](#NPP-band)
+- [Eligible contracts that have seen new patients](#NPP-contracts)
+- [NPP activity to date against previous year's delivery](#NPP-comparison)
+
+
+---
+
+name: unique-patients
+### Unique dental patients seen
+
+```{r xaringan-panelset-UDP, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+
+-   Data on unique patients seen is not available at regional level, however ICB level data is available.
+
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP1,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP2,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP3,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP4,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP5,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP6,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP7,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP8,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP9,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP10,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_unique_patients_rolling(level = "STP", 
+                             region_STP_name = STP11,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
+
+]
+]
+
+---
+
+name: unique-patients-Feb2020
+### Unique dental patients seen as a percentage of February 2020 figures
+
+```{r xaringan-panelset-UDP2, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+
+-   Data on unique patients seen is not available at regional level, however ICB level data is available.
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP1, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP2, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP3, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP4, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP5, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP6, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP7, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP8, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                              asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP9, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP10, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_unique_patients_rolling(level = "STP",
+                                  region_STP_name = STP11, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
+
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
+
+]
+]
+
+
+---
+
+name: NPP
+#### Patients seen under the New Patient Premium definition
+
+```{r xaringan-panelset-NPP, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "Regional",
+                              region_STP_name = region,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP1,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP2,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP3,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP4,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP5,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP6,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP7,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP8,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP9,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP10,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP11,
+                  by_band = FALSE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+]
+
+
+---
+
+name: NPP-band
+#### Patients seen under the New Patient Premium definition by band
+
+```{r xaringan-panelset-NPP-band, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "Regional",
+                              region_STP_name = region,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP1,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP2,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP3,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP4,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP5,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP6,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP7,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP8,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP9,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP10,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot_npp_activity(level = "STP",
+                                  region_STP_name = STP11,
+                  by_band = TRUE)
+
+```
+
+-   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+
+]
+]
+
+
+---
+
+name: NPP-contracts
+#### Eligible contracts that have seen new patients
+
+
+<!-- CODE COMMENTED OUT WHILE METHODOLOGY REVIEWED -->
+```{r xaringan-panelset-NPP2, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+# plot <- plot_npp_contracts(level = "Regional",
+#                               region_STP_name = region)
+# 
+# table <- table_npp_contracts(level = "Regional",
+#                               region_STP_name = region)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP1)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP1)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP2)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP2)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP3)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP3)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP4)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP4)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP5)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP5)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP6)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP6)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP7)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP7)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP8)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP8)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP9)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP9)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP10)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP10)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP11)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP11)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
+
+```
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
+
+]
+]
+
+---
+
+name: NPP-comparison
+#### NPP activity to date against previous year's delivery
+
+
+```{r xaringan-panelset-NPP-comparison, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot <- plot_npp_activity_monitoring(level = "Regional", 
+                                     region_STP_name = region)
+
+table <- table_npp_monitoring(level = "Regional", 
+                                     region_STP_name = region)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP1)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP1)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP2)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP2)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP3)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP3)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP4)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP4)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP5)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP5)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP6)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP6)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP7)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP7)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP8)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP8)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP9)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP9)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP10)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP10)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP11)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP11)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+]
+
+---
+
+
