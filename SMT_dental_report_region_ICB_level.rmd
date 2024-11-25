@@ -13,7 +13,7 @@ output:
       highlightLines: true
       countIncrementalSlides: false
 params:
-  region: "South West"
+  region: "North West"
 ---
 
 ```{r setup, include=FALSE}
@@ -38,10 +38,10 @@ options(scipen=999)
 # Suppress summarise info
 options(dplyr.summarise.inform = FALSE)
 
-#source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
-#source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
-#source(knitr::purl("plotting.Rmd", output = tempfile()))
-#source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
+source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
+source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
+source(knitr::purl("plotting.Rmd", output = tempfile()))
+source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
 ```
 
 ```{r set ICB name, include=FALSE}
@@ -283,6 +283,7 @@ name: contents
 - [Patients seen under the New Patient Premium definition](#NPP)
 - [Patients seen under the New Patient Premium definition by band](#NPP-band)
 - [Eligible contracts that have seen new patients](#NPP-contracts)
+- [NPP activity to date against previous year's delivery](#NPP-comparison)
 - [Oral health risk assessment](#BPE-contracts)
 - [Units of Orthodontic Activity (UOA) - Calendar activity data standardised by working days](#UOA)
 - [Units of Orthodontic Activity (UOA) - Calendar year to date delivery](#YTD-UOA-delivery)
@@ -2228,6 +2229,8 @@ plot_npp_activity(level = "STP",
 name: NPP-contracts
 #### Eligible contracts that have seen new patients
 
+
+<!-- CODE COMMENTED OUT WHILE METHODOLOGY REVIEWED -->
 ```{r xaringan-panelset-NPP2, echo=FALSE}
 xaringanExtra::use_panelset()
 ```
@@ -2236,213 +2239,426 @@ xaringanExtra::use_panelset()
 
 .panel[.panel-name[`r region`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot <- plot_npp_contracts(level = "Regional",
-                              region_STP_name = region)
-
-table <- table_npp_contracts(level = "Regional",
-                              region_STP_name = region)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "Regional",
+#                               region_STP_name = region)
+# 
+# table <- table_npp_contracts(level = "Regional",
+#                               region_STP_name = region)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP1)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP1)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP1)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP1)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP2)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP2)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP2)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP2)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP3`]
 ```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP3)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP3)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP3)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP3)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP4)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP4)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP4)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP4)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP5`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP5)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP5)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP5)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP5)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP6`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP6)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP6)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP6)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP6)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP7`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP7)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP7)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP7)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP7)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP8)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP8)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP8)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP8)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP9`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP9)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP9)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP9)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP9)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP10`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP10)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP10)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP10)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP10)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 .panel[.panel-name[`r STP11`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
-plot <- plot_npp_contracts(level = "STP",
-                                  region_STP_name = STP11)
-
-table <- table_npp_contracts(level = "STP",
-                                  region_STP_name = STP11)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_contracts(level = "STP",
+#                                   region_STP_name = STP11)
+# 
+# table <- table_npp_contracts(level = "STP",
+#                                   region_STP_name = STP11)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+This slide is not currently shown as the methodology is being reviewed.
 
 ]
 ]
 
 ---
+
+name: NPP-comparison
+#### NPP activity to date against previous year's delivery
+
+
+```{r xaringan-panelset-NPP-comparison, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot <- plot_npp_activity_monitoring(level = "Regional", 
+                                     region_STP_name = region)
+
+table <- table_npp_monitoring(level = "Regional", 
+                                     region_STP_name = region)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
+-   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP1)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP1)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP2)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP2)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP3`]
+```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP3)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP3)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP4)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP4)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP5)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP5)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP6)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP6)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP7)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP7)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP8)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP8)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP9)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP9)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP10)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP10)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
+plot <- plot_npp_activity_monitoring(level = "STP", 
+                                     region_STP_name = STP11)
+
+table <- table_npp_monitoring(level = "STP", 
+                                     region_STP_name = STP11)
+
+grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+             layout_matrix = rbind(c(1, 1, 2)))
+
+```
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+]
+]
+
+---
+
 name: BPE-contracts
 #### Oral health risk assessment
 
@@ -3057,7 +3273,7 @@ plot_UOA_start_complete(data = UOA_calendar_data,
 - FP17O forms are to be submitted at the start of orthodontic treatment and updated on completion. currently about 70% are updated with a completion date. 
 
 ]
-]
+
 ---
 
 ### Data sources
