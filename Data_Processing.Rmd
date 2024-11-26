@@ -101,3 +101,115 @@ new_data <- new_data %>%
 }
 ```
 
+```{r npp-comparison-data}
+get_npp_data <- function(level = level, 
+                         region_STP_name = region_STP_name, 
+                         all_regions_STPs = FALSE){
+  
+  monthly_delivered_post <- npp_data %>% 
+    filter(month >= "2024-03-01") %>% 
+    group_by(month, commissioner_code, commissioner_name, region_name) %>% 
+    summarise(TotalNPP = sum(band1_adult_count, band1_child_count, band23_adult_count, band23_child_count, na.rm = TRUE)) %>% 
+    rename(YEAR_MONTH = month)
+  
+  if(level == "National"){
+  
+    data_pre <- monthly_delivered_pre %>% 
+      filter(REGION == "National") %>% 
+      select(YEAR_MONTH, total, financial_year, GROUP)
+  
+    data_post <- monthly_delivered_post %>% 
+      group_by(YEAR_MONTH) %>% 
+      summarise(total = sum(TotalNPP, na.rm = TRUE)) %>% 
+      mutate(financial_year = "2024/25", 
+             GROUP = "Post NPP launch - paid (2024/25)")
+  
+    } else if(level == "Regional"){
+      
+      if(all_regions_STPs == TRUE){
+        
+        data_pre <- monthly_delivered_pre %>% 
+          group_by(REGION, TREATMENT_MONTH, GROUP) %>% 
+          summarise(total = sum(total)) %>% 
+          mutate(financial_year = ifelse(TREATMENT_MONTH <= "202402",
+                                          "2023/24", "2024/25"), 
+                  YEAR_MONTH = as.Date(paste(substr(TREATMENT_MONTH, 1, 4), 
+                                              substr(TREATMENT_MONTH, 5, 6), 
+                                              "01", sep = "-")))
+        
+        data_post <- monthly_delivered_post %>% 
+          group_by(region_name, YEAR_MONTH) %>% 
+          summarise(total = sum(TotalNPP, na.rm = TRUE)) %>% 
+          mutate(financial_year = "2024/25", 
+                  GROUP = "Post NPP launch - paid (2024/25)") %>% 
+          rename(REGION = region_name)
+        
+      } else if(all_regions_STPs == FALSE){
+  
+      data_pre <- monthly_delivered_pre %>% 
+        filter(REGION == region_STP_name) %>% 
+        group_by(REGION, TREATMENT_MONTH, GROUP) %>% 
+        summarise(total = sum(total)) %>% 
+        mutate(financial_year = ifelse(TREATMENT_MONTH <= "202402",
+                                       "2023/24", "2024/25"), 
+               YEAR_MONTH = as.Date(paste(substr(TREATMENT_MONTH, 1, 4), 
+                                          substr(TREATMENT_MONTH, 5, 6), 
+                                          "01", sep = "-")))
+      
+      data_post <- monthly_delivered_post %>% 
+        filter(region_name == region_STP_name) %>% 
+        group_by(region_name, YEAR_MONTH) %>% 
+        summarise(total = sum(TotalNPP, na.rm = TRUE)) %>% 
+        mutate(financial_year = "2024/25", 
+               GROUP = "Post NPP launch - paid (2024/25)") %>% 
+        rename(REGION = region_name)
+        }
+      } else if(level == "STP"){
+        
+        if(all_regions_STPs == TRUE){
+          
+          data_pre <- monthly_delivered_pre %>% 
+            group_by(COMMISSIONER_NAME, TREATMENT_MONTH, GROUP) %>% 
+            summarise(total = sum(total)) %>% 
+            mutate(financial_year = ifelse(TREATMENT_MONTH <= "202402",
+                                          "2023/24", "2024/25"), 
+                    YEAR_MONTH = as.Date(paste(substr(TREATMENT_MONTH, 1, 4), 
+                                          substr(TREATMENT_MONTH, 5, 6), 
+                                          "01", sep = "-")))
+          data_post <- monthly_delivered_post %>% 
+            group_by(commissioner_name, YEAR_MONTH) %>% 
+            summarise(total = sum(TotalNPP, na.rm = TRUE)) %>% 
+            mutate(financial_year = "2024/25", 
+                    GROUP = "Post NPP launch - paid (2024/25)")
+        }
+        
+        if(all_regions_STPs == FALSE){
+  
+        data_pre <- monthly_delivered_pre %>% 
+          filter(COMMISSIONER_NAME == region_STP_name) %>% 
+          group_by(COMMISSIONER_NAME, TREATMENT_MONTH, GROUP) %>% 
+          summarise(total = sum(total)) %>% 
+          mutate(financial_year = ifelse(TREATMENT_MONTH <= "202402",
+                                         "2023/24", "2024/25"), 
+                 YEAR_MONTH = as.Date(paste(substr(TREATMENT_MONTH, 1, 4), 
+                                      substr(TREATMENT_MONTH, 5, 6), 
+                                      "01", sep = "-")))
+  
+        data_post <- monthly_delivered_post %>% 
+          filter(commissioner_name == region_STP_name) %>% 
+          group_by(commissioner_name, YEAR_MONTH) %>% 
+          summarise(total = sum(TotalNPP, na.rm = TRUE)) %>% 
+          mutate(financial_year = "2024/25", 
+                 GROUP = "Post NPP launch - paid (2024/25)")
+        }
+      }
+  
+  data_combined <- rbind(data_pre, data_post) %>% 
+          mutate(month_name = month.name[month(YEAR_MONTH)], 
+                 month_name = factor(month_name, 
+                                     levels = c("March", "April", "May", "June", "July", "August", 
+                                                "September", "October", "November", "December", "January", "February")),
+                 GROUP = factor(GROUP, 
+                                levels = c("Pre NPP launch (2023/24)", "Post NPP launch - unpaid (2024/25)", "Post NPP launch - paid (2024/25)")))
+  }
+```

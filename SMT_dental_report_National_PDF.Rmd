@@ -314,19 +314,38 @@ plot_npp_activity(level = "National",
 
 ## Eligible contracts that have seen new patients
 
-```{r npp contracts, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot <- plot_npp_contracts(level = "National",
-                           region_STP_name = NULL)
+This slide is not currently shown as the methodology is being reviewed.
 
-table <- table_npp_contracts(level = "National", 
-                             region_STP_name = NULL)
+<!-- COMMENTED OUT WHILE METHODOLOGY REVIEWED -->
+<!-- ```{r npp contracts, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'} -->
+<!-- plot <- plot_npp_contracts(level = "National", -->
+<!--                            region_STP_name = NULL) -->
+
+<!-- table <- table_npp_contracts(level = "National",  -->
+<!--                              region_STP_name = NULL) -->
+
+<!-- grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),  -->
+<!--              layout_matrix = rbind(c(1, 1, 2))) -->
+<!-- ``` -->
+
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: <https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/> -->
+<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+
+## NPP activity to date against previous year's delivery
+
+```{r npp comparison, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5}
+plot <- plot_npp_activity_monitoring(level = "National", 
+                                     region_STP_name = NULL)
+
+table <- table_npp_monitoring(level = "National", 
+                                     region_STP_name = NULL)
 
 grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
              layout_matrix = rbind(c(1, 1, 2)))
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: <https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/>
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
 
 # Oral Health
 

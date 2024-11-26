@@ -1761,6 +1761,86 @@ table_npp_contracts <- function(data = npp_data,
 }
 ```
 
+```{r npp-pre/post-intro-plot}
+plot_npp_activity_monitoring <- function(level = "National", 
+                                         region_STP_name = NULL){
+  
+  monthly_delivered <- get_npp_data(level = level, 
+                                    region_STP_name = region_STP_name)
+  
+  plt <- ggplot(monthly_delivered, 
+                aes(x = financial_year,
+                    y = total, 
+                    fill = GROUP)) + 
+    geom_bar(stat = "identity", position = "stack") + 
+    facet_wrap(~month_name, ncol=12, strip.position = "bottom") + 
+    xlab("Month") + 
+    ylab("Completed courses of treatment") + 
+    scale_y_continuous(labels = scales::comma) + 
+    scale_fill_manual(values = c("#003087", "#E5C9D9", "#AE2573"),
+                      labels = c("Pre NPP launch (2023/24)",
+                                 "Post NPP launch - unpaid (2024/25)",
+                                 "Post NPP launch - paid (2024/25)")) + 
+    theme(panel.border = element_blank(),
+          panel.background = element_blank(), 
+          strip.background = element_blank(),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          legend.position = "bottom",
+          legend.title = element_blank())
+  
+  plt
+}
+```
+
+```{r npp-comparison-table}
+table_npp_monitoring <- function(level = "National", 
+                                 region_STP_name = NULL){
+  
+  monthly_delivered_post <- npp_data %>% 
+    filter(month >= "2024-03-01") %>% 
+    group_by(month, commissioner_code, commissioner_name, region_name) %>% 
+    summarise(TotalNPP = sum(band1_adult_count, band1_child_count, band23_adult_count, band23_child_count, na.rm = TRUE)) %>% 
+    rename(YEAR_MONTH = month, 
+           COMMISSIONER_CODE = commissioner_code,
+           COMMISSIONER_NAME = commissioner_name,
+           Region_Name = region_name)
+  
+  comparison <- comparison %>% 
+    left_join(monthly_delivered_post, by = c("Region_Name", "COMMISSIONER_CODE", "COMMISSIONER_NAME", "YEAR_MONTH"))
+  
+  if(level == "National"){
+    
+    table_data <- comparison
+    
+  } else if(level == "Regional"){
+    
+    table_data <- comparison %>% 
+      filter(Region_Name == region_STP_name)
+    
+  } else if(level == "STP"){
+    
+    table_data <- comparison %>% 
+      filter(COMMISSIONER_NAME == region_STP_name)
+  }
+  
+  table_data <- table_data %>% 
+      group_by(YEAR_MONTH) %>% 
+      summarise(total_ncdr = sum(TotalNPP, na.rm = TRUE), 
+                total_eden = sum(total_eden, na.rm = TRUE)) %>% 
+      mutate(pct_diff = (total_ncdr - total_eden)/total_eden, 
+             total_ncdr = prettyNum(round(total_ncdr, 0), big.mark = ","), 
+             total_eden = prettyNum(round(total_eden, 0), big.mark = ","), 
+             pct_diff = paste0(round(pct_diff*100), "%", sep = "")) %>% 
+    rename(Month = YEAR_MONTH, 
+           COMPASS = total_ncdr,
+           eDEN = total_eden, 
+           `Percentage difference` = pct_diff)
+  
+  table_to_print <- tableGrob(table_data, rows = NULL)
+}
+```
+
 ```{r DCP1}
 plot_DCP_analysis <- function(data = UDA_calendar_data,
                               dcp_data = DCP_data,
