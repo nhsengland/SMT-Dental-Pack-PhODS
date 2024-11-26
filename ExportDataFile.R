@@ -852,7 +852,20 @@ create_export_file <- function(){
   }
   
   # overwrite file if it already exists in the directory
-  openxlsx::saveWorkbook(output_file, file = paste0(reports_dir, '/SMT_pack_data_', format(Sys.Date(), '%B%Y'), '.xlsx'), overwrite = TRUE)
+  latest_month <- paste(month.name[as.numeric(substr(max(data_dental_activity$calendar_month), 6,7))], 
+                        substr(max(data_dental_activity$calendar_month), 1,4), 
+                        sep = " ")
+  
+  filename <- paste0(reports_dir, 
+                     '/',
+                     month(Sys.Date()), 
+                     " ", 
+                     year(Sys.Date()),
+                     " Dental Pack National-Regional-ICB reporting up to end of ",
+                     latest_month, 
+                     '.xlsx')
+  
+  openxlsx::saveWorkbook(output_file, file = filename, overwrite = TRUE)
 }
   
 create_pcdid_extract <- function(){

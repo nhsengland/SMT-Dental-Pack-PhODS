@@ -38,15 +38,39 @@ create_pcdid_extract()
 create_uda_projections_extract()
 
 # Render national report
+latest_month <- paste(month.name[as.numeric(substr(max(data_dental_activity$calendar_month), 6,7))], 
+                      substr(max(data_dental_activity$calendar_month), 1,4), 
+                      sep = " ")
+
+filename <- paste0(reports_dir, 
+                   '/',
+                   month(Sys.Date()), 
+                   " ", 
+                   year(Sys.Date()),
+                   " Dental Pack National reporting up to end of ",
+                   latest_month, 
+                   '.pdf')
+
 rmarkdown::render("SMT_dental_report_National_PDF.Rmd", 
-                  output_file = file.path(reports_dir, paste0("National_Report_", format(Sys.Date(), '%B%Y'), ".pdf")))
+                  output_file = filename)
 
 # Define a function to render the report for a specific region
 render_report = function(region) {
+  filename <- paste0(reports_dir, 
+                     '/',
+                     month(Sys.Date()), 
+                     "_", 
+                     year(Sys.Date()),
+                     "_Dental_Pack_",
+                     gsub(" ", "_", region),
+                     "_ICBs_reporting_to_",
+                     gsub(" ", "_",latest_month), 
+                     '.html')
+
   rmarkdown::render(
     "SMT_dental_report_region_ICB_level.rmd", 
     params = list(region = region),
-    output_file = file.path(reports_dir, paste0(gsub(" ", "_", region), "_Region_Report_", format(Sys.Date(), '%B%Y'), ".html"))
+    output_file = filename
   )
 }
 
