@@ -868,9 +868,129 @@ create_pcdid_extract <- function(){
 
 create_uda_projections_extract <- function(){
   output <- data_dental_activity %>% 
-    select(calendar_month, geography_code, geography_name,
+    select(calendar_month, geography_level, geography_code, geography_name,
            UDAs_annual_contracted, UDAs_delivered_month) %>% 
-    filter(calendar_month >= "2023-04") # needs updating for new financial year
+    filter(calendar_month >= format(current_fy_start, "%Y-%m") &
+             geography_level %in% c("National", "ICB")) %>% 
+    arrange(calendar_month) %>% 
+    mutate(calendar_month = month.name[as.numeric(substr(calendar_month, 6, 7))])
+  
+  # select contracted UDAs and add columns for remaining months of financial year
+  # assume contracted is equal to last available month for the rest of the financial year
+  contracted <- output %>% 
+    select(calendar_month, geography_name, UDAs_annual_contracted) %>% 
+    pivot_wider(names_from = calendar_month, values_from = UDAs_annual_contracted)
+  
+  # if the month is not already in the columns, add a new column with the same values as the previous column
+  if(ncol(contracted) < 13){
+    if(!"May" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(May = April)
+    }
+    if(!"June" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(June = May)
+    }
+    if(!"July" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(July = June)
+    }
+    if(!"August" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(August = July)
+    }
+    if(!"September" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(September = August)
+    }
+    if(!"October" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(October = September)
+    }
+    if(!"November" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(November = October)
+    }
+    if(!"December" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(December = November)
+    }
+    if(!"January" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(January = December)
+    }
+    if(!"February" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(February = January)
+    }
+    if(!"March" %in% names(contracted)){
+      contracted <- contracted %>% 
+        mutate(March = February)
+    }
+  }
+  
+  names(contracted) <- paste0(names(contracted), "_contracted")
+  names(contracted)[names(contracted) == "geography_name_contracted"] <- "geography_name"
+  
+  # select delivered UDAs and add columns for remaining months of financial year
+  # set delivered to blank for rest of financial year
+  delivered <- output %>% 
+    select(calendar_month, geography_name, UDAs_delivered_month) %>% 
+    pivot_wider(names_from = calendar_month, values_from = UDAs_delivered_month)
+  
+  # if the month is not already in the columns, add a new column with 0 as value
+  if(ncol(delivered) < 13){
+    if(!"May" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(May = 0)
+    }
+    if(!"June" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(June = 0)
+    }
+    if(!"July" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(July = 0)
+    }
+    if(!"August" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(August = 0)
+    }
+    if(!"September" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(September = 0)
+    }
+    if(!"October" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(October = 0)
+    }
+    if(!"November" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(November = 0)
+    }
+    if(!"December" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(December = 0)
+    }
+    if(!"January" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(January = 0)
+    }
+    if(!"February" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(February = 0)
+    }
+    if(!"March" %in% names(delivered)){
+      delivered <- delivered %>% 
+        mutate(March = 0)
+    }
+  }
+  
+  names(delivered) <- paste0(names(delivered), "_delivered")
+  names(delivered)[names(delivered) == "geography_name_delivered"] <- "geography_name"
+  
+  output <- contracted %>% 
+    left_join(delivered, by = "geography_name")
   
   write.csv(output, 
             paste0(reports_dir, '/SMT_pack_extract_for_UDA_projections_data_up_to_', format(Sys.Date()-30, '%B%Y'), '.csv'), 
