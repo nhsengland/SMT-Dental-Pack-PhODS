@@ -408,69 +408,117 @@ npp_icb <- npp_data %>%
 
 npp_total <- rbind(npp_nat, npp_reg, npp_icb)
 
-npp_contracts_nat <- npp_data %>% 
-  filter(month >= "2024-03-01") %>% 
-  mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
-  group_by(month, saw_new_patient) %>% 
-  summarise(contracts = n_distinct(contract_number)) %>% 
-  pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
-  mutate(yes = ifelse(is.na(yes), 0, yes),
-         no = ifelse(is.na(no), 0, no),
-         eligible = yes + no, 
-         month = format(as.Date(month), "%Y-%m"), 
-         geography_name = "England", 
-         geography_level = "National") %>% 
-  select(-no) %>% 
-  arrange(desc(month)) %>% 
-  rename(calendar_month = month, 
-         contracts_seeing_NPP_patients = yes,
-         eligible_contracts_for_NPP = eligible)
+# COMMENTED OUT WHILE METHODOLOGY REVIEWED
+# npp_contracts_nat <- npp_data %>% 
+#   filter(month >= "2024-03-01") %>% 
+#   mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
+#   group_by(month, saw_new_patient) %>% 
+#   summarise(contracts = n_distinct(contract_number)) %>% 
+#   pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
+#   mutate(yes = ifelse(is.na(yes), 0, yes),
+#          no = ifelse(is.na(no), 0, no),
+#          eligible = yes + no, 
+#          month = format(as.Date(month), "%Y-%m"), 
+#          geography_name = "England", 
+#          geography_level = "National") %>% 
+#   select(-no) %>% 
+#   arrange(desc(month)) %>% 
+#   rename(calendar_month = month, 
+#          contracts_seeing_NPP_patients = yes,
+#          eligible_contracts_for_NPP = eligible)
 
-npp_contracts_reg <- npp_data %>% 
-  filter(month >= "2024-03-01") %>% 
-  mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
-  group_by(month, region_name, saw_new_patient) %>% 
-  summarise(contracts = n_distinct(contract_number)) %>% 
-  pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
-  mutate(yes = ifelse(is.na(yes), 0, yes), 
-         no = ifelse(is.na(no), 0, no),
-         eligible = yes + no, 
-         month = format(as.Date(month), "%Y-%m"),
+# npp_contracts_reg <- npp_data %>% 
+#   filter(month >= "2024-03-01") %>% 
+#   mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
+#   group_by(month, region_name, saw_new_patient) %>% 
+#   summarise(contracts = n_distinct(contract_number)) %>% 
+#   pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
+#   mutate(yes = ifelse(is.na(yes), 0, yes), 
+#          no = ifelse(is.na(no), 0, no),
+#          eligible = yes + no, 
+#          month = format(as.Date(month), "%Y-%m"),
+#          geography_level = "Regional") %>% 
+#   select(-no) %>% 
+#   arrange(desc(month)) %>% 
+#   rename(calendar_month = month, 
+#          contracts_seeing_NPP_patients = yes,
+#          eligible_contracts_for_NPP = eligible, 
+#          geography_name = region_name)
+
+# npp_contracts_icb <- npp_data %>% 
+#   filter(month >= "2024-03-01") %>% 
+#   mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
+#   group_by(month, commissioner_name, saw_new_patient) %>% 
+#   summarise(contracts = n_distinct(contract_number)) %>% 
+#   pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
+#   mutate(yes = ifelse(is.na(yes), 0, yes),
+#          no = ifelse(is.na(no), 0, no),
+#          eligible = yes + no, 
+#          month = format(as.Date(month), "%Y-%m"),
+#          geography_level = "ICB") %>% 
+#   select(-no) %>% 
+#   arrange(desc(month)) %>% 
+#   rename(calendar_month = month, 
+#          contracts_seeing_NPP_patients = yes,
+#          eligible_contracts_for_NPP = eligible, 
+#          geography_name = commissioner_name)
+
+# npp_contracts <- rbind(npp_contracts_nat, npp_contracts_reg, npp_contracts_icb) %>% 
+#   select(calendar_month, eligible_contracts_for_NPP, contracts_seeing_NPP_patients, everything())
+
+npp_comparison_nat <- get_npp_data(level = "National", 
+                                   region_STP_name = NULL) %>% 
+  mutate(calendar_month = format(YEAR_MONTH, "%Y-%m"), 
+         geography_level = "National", 
+         geography_name = "England") %>% 
+  select(-c(financial_year, YEAR_MONTH, month_name)) %>% 
+  pivot_wider(names_from = GROUP,
+              values_from = total) %>% 
+  rename(pre_NPP_launch = `Pre NPP launch (2023/24)`, 
+         post_NPP_launch_unpaid = `Post NPP launch - unpaid (2024/25)`, 
+         post_NPP_launch_paid = `Post NPP launch - paid (2024/25)`) %>% 
+  arrange(desc(calendar_month))
+
+npp_comparison_reg <- get_npp_data(level = "Regional", 
+                                   region_STP_name = NULL,
+                                   all_regions_STPs = TRUE) %>% 
+  ungroup() %>% 
+  mutate(calendar_month = format(YEAR_MONTH, "%Y-%m"), 
          geography_level = "Regional") %>% 
-  select(-no) %>% 
-  arrange(desc(month)) %>% 
-  rename(calendar_month = month, 
-         contracts_seeing_NPP_patients = yes,
-         eligible_contracts_for_NPP = eligible, 
-         geography_name = region_name)
+  select(-c(financial_year, YEAR_MONTH, month_name, TREATMENT_MONTH)) %>% 
+  pivot_wider(names_from = GROUP, 
+              values_from = total) %>% 
+  rename(geography_name = REGION, 
+         pre_NPP_launch = `Pre NPP launch (2023/24)`, 
+         post_NPP_launch_unpaid = `Post NPP launch - unpaid (2024/25)`, 
+         post_NPP_launch_paid = `Post NPP launch - paid (2024/25)`) %>% 
+  arrange(desc(calendar_month))
 
-npp_contracts_icb <- npp_data %>% 
-  filter(month >= "2024-03-01") %>% 
-  mutate(saw_new_patient = ifelse(new_patient_tariff_amount == 0, "no", "yes")) %>% 
-  group_by(month, commissioner_name, saw_new_patient) %>% 
-  summarise(contracts = n_distinct(contract_number)) %>% 
-  pivot_wider(names_from = saw_new_patient, values_from = contracts) %>% 
-  mutate(yes = ifelse(is.na(yes), 0, yes),
-         no = ifelse(is.na(no), 0, no),
-         eligible = yes + no, 
-         month = format(as.Date(month), "%Y-%m"),
-         geography_level = "ICB") %>% 
-  select(-no) %>% 
-  arrange(desc(month)) %>% 
-  rename(calendar_month = month, 
-         contracts_seeing_NPP_patients = yes,
-         eligible_contracts_for_NPP = eligible, 
-         geography_name = commissioner_name)
+npp_comparison_icb <- get_npp_data(level = "STP", 
+                                   region_STP_name = NULL, 
+                                   all_regions_STPs = TRUE) %>% 
+  ungroup() %>% 
+  mutate(calendar_month = format(YEAR_MONTH, "%Y-%m"), 
+         geography_level = "ICB", 
+         commissioner_name = ifelse(is.na(commissioner_name), COMMISSIONER_NAME, commissioner_name)) %>% 
+  select(-c(financial_year, YEAR_MONTH, month_name, TREATMENT_MONTH, COMMISSIONER_NAME)) %>% 
+  pivot_wider(names_from = GROUP, 
+              values_from = total) %>% 
+  rename(geography_name = commissioner_name, 
+         pre_NPP_launch = `Pre NPP launch (2023/24)`, 
+         post_NPP_launch_unpaid = `Post NPP launch - unpaid (2024/25)`, 
+         post_NPP_launch_paid = `Post NPP launch - paid (2024/25)`) %>% 
+  arrange(desc(calendar_month))
 
-npp_contracts <- rbind(npp_contracts_nat, npp_contracts_reg, npp_contracts_icb) %>% 
-  select(calendar_month, eligible_contracts_for_NPP, contracts_seeing_NPP_patients, everything())
+npp_comparison <- rbind(npp_comparison_nat, npp_comparison_reg, npp_comparison_icb)
 
 data_dental_activity<-data_UDA_de_co%>%
   full_join(data_UDA_YTD,by=c('calendar_month','geography_name','geography_level'))%>%
   left_join(data_CoT, by = c('calendar_month', 'geography_name', 'geography_level')) %>% 
   left_join(data_unique, by = c('calendar_month', 'geography_name', 'geography_level'))%>%
   left_join(npp_total, by = c("calendar_month", "geography_name", "geography_level")) %>% 
-  left_join(npp_contracts, by = c("calendar_month", "geography_name", "geography_level")) %>% 
+  #left_join(npp_contracts, by = c("calendar_month", "geography_name", "geography_level")) %>% 
+  left_join(npp_comparison, by = c("calendar_month", "geography_name", "geography_level")) %>% 
   select(calendar_month, financial_year, geography_level, geography_name, everything())
 
 
