@@ -51,8 +51,26 @@ filename <- paste0(reports_dir,
                    latest_month, 
                    '.pdf')
 
+
 rmarkdown::render("SMT_dental_report_National_PDF.Rmd", 
                   output_file = filename)
+
+###############the following orks for me as I replace all the space with '_'
+filename_JX <- file.path(
+  reports_dir,
+  gsub(" ", "_", paste0(
+    month(Sys.Date()), 
+    " ", 
+    year(Sys.Date()), 
+    " Dental Pack National reporting up to end of ", 
+    latest_month, 
+    ".pdf"
+  ))
+)
+
+rmarkdown::render("SMT_dental_report_National_PDF.Rmd", 
+                  output_file = filename_JX)
+
 
 # Define a function to render the report for a specific region
 render_report = function(region) {
