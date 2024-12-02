@@ -26,9 +26,9 @@ source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
 source(knitr::purl("plotting.Rmd", output = tempfile()))
 source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
+source("ExportDataFile.R")
 
 # produce data file
-source("ExportDataFile.R")
 create_export_file()
 
 # produce extract for PCDID
