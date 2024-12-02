@@ -45,6 +45,7 @@ The process uses the following R packages:
 19. textclean
 20. openxlsx
 21. xaringanExtra
+22. reshape2
 
 To install the required packages, run `source("install_requirements.R")` in the console.
 
