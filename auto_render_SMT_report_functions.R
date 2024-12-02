@@ -40,16 +40,15 @@ create_uda_projections_extract()
 # Render national report
 latest_month <- paste(month.name[as.numeric(substr(max(data_dental_activity$calendar_month), 6,7))], 
                       substr(max(data_dental_activity$calendar_month), 1,4), 
-                      sep = " ")
+                      sep = "-")
 
-filename <- paste0(reports_dir, 
-                   '/',
-                   month(Sys.Date()), 
-                   " ", 
+filename <- paste0(month(Sys.Date()), 
+                   "-", 
                    year(Sys.Date()),
-                   " Dental Pack National reporting up to end of ",
+                   "-Dental-Pack-National-reporting-up-to-end-of-",
                    latest_month, 
                    '.pdf')
+
 
 rmarkdown::render("SMT_dental_report_National_PDF.Rmd", 
                   output_file = filename)
