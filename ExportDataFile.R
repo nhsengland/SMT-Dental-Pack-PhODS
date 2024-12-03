@@ -1057,3 +1057,26 @@ create_uda_projections_extract <- function(){
             paste0(reports_dir, '/SMT_pack_extract_for_UDA_projections_data_up_to_', format(Sys.Date()-30, '%B%Y'), '.csv'), 
             row.names = FALSE)
 }
+
+# create NPP monitoring figures for ICB dashboard
+create_npp_output <- function(){
+  npp_pre_intro <- read.csv("N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/BSA Calendar data/NPP/npp_average_pre_intro.csv")
+  
+  # calculate YTD delivery for final months only (excluding provisional months)
+  ytd_delivery <- npp_icb %>% 
+    filter(calendar_month <= format(latest_final_month, "%Y-%m")) %>% 
+    group_by(geography_name) %>% 
+    summarise(ytd_delivered = sum(total_NPP_patients_seen))
+  
+  # calculate number of months included
+  n_months <- length(unique(npp_icb$calendar_month[npp_icb$calendar_month <= format(latest_final_month, "%Y-%m")]))
+  
+  # calculate difference from expected
+  npp_monitoring <- npp_pre_intro %>% 
+    left_join(ytd_delivery, by = "geography_name") %>% 
+    mutate(difference_from_expected = ytd_delivered - (monthly_average_pre_intro * n_months))
+  
+  write.csv(npp_monitoring, 
+            paste0(reports_dir, "/SMT_pack_extract_for_NPP_monitoring_data_up_to_", latest_final_month, ".csv"), 
+            row.names = FALSE)
+}
