@@ -38,10 +38,10 @@ options(scipen=999)
 # Suppress summarise info
 options(dplyr.summarise.inform = FALSE)
 
-source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
-source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
-source(knitr::purl("plotting.Rmd", output = tempfile()))
-source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
+#source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
+#source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
+#source(knitr::purl("plotting.Rmd", output = tempfile()))
+#source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
 ```
 
 ```{r set ICB name, include=FALSE}
