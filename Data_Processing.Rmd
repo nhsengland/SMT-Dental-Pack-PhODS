@@ -106,8 +106,10 @@ get_npp_data <- function(level = level,
                          region_STP_name = region_STP_name, 
                          all_regions_STPs = FALSE){
   
+  # filter for new_patient_tariff_amount > 0 to only count contracts seeing patients under NPP
   monthly_delivered_post <- npp_data %>% 
-    filter(month >= "2024-03-01") %>% 
+    filter(month >= "2024-03-01" &
+             new_patient_tariff_amount > 0) %>% 
     group_by(month, commissioner_code, commissioner_name, region_name) %>% 
     summarise(TotalNPP = sum(band1_adult_count, band1_child_count, band23_adult_count, band23_child_count, na.rm = TRUE)) %>% 
     rename(YEAR_MONTH = month)
