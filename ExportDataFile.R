@@ -1060,19 +1060,38 @@ create_uda_projections_extract <- function(){
 
 # create NPP monitoring figures for ICB dashboard
 create_npp_output <- function(){
+  
   npp_pre_intro <- read.csv("N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/BSA Calendar data/NPP/npp_average_pre_intro.csv")
   
+  # national level
   # calculate YTD delivery for final months only (excluding provisional months)
-  ytd_delivery <- npp_icb %>% 
+  nat_ytd_delivery <- npp_icb %>% 
     filter(calendar_month <= format(latest_final_month, "%Y-%m")) %>% 
-    group_by(geography_name) %>% 
-    summarise(ytd_delivered = sum(total_NPP_patients_seen))
+    group_by(geography_level) %>% 
+    summarise(ytd_delivered = sum(total_NPP_patients_seen, na.rm = TRUE)) %>% 
+    select(-geography_level) %>% 
+    mutate(geography_name = "England")
   
   # calculate number of months included
   n_months <- length(unique(npp_icb$calendar_month[npp_icb$calendar_month <= format(latest_final_month, "%Y-%m")]))
   
   # calculate difference from expected
+  nat_npp_monitoring <- npp_pre_intro %>% 
+    summarise(monthly_average_pre_intro = sum(monthly_average_pre_intro)) %>% 
+    mutate(geography_name = "England")
+  
+  # icb level
+  # calculate YTD delivery for final months only (excluding provisional months)
+  # add national figure to ICB table
+  ytd_delivery <- npp_icb %>% 
+    filter(calendar_month <= format(latest_final_month, "%Y-%m")) %>% 
+    group_by(geography_name) %>% 
+    summarise(ytd_delivered = sum(total_NPP_patients_seen, na.rm = TRUE)) %>% 
+    rbind(nat_ytd_delivery)
+  
+  # calculate difference from expected
   npp_monitoring <- npp_pre_intro %>% 
+    rbind(nat_npp_monitoring) %>% 
     left_join(ytd_delivery, by = "geography_name") %>% 
     mutate(difference_from_expected = ytd_delivered - (monthly_average_pre_intro * n_months))
   
