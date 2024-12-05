@@ -37,6 +37,9 @@ create_pcdid_extract()
 # produce extract for UDA projections
 create_uda_projections_extract()
 
+# produce extract for NPP monitoring in ICB dashboard
+create_npp_output()
+
 # Render national report
 latest_month <- paste(month.name[as.numeric(substr(max(data_dental_activity$calendar_month), 6,7))], 
                       substr(max(data_dental_activity$calendar_month), 1,4), 
