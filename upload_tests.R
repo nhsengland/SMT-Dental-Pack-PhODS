@@ -3,7 +3,7 @@ library(odbc)
 library(DBI)
 library(testthat)
 
-# read in NCDR tables
+# read in NCDR tables......................
 con <- dbConnect(odbc::odbc(), "NCDR")
 
 bpe <- dbGetQuery(con, "SELECT * FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_BPE_backup]")
