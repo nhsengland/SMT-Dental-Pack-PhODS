@@ -40,5 +40,4 @@ rsconnect/
 *.html
 reports/
 data111/
-# Test Push
-.testpush
+
