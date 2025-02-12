@@ -2481,8 +2481,8 @@ grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),
              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
--   This chart shows the percentage of contracts who assign recall intervals of less than a year to 50% or more of their low risk patients. 
--   Low risk patients are adult patients receiving routine care with no evidence of decay and a Basic Periodontal Examination (PBE) score of 0 or 1.
+-   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
+-   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
 ]
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
