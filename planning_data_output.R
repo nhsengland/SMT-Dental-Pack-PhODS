@@ -113,7 +113,8 @@ data_ICB_unique_quarterly <- pull_unique_patients() %>%
   ),
   Year_Quarter = paste0(fiscal_year_label, " ", Quarter)
 ) %>%
-  group_by(Year_Quarter,commissioner_name,commissioner_ods_code_icb) %>%
+  group_by(fiscal_year_label, Quarter,Year_Quarter,commissioner_name,commissioner_ods_code_icb) %>%
+  filter(month == max(month)) %>%   
   summarise(
     `child_12m_count` = sum(`child_12m_count`, na.rm = TRUE), 
     `adult_24m_count` = sum(`adult_24m_count`, na.rm = TRUE) ,
