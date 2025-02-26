@@ -27,6 +27,7 @@ source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
 source(knitr::purl("plotting.Rmd", output = tempfile()))
 source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
 source("ExportDataFile.R")
+source("planning_data_output.R")
 
 # produce data file
 create_export_file()

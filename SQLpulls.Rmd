@@ -470,3 +470,18 @@ BPE_data$commissioner_name <- paste0(BPE_data$commissioner_name,
 
 ```
 
+
+```{r population data at ICB level}
+
+#read local file -- No working days in each month
+population_ICB <- read_excel("ICB_population_master.xlsx",sheet = "Sheet1")
+population_ICB$month <- as.Date(population_ICB$Date)
+population_ICB$`ICB Name` <- str_sub(population_ICB$`ICB Name`,5)
+population_ICB$`ICB Name` <- str_to_title(population_ICB$`ICB Name`)
+population_ICB$`ICB Name` <- substr(population_ICB$`ICB Name`,1,
+                                              nchar(population_ICB$`ICB Name`)-3)
+population_ICB$`ICB Name`<- paste0(population_ICB$`ICB Name`, 
+                                              rep("ICB", nrow(population_ICB)))
+
+```
+
