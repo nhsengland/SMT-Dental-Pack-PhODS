@@ -47,7 +47,7 @@ library(openxlsx)
                 monthly_UDA_UOAs_BAND_OTHER_delivered = sum(monthly_UDA_UOAs_BAND_OTHER_delivered, na.rm = TRUE),
                 monthly_UDA_UOAs_BAND_URGENT_delivered = sum(monthly_UDA_UOAs_BAND_URGENT_delivered, na.rm = TRUE),
                 monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
-                annual_contracted_UDA_UOA = sum(annual_contracted_UDA_UOA, na.rm = TRUE))
+                annual_contracted_UDA_UOA = last(annual_contracted_UDA_UOA[order(month_num)], na.rm = TRUE))
     
     #create Quarter for working days
     working_days <- working_days %>%
@@ -69,7 +69,7 @@ library(openxlsx)
       group_by(Year_Quarter) %>%
       summarise(
         `no workdays` = sum(`no workdays`, na.rm = TRUE), # Sum of no workdays
-        `total workdays` = sum(`total workdays`, na.rm = TRUE) # Mean of total workdays
+        `total workdays` = last( `total workdays`[order(month_num)], na.rm = TRUE) # latest of total workdays
       )
     
     data <- data %>% 
