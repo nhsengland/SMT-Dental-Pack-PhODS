@@ -80,9 +80,9 @@ library(openxlsx)
     
     #rename columns
     new_col_names <- c("Year_Quarter" = "Year_Quarter",
-                       "UDAs_delivered_month" = "monthly_UDA_UOAs_delivered",
+                       "UDAs_delivered_quarter" = "monthly_UDA_UOAs_delivered",
                        "UDAs_annual_contracted" = "annual_contracted_UDA_UOA",
-                       "UDAs_delivered_month_percent_contracted_standardised" = "perc_standardised_wd")
+                       "UDAs_delivered_quarter_percent_contracted_standardised" = "perc_standardised_wd")
     
      data <- data %>%
       rename(any_of(new_col_names))
@@ -90,7 +90,7 @@ library(openxlsx)
     
 data_ICB_UDA <- data %>%
   select(Year_Quarter,geography_name=commissioner_name,
-         UDAs_annual_contracted,UDAs_delivered_month,UDAs_delivered_month_percent_contracted_standardised)%>%
+         UDAs_annual_contracted,UDAs_delivered_quarter,UDAs_delivered_quarter_percent_contracted_standardised)%>%
   arrange(desc(Year_Quarter))
 
 
