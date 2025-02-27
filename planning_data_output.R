@@ -134,7 +134,7 @@ data_ICB_unique_quarterly <- pull_unique_patients() %>%
 
 
 population_ICB <- population_ICB %>%
-  filter(month>"2020-03-01") %>%
+  filter(month>"2020-04-01") %>%
   mutate(
     month_num = month(month),                                     # Extract month number
     year = year(month),                                           # Extract year
@@ -142,10 +142,10 @@ population_ICB <- population_ICB %>%
     fiscal_year_end = fiscal_year_start + 1,                      # Fiscal year end
     fiscal_year_label = paste0(substr(fiscal_year_start, 3, 4), "/", substr(fiscal_year_end, 3, 4)), # e.g., "20/21"
     Quarter = case_when(                                          # Assign fiscal quarters
-      month_num %in% 4:6 ~ "Q1",
-      month_num %in% 7:9 ~ "Q2",
-      month_num %in% 10:12 ~ "Q3",
-      month_num %in% 1:3 ~ "Q4",
+      month_num %in% 5:7 ~ "Q1",
+      month_num %in% 8:10 ~ "Q2",
+      month_num %in% 11:1 ~ "Q3",
+      month_num %in% 2:4 ~ "Q4",
       TRUE ~ NA_character_
     ),
     Year_Quarter = paste0(fiscal_year_label, " ", Quarter)
