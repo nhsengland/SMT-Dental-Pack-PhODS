@@ -177,7 +177,7 @@ data_ICB_unique_quarterly_adult <- data_ICB_unique_quarterly %>%
   summarise(planning_ref='E.D.22',
     unique_adults_seen_24_month= sum(`unique_adults_seen_24_month`, na.rm = TRUE),
     adult_populations= sum(`adults`, na.rm = TRUE),
-    `% unique adult seen 24M` = round(100 * (unique_adults_seen_24_month / adult_populations), 0),
+    `% unique adult seen 24M` = unique_adults_seen_24_month / adult_populations,
     .groups = "drop"  # Prevents unexpected grouping downstream
   )
 
@@ -189,7 +189,7 @@ data_ICB_unique_quarterly_children <- data_ICB_unique_quarterly %>%
   summarise(planning_ref='E.D.22',
     unique_children_seen_12_month= sum(`unique_children_seen_12_month`, na.rm = TRUE),
     children_population= sum(`children`, na.rm = TRUE),
-    `% unique children seen 12M` = round(100 * (unique_children_seen_12_month / children_population), 0),
+    `% unique children seen 12M` = unique_children_seen_12_month / children_population,
     .groups = "drop"  # Prevents unexpected grouping downstream
   )
 
