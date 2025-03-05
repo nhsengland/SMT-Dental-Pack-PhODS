@@ -15,23 +15,11 @@ library(openxlsx)
     #include data only after 2020-04-01 and select fields needed
     data <- data %>%
       mutate(month = as.Date(month)) %>%
-      filter(month >= as.Date ("2022-06-01")) %>%
-      select(month, contract_number, commissioner_ods_code_icb, region_name, annual_contracted_UDA, UDA_band_1,UDA_band_2,UDA_band_3,UDA_other,UDA_urgent,UDA_delivered)
-    
-    #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
-    data <- data %>%
-      group_by(month, region_name, commissioner_ods_code_icb)%>%
-      summarise(monthly_UDA_UOAs_BAND1_delivered = sum(UDA_band_1, na.rm = T),
-                monthly_UDA_UOAs_BAND2_delivered = sum(UDA_band_2, na.rm = T),
-                monthly_UDA_UOAs_BAND3_delivered = sum(UDA_band_3, na.rm = T),
-                monthly_UDA_UOAs_BAND_OTHER_delivered = sum(UDA_other, na.rm = T),
-                monthly_UDA_UOAs_BAND_URGENT_delivered = sum(UDA_urgent, na.rm = T),
-                monthly_UDA_UOAs_delivered = sum(UDA_delivered, na.rm = T),
-                annual_contracted_UDA_UOA = sum(annual_contracted_UDA, na.rm = T))
-
-    
-    data <- data %>%
-      filter(month>"2022-05-01")
+      filter(month >= as.Date ("2022-04-01")) %>%
+      select(month, commissioner_ods_code_icb, annual_contracted_UDA, UDA_delivered)%>%
+      group_by(month, commissioner_ods_code_icb) %>%
+      summarise(UDA_delivered = sum(UDA_delivered, na.rm = TRUE),
+                annual_contracted_UDA = sum(annual_contracted_UDA, na.rm = TRUE))
     
     # Create the 'Quarter' column with custom quarter assignment
     data <- data %>%
@@ -52,13 +40,8 @@ library(openxlsx)
     
     data <- data %>%
       group_by(Year_Quarter, commissioner_ods_code_icb) %>%
-      summarise(monthly_UDA_UOAs_BAND1_delivered = sum(monthly_UDA_UOAs_BAND1_delivered, na.rm = TRUE),
-                monthly_UDA_UOAs_BAND2_delivered = sum(monthly_UDA_UOAs_BAND2_delivered, na.rm = TRUE),
-                monthly_UDA_UOAs_BAND3_delivered = sum(monthly_UDA_UOAs_BAND3_delivered, na.rm = TRUE),
-                monthly_UDA_UOAs_BAND_OTHER_delivered = sum(monthly_UDA_UOAs_BAND_OTHER_delivered, na.rm = TRUE),
-                monthly_UDA_UOAs_BAND_URGENT_delivered = sum(monthly_UDA_UOAs_BAND_URGENT_delivered, na.rm = TRUE),
-                monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
-                annual_contracted_UDA_UOA = last(annual_contracted_UDA_UOA[order(month_num)], na.rm = TRUE))
+      summarise(monthly_UDA_UOAs_delivered = sum(UDA_delivered, na.rm = TRUE),
+                annual_contracted_UDA_UOA = last(annual_contracted_UDA[order(month_num)], na.rm = TRUE))
     
     #create Quarter for working days
     working_days <- working_days %>%
@@ -85,7 +68,8 @@ library(openxlsx)
     
     data <- data %>% 
       left_join(working_days,by=c('Year_Quarter')) %>%
-      mutate(quarterly_contracted_UDA =annual_contracted_UDA_UOA*(`no workdays`/`total workdays`),
+      mutate(planning_ref='E.D.24',
+        quarterly_contracted_UDA =annual_contracted_UDA_UOA*(`no workdays`/`total workdays`),
              perc_standardised_wd_int = 
                100*(monthly_UDA_UOAs_delivered /quarterly_contracted_UDA))
     
@@ -100,8 +84,10 @@ library(openxlsx)
     
     
 data_ICB_UDA <- data %>%
-  select(reporting_date,org_code=commissioner_ods_code_icb,
-         UDAs_contracted_quarter,UDAs_delivered_quarter,UDAs_delivered_quarter_percent_contracted_standardised)%>%
+  select(planning_ref,org_code=commissioner_ods_code_icb,
+         reporting_date,value=UDAs_delivered_quarter_percent_contracted_standardised,
+         numerator_value=UDAs_contracted_quarter,
+         denominator_value=UDAs_delivered_quarter,)%>%
   arrange(desc(reporting_date))
 
 
@@ -177,21 +163,25 @@ data_ICB_unique_quarterly_adult <- data_ICB_unique_quarterly %>%
   summarise(planning_ref='E.D.22',
     unique_adults_seen_24_month= sum(`unique_adults_seen_24_month`, na.rm = TRUE),
     adult_populations= sum(`adults`, na.rm = TRUE),
-    `% unique adult seen 24M` = unique_adults_seen_24_month / adult_populations,
+    `% unique adult seen 24M` =100*(unique_adults_seen_24_month / adult_populations) ,
     .groups = "drop"  # Prevents unexpected grouping downstream
-  )
+  )%>% select(planning_ref,org_code,reporting_date,value=`% unique adult seen 24M` ,
+              numerator_value=unique_adults_seen_24_month,
+              denominator_value=adult_populations)
 
 
 data_ICB_unique_quarterly_children <- data_ICB_unique_quarterly %>% 
   inner_join(population_ICB, by = c('Year_Quarter', 'ODS_CODE')) %>% 
   #filter(!is.na(children) & !is.na(adults) & !is.na(all)) %>% 
   group_by(reporting_date=Year_Quarter,org_code= ODS_CODE) %>% 
-  summarise(planning_ref='E.D.22',
+  summarise(planning_ref='E.D.23',
     unique_children_seen_12_month= sum(`unique_children_seen_12_month`, na.rm = TRUE),
     children_population= sum(`children`, na.rm = TRUE),
-    `% unique children seen 12M` = unique_children_seen_12_month / children_population,
+    `% unique children seen 12M` =100*(unique_children_seen_12_month / children_population) ,
     .groups = "drop"  # Prevents unexpected grouping downstream
-  )
+  )%>% select(planning_ref,org_code,reporting_date,value=`% unique children seen 12M` ,
+              numerator_value=unique_children_seen_12_month,
+              denominator_value=children_population)
 
 
 
@@ -201,16 +191,15 @@ data_ICB_unique_quarterly_children <- data_ICB_unique_quarterly %>%
 
 create_export_file <- function(){
   output_file <- createWorkbook()
-  
-  addWorksheet(output_file, "ED22 % UDA delivered")
-  writeData(output_file, "ED22 % UDA delivered", data_ICB_UDA)
-  
+
   addWorksheet(output_file, "ED22_unique adults")
   writeData(output_file, "ED22_unique adults", data_ICB_unique_quarterly_adult)
 
-  addWorksheet(output_file, "ED22_unique children")
-  writeData(output_file, "ED22_unique children", data_ICB_unique_quarterly_children)
+  addWorksheet(output_file, "ED23_unique children")
+  writeData(output_file, "ED23_unique children", data_ICB_unique_quarterly_children)
   
+  addWorksheet(output_file, "ED24 % UDA delivered")
+  writeData(output_file, "ED24 % UDA delivered", data_ICB_UDA)
   
   # we will first create a folder to save our output
   # Print the current working directory
