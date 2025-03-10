@@ -86,8 +86,8 @@ library(openxlsx)
 data_ICB_UDA <- data %>%
   select(planning_ref,org_code=commissioner_ods_code_icb,
          reporting_date,value=UDAs_delivered_quarter_percent_contracted_standardised,
-         numerator_value=UDAs_contracted_quarter,
-         denominator_value=UDAs_delivered_quarter,)%>%
+         denominator_value =UDAs_contracted_quarter,
+         numerator_value=UDAs_delivered_quarter,)%>%
   arrange(desc(reporting_date))
 
 
