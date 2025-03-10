@@ -6,7 +6,6 @@ library(stringr)
 library(dplyr)
 library(readxl)
 
-
 con <- dbConnect(odbc::odbc(), "NCDR")
 
 ##################################################
@@ -22,9 +21,9 @@ UDA2<-read.csv(paste0(folder,"/Production_dental_UDA_activity_urgent_202407_to_2
 FDonly1<-read.csv(paste0(folder,"/Production_dental_UDA_activity_FD_only_urgent_202307_to_202406.csv"))
 FDonly2<- read.csv(paste0(folder,"/Production_dental_UDA_activity_FD_only_urgent_202407_to_202411.csv"))
 
-u7_contract<-rbind(contract1, contract2)
-u7_UDA<-rbind(UDA1, UDA2)
-u7_FDonly<-rbind(FDonly1, FDonly2)
+u7_contract<-rbind(contract1, contract2)%>%mutate(`YEAR_MONTH`= as.Date(paste0(substr(`YEAR_MONTH`,1,4), "-", substr(`YEAR_MONTH`, 5,6), "-01"), "%Y-%m-%d"))
+u7_UDA<-rbind(UDA1, UDA2)%>%mutate(`YEAR_MONTH`= as.Date(paste0(substr(`YEAR_MONTH`,1,4), "-", substr(`YEAR_MONTH`, 5,6), "-01"), "%Y-%m-%d"))
+u7_FDonly<-rbind(FDonly1, FDonly2)%>%mutate(`YEAR_MONTH`= as.Date(paste0(substr(`YEAR_MONTH`,1,4), "-", substr(`YEAR_MONTH`, 5,6), "-01"), "%Y-%m-%d"))
 
 ### create new tables in NCDR and upload data
 dbWriteTable(con, Id(catalog="NHSE_Sandbox_PrimaryCareNHSContracts",schema="Dental",table="Calendar_Contracts_urgent_700000"),
