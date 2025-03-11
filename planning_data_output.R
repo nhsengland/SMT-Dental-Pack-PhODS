@@ -14,6 +14,7 @@ library(openxlsx)
                                             
     #include data only after 2020-04-01 and select fields needed
     data <- data %>%
+      filter(final_yn=='Y') %>%
       mutate(month = as.Date(month)) %>%
       filter(month >= as.Date ("2022-04-01")) %>%
       select(month, commissioner_ods_code_icb, annual_contracted_UDA, UDA_delivered)%>%
@@ -40,8 +41,12 @@ library(openxlsx)
     
     data <- data %>%
       group_by(Year_Quarter, commissioner_ods_code_icb) %>%
+      filter(n_distinct(month_num) == 3) %>%  # Include only full quarters
+      arrange(Year_Quarter, commissioner_ods_code_icb, month_num) %>%  # Sort properly
       summarise(monthly_UDA_UOAs_delivered = sum(UDA_delivered, na.rm = TRUE),
-                annual_contracted_UDA_UOA = last(annual_contracted_UDA[order(month_num)], na.rm = TRUE))
+                annual_contracted_UDA_UOA = last(annual_contracted_UDA, na.rm = TRUE)  # Get the last month’s value
+      ) %>%
+      ungroup()
     
     #create Quarter for working days
     working_days <- working_days %>%
@@ -71,7 +76,9 @@ library(openxlsx)
       mutate(planning_ref='E.D.24',
         quarterly_contracted_UDA =annual_contracted_UDA_UOA*(`no workdays`/`total workdays`),
              perc_standardised_wd_int = 
-               100*(monthly_UDA_UOAs_delivered /quarterly_contracted_UDA))
+               100*(monthly_UDA_UOAs_delivered /quarterly_contracted_UDA))%>% 
+      arrange(desc(Year_Quarter))
+    
     
     #rename columns
     new_col_names <- c("reporting_date" = "Year_Quarter",
@@ -86,14 +93,15 @@ library(openxlsx)
 data_ICB_UDA <- data %>%
   select(planning_ref,org_code=commissioner_ods_code_icb,
          reporting_date,value=UDAs_delivered_quarter_percent_contracted_standardised,
-         denominator_value =UDAs_contracted_quarter,
-         numerator_value=UDAs_delivered_quarter,)%>%
+         numerator_value=UDAs_delivered_quarter,
+         denominator_value =UDAs_contracted_quarter)%>%
   arrange(desc(reporting_date))
 
 
 
 #Unique Patient Seen 
 data_ICB_unique_quarterly <- pull_unique_patients() %>%
+  filter(final_yn=='Y') %>%
   filter(month>"2020-03-01") %>%
   mutate(month = as.Date(month),   # Convert 'month' to Date format if it isn't already
     month_num = month(month),   # Extract month number
@@ -109,10 +117,9 @@ data_ICB_unique_quarterly <- pull_unique_patients() %>%
     Year_Quarter = paste0(substr(year, 3, 4), "-", Quarter_End)  # Format "YY-MM"
   )%>%
   group_by(Year_Quarter,commissioner_ods_code_icb) %>%
-  # Add a new column to get the latest month per group
-  mutate(latest_month = max(month, na.rm = TRUE)) %>%  
-  # Now filter for the rows where the month is equal to the latest month per group
-  filter(month == latest_month) %>%  
+  filter(n_distinct(month_num) == 3) %>%  # Keep only full quarters
+  slice_max(month, n = 1, with_ties = FALSE) %>%  # Get latest month per group
+  group_by(Year_Quarter, commissioner_ods_code_icb) %>%  # Re-group after slice_max()
   summarise(
     `child_12m_count` = sum(`child_12m_count`, na.rm = TRUE), 
     `adult_24m_count` = sum(`adult_24m_count`, na.rm = TRUE) ,
