@@ -9,9 +9,7 @@ library(tidyr)
 
 con <- dbConnect(odbc::odbc(), "NCDR")
 
-#### Produce 42 outputs ----
-
-############ Extract data from NCDR
+############ Extract data from NCDR ----
 
 sql <- "SELECT *
   FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts_urgent_700000]"
@@ -31,10 +29,8 @@ result <- dbSendQuery(con, sql)
 u7_FDonly <- dbFetch(result)
 dbClearResult(result)
 
-############ Process data and prep master data as ready to be filtered by ICB
-
-update<- format(Sys.Date(), '%b%y') ###<- Month of update (this will be used as part the ICB output file names)
-
+############ Process data ----
+#prep master data as ready to be filtered by ICB
 
 master<-u7_UDA%>%
   select(YEAR_MONTH, 
@@ -47,7 +43,7 @@ master<-u7_UDA%>%
          UDA_URGENT_DIFF_DAY_DELIVERED,
          URGENT_SAME_DAY_DELIVERED_LATE,
          URGENT_DIFF_DAY_DELIVERED_LATE)%>%
-  left_join(subset(u7_FDonly, select=c(YEAR_MONTH, ### <-- left_join to bring in FD only activity data 
+  full_join(subset(u7_FDonly, select=c(YEAR_MONTH, ### <-- left_join to bring in FD only activity data 
                                      CONTRACT_NUMBER, 
                                      URGENT_SAME_DAY_DELIVERED, 
                                      URGENT_DIFF_DAY_DELIVERED, 
@@ -55,6 +51,11 @@ master<-u7_UDA%>%
                                      UDA_URGENT_DIFF_DAY_DELIVERED,
                                      URGENT_SAME_DAY_DELIVERED_LATE,
                                      URGENT_DIFF_DAY_DELIVERED_LATE)), c("YEAR_MONTH","CONTRACT_NUMBER"))%>%
+  collect()
+
+master[is.na(master)] = 0
+
+master<-master%>%
   mutate(URGENT_SAME_DAY_DELIVERED= `URGENT_SAME_DAY_DELIVERED.x`+`URGENT_SAME_DAY_DELIVERED.y`,  ###<-- This step to add urgent care delivered by non-FD and FD together
          URGENT_DIFF_DAY_DELIVERED = `URGENT_DIFF_DAY_DELIVERED.x`+`URGENT_DIFF_DAY_DELIVERED.y`, 
          URGENT_DELIVERED = URGENT_SAME_DAY_DELIVERED + URGENT_DIFF_DAY_DELIVERED,
@@ -81,113 +82,153 @@ master<-u7_UDA%>%
 
 
 
-#### get 42 ICBs
+#### get 42 ICBs (to be used in loop for automating 42 outputs later)
 ICB_list<-distinct(subset(master, select = c( ICB_CODE))) 
 
+### get month of update (this will be used as part of ICB output file name)
+update<- format(Sys.Date(), '%b%y') 
 
-### function to prep wide tables for each ICB
+
+### Prep wide tables for each ICB ----
 extract_icb_data<-function(ICB="QRV"){
+
+# prep a reference table for all contracts within selected ICB during this time period
+  contract_a<-distinct(subset(u7_contract, select = c(COMMISSIONER_CODE, 
+                                                      COMMISSIONER_NAME, 
+                                                      CONTRACT_NUMBER, 
+                                                      PROVIDER_ID, 
+                                                      PROVIDER_NAME)))
   
-master<-filter(master, ICB_CODE == ICB )
-
-contract<- distinct(subset(master, select = c( ICB_CODE, ICB_NAME, CONTRACT_NUMBER)))%>%
-  filter( ICB_CODE == ICB )%>% 
-  left_join(distinct(subset(u7_contract,
-                   select = c(CONTRACT_NUMBER,
-                              PROVIDER_ID, PROVIDER_NAME, LATEST_PPC_ADDRESS_POSTCODE, 
-                              LSOA11_CODE, WARD_CODE, WARD_NAME,LOCAL_AUTHORITY_CODE, 
-                              LOCAL_AUTHORITY_NAME))), "CONTRACT_NUMBER" )
+  contract_b<- distinct(subset(u7_UDA, select = c(COMMISSIONER_CODE, 
+                                                  COMMISSIONER_NAME, 
+                                                  CONTRACT_NUMBER, 
+                                                  PROVIDER_ID, 
+                                                  PROVIDER_NAME)))
+  contract_c<- distinct(subset(u7_FDonly, select = c(COMMISSIONER_CODE, 
+                                                     COMMISSIONER_NAME, 
+                                                     CONTRACT_NUMBER, 
+                                                     PROVIDER_ID, 
+                                                     PROVIDER_NAME)))
   
+  contract<- distinct(rbind(contract_a, contract_b, contract_c))%>%
+    rename(ICB_CODE = COMMISSIONER_CODE, ICB_NAME = COMMISSIONER_NAME)%>%
+    filter( ICB_CODE == ICB )%>%
+    collect()
   
-urgent_delivered<- spread(data=subset(master, select = c(YEAR_MONTH, CONTRACT_NUMBER, URGENT_DELIVERED)),              
-                                      key = "YEAR_MONTH",
-                                      value = "URGENT_DELIVERED")
 
-uda_urgent_delivered<- spread(data=subset(master, select = c(YEAR_MONTH, CONTRACT_NUMBER, UDA_URGENT_DELIVERED)),       
-                          key = "YEAR_MONTH",
-                          value = "UDA_URGENT_DELIVERED")
+# filter master activity table to include deliveries by contracts within selected ICB only
+data1<-filter(master, ICB_CODE == ICB )
 
-urgent_delivered_late<- spread(data=subset(master, select = c(YEAR_MONTH, CONTRACT_NUMBER, URGENT_DELIVERED_LATE)),                       
-                               key = "YEAR_MONTH",
-                               value = "URGENT_DELIVERED_LATE")
+# filter out rows with no urgent care delivery and only keep columns for urgent care delivery
+data2<- subset(data1, select = c(YEAR_MONTH, CONTRACT_NUMBER, URGENT_DELIVERED))%>%
+  filter(URGENT_DELIVERED>0)%>%
+  collect()
+  
+# convert long table to wide (using months as columns)
+urgent_delivered<- spread(data2, key = "YEAR_MONTH",value = "URGENT_DELIVERED")
 
-dataset_names <- list('Contracts'= contract,
-                      'Urgent Delivered' = urgent_delivered, 
-                      'UDA Urgent Delivered' = uda_urgent_delivered, 
-                      'Urgent Delivered Late' = urgent_delivered_late)
+# add contracts details into wide table
+urgent_delivered<-contract%>%
+  right_join(urgent_delivered,  "CONTRACT_NUMBER" )
+
+# assign tables into right tabs for excel output
+dataset_names <- list(#'Contracts'= contract,    ### decided to hide this tab for now
+                      'Urgent Delivered' = urgent_delivered)
 
 openxlsx::write.xlsx(dataset_names, file = paste0('~/Rprojects/SMT-Dental-Pack-PhODS/ICB_outputs\\Urgent700k_',ICB,'_',update, '_update.xlsx')) 
 
 }
 
-##### Write 42 files
+### Write all 42 files ----
 
 
 for (i in (1: nrow(ICB_list))) {
   extract_icb_data(ICB_list$ICB_CODE[i])
 }
 
+#########################################################################################
+### QA ----
+#spot check outputs against SQL queries (PLEASE CHANGE ICB CODE AND CONTRACT NUMBER BELOW TO CHECK)
 
-############################################################################
-#### UDA urgent care Analysis ----
-## Add monthly UDA target in by adjusting annual contracted UDA with number of workdays ##
-working_days <- read_excel("workdays.xlsx",sheet = "workdays")
-working_days<-working_days%>%mutate(`YEAR_MONTH`=as.Date(`Month`))
+sql = "select a.*, b.[ACT], (a.FDONLY+b.ACT) as total
+from
+(SELECT  [YEAR_MONTH]
+ ,([URGENT_SAME_DAY_DELIVERED]+[URGENT_DIFF_DAY_DELIVERED]) AS FDONLY
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000]
+  where [COMMISSIONER_CODE]='QE1' and [CONTRACT_NUMBER] = '6359440001') a
+  full join 
+ ( SELECT  [YEAR_MONTH]
+,([URGENT_SAME_DAY_DELIVERED]+[URGENT_DIFF_DAY_DELIVERED]) AS ACT
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_urgent_700000]
+    where [COMMISSIONER_CODE]='QE1' and [CONTRACT_NUMBER] = '6359440001') b
+	on a.[YEAR_MONTH]= b.[YEAR_MONTH]
+	order by [YEAR_MONTH]"
 
-df <- u7_contract%>%
-  select(`YEAR_MONTH`,`CONTRACT_NUMBER`
-         #,`CONTRACTED_UDA`, `CONTRACTED_UOA`,`CONTRACTED_COT`
-  )%>%
-  inner_join(u7_UDA, c("YEAR_MONTH", "CONTRACT_NUMBER")) %>% 
-  left_join(working_days, "YEAR_MONTH") %>% 
-  mutate(mon_UDA_target = round(UDA_PERF_TARGET/`total workdays`*`no workdays`, 1),
-         perc_UDA_delivered=ifelse(UDA_PERF_TARGET==0, NA, round(UDA_DELIVERED/mon_UDA_target, 3)), 
-         perc_urgent_UDA = ifelse(UDA_DELIVERED==0, NA, round((UDA_URGENT_SAME_DAY_DELIVERED + UDA_URGENT_DIFF_DAY_DELIVERED)/UDA_DELIVERED,3)),
-         uda_urgent= UDA_URGENT_SAME_DAY_DELIVERED + UDA_URGENT_DIFF_DAY_DELIVERED)
+result <- dbSendQuery(con, sql)
+QA1 <- dbFetch(result)
+dbClearResult(result)
 
-df<-distinct(df)
+## CHANGE ICB CODE in file name AND contract number below
+QA2 <- read.xlsx(paste0('~/Rprojects/SMT-Dental-Pack-PhODS/ICB_outputs\\Urgent700k_QE1_',update, '_update.xlsx'), sheet = "Urgent Delivered", startRow = 1)
+QA2a<-QA2%>%filter(`CONTRACT_NUMBER`== "6359440001")
+QA2_long <-reshape2::melt(subset(QA2a, select = -c(ICB_CODE, ICB_NAME,  PROVIDER_ID, PROVIDER_NAME)),
+                                 id.vars= c("CONTRACT_NUMBER"),
+                                 measure.vars= c( "2023-07-01",
+                                                  "2023-08-01",
+                                                  "2023-09-01",
+                                                  "2023-10-01",
+                                                  "2023-11-01",
+                                                  "2023-12-01",
+                                                  "2024-01-01",
+                                                  "2024-02-01",
+                                                  "2024-03-01",
+                                                  "2024-04-01",
+                                                  "2024-05-01",
+                                                  "2024-06-01",
+                                                  "2024-07-01",
+                                                  "2024-08-01",
+                                                  "2024-09-01",
+                                                  "2024-10-01",
+                                                  "2024-11-01"),
+                                 variable.name = "YEAR_MONTH",
+                                 value.name ="value")
 
-names(df) <- base::tolower(names(df))
+check<-QA2_long%>%
+  mutate(YEAR_MONTH=as.Date(YEAR_MONTH))%>%
+  right_join(QA1, "YEAR_MONTH")%>%
+  mutate(check = ifelse(value==total, TRUE, FALSE))
 
-df_12mon_avg<-df%>%
-  filter(year_month>="2023-07-01", year_month<="2024-06-01")%>%
-  group_by(contract_number, commissioner_code, commissioner_name, provider_id, provider_name, uda_perf_target)%>%
-  summarise(no_uda_month =n(),
-            uda_delivered_12mon_avg = sum(uda_delivered, na.rm = T),
-            uda_delivered_fd_12mon_avg  = mean(uda_delivered_fd, na.rm = T),
-            uda_band_1_delivered_12mon_avg  = mean(uda_band_1_delivered, na.rm = T),
-            uda_band_2_delivered_12mon_avg  = mean(uda_band_2_delivered, na.rm = T),
-            uda_band_2a_delivered_12mon_avg  = mean(uda_band_2a_delivered, na.rm = T),
-            uda_band_2b_delivered_12mon_avg  = mean(uda_band_2b_delivered, na.rm = T),
-            uda_band_2c_delivered_12mon_avg  = mean(uda_band_2c_delivered, na.rm = T),
-            uda_band_3_delivered_12mon_avg  = mean(uda_band_3_delivered, na.rm = T),
-            uda_urgent_same_day_delivered_12mon_avg  = mean(uda_urgent_same_day_delivered, na.rm = T),
-            uda_urgent_diff_day_delivered_12mon_avg  = mean(uda_urgent_diff_day_delivered, na.rm = T),
-            uda_band_other_12mon_avg  = mean(uda_band_other_delivered, na.rm = T),
-            contracted_uda_12mon_avg = mean(mon_uda_target, na.rm=T),
-            perc_udal_delivered_12mon_avg =mean(perc_uda_delivered, na.rm=T),
-            perc_urgent_uda_avg =mean(perc_urgent_uda, na.rm=T))%>%
-  collect()
+# if check is all TRUE, then pass QA meaning urgent delivered activities match
+view(check)
 
-df_12mon_sum<-df%>%
-  filter(year_month>="2023-07-01", year_month<="2024-06-01")%>%
-  group_by(contract_number, commissioner_code, commissioner_name, provider_id, provider_name, uda_perf_target)%>%
-  summarise(uda_delivered_12mon = sum(uda_delivered, na.rm = T),
-            uda_delivered_fd_12mon = sum(uda_delivered_fd, na.rm = T),
-            uda_band_1_delivered_12mon = sum(uda_band_1_delivered, na.rm = T),
-            uda_band_2_delivered_12mon = sum(uda_band_2_delivered, na.rm = T),
-            uda_band_2a_delivered_12mon = sum(uda_band_2a_delivered, na.rm = T),
-            uda_band_2b_delivered_12mon = sum(uda_band_2b_delivered, na.rm = T),
-            uda_band_2c_delivered_12mon = sum(uda_band_2c_delivered, na.rm = T),
-            uda_band_3_delivered_12mon = sum(uda_band_3_delivered, na.rm = T),
-            uda_urgent_same_day_delivered_12mon = sum(uda_urgent_same_day_delivered, na.rm = T),
-            uda_urgent_diff_day_delivered_12mon = sum(uda_urgent_diff_day_delivered, na.rm = T),
-            uda_band_other_12mon = sum(uda_band_other_delivered, na.rm = T),
-            contracted_uda_12mon= sum(mon_uda_target, na.rm=T))%>%
-  mutate(perc_udal_delivered_12mon=ifelse(contracted_uda_12mon==0, NA, round(uda_delivered_12mon/contracted_uda_12mon, 3)),
-         perc_urgent_uda_12mon=ifelse(uda_delivered_12mon==0, NA, round((uda_urgent_same_day_delivered_12mon+uda_urgent_diff_day_delivered_12mon)/uda_delivered_12mon, 3)))%>%
-  collect()
+sql="/****** Script for SelectTopNRows command from SSMS  ******/
+select distinct b.CONTRACT_NUMBER, a.nonFD, b.FD, (a.nonFD+b.FD) AS TOTAL
+from
+(SELECT    [CONTRACT_NUMBER], sum([URGENT_SAME_DAY_DELIVERED]+[URGENT_DIFF_DAY_DELIVERED]) as nonFD
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000]
+ group by [CONTRACT_NUMBER],[COMMISSIONER_CODE]
+ HAVING [COMMISSIONER_CODE]='QE1'
+ ) a
+  full join 
+ ( SELECT  [CONTRACT_NUMBER], sum([URGENT_SAME_DAY_DELIVERED]+[URGENT_DIFF_DAY_DELIVERED]) as FD
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_urgent_700000]
+ group by [CONTRACT_NUMBER],[COMMISSIONER_CODE]
+ HAVING [COMMISSIONER_CODE]='QE1' 
+ 
+ ) b
+	on  a.CONTRACT_NUMBER=b.CONTRACT_NUMBER
+	WHERE (a.nonFD+b.FD)>0"
+result <- dbSendQuery(con, sql)
+QA3 <- dbFetch(result)
+dbClearResult(result)
 
-dataset_names1 <- list('Monthly_Jul23toNov24' = subset(df, select = -c(`month`)), '12months_average' = df_12mon_avg, '12months_sum' = df_12mon_sum)
+check2=ifelse(n_row(QA3$CONTRACT_NUMBER)==n_distinct(QA2$CONTRACT_NUMBER), TRUE, FALSE)
 
-openxlsx::write.xlsx(dataset_names1, file = paste0('~/Rprojects/SMT-Dental-Pack-PhODS/\\Urgent700k_UDAdelivery.xlsx')) 
+# if check2 is TRUE, then pass QA meaning number of contracts included in the ICB output is complete
+view(check2)
+
+
+#### check if total activities match 
+
+
+
