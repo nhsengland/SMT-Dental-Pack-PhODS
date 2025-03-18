@@ -150,7 +150,7 @@ for (i in (1: nrow(ICB_list))) {
 ### QA ----
 #spot check outputs against SQL queries (PLEASE CHANGE ICB CODE AND CONTRACT NUMBER BELOW TO CHECK)
 
-sql = "select a.*, b.[ACT], (a.FDONLY+b.ACT) as total
+sql = "select a.*, b.[ACT], (a.FDONLY+b.ACT) as totalData
 from
 (SELECT  [YEAR_MONTH]
  ,([URGENT_SAME_DAY_DELIVERED]+[URGENT_DIFF_DAY_DELIVERED]) AS FDONLY
@@ -222,9 +222,31 @@ result <- dbSendQuery(con, sql)
 QA3 <- dbFetch(result)
 dbClearResult(result)
 
-check2=ifelse(n_row(QA3$CONTRACT_NUMBER)==n_distinct(QA2$CONTRACT_NUMBER), TRUE, FALSE)
+QA2<-QA2%>%mutate(total=select(., c( "2023-07-01",
+                                     "2023-08-01",
+                                     "2023-09-01",
+                                     "2023-10-01",
+                                     "2023-11-01",
+                                     "2023-12-01",
+                                     "2024-01-01",
+                                     "2024-02-01",
+                                     "2024-03-01",
+                                     "2024-04-01",
+                                     "2024-05-01",
+                                     "2024-06-01",
+                                     "2024-07-01",
+                                     "2024-08-01",
+                                     "2024-09-01",
+                                     "2024-10-01",
+                                     "2024-11-01"))%>% 
+                    rowSums(na.rm=T))
 
-# if check2 is TRUE, then pass QA meaning number of contracts included in the ICB output is complete
+check2<-QA2%>%
+  full_join(QA3, "CONTRACT_NUMBER")%>%
+  mutate(check=ifelse(total==TOTAL, TRUE, FALSE))
+
+
+# if check2 is all TRUE, then pass QA meaning number of contracts included in the ICB output is complete
 view(check2)
 
 
