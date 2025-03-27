@@ -13,7 +13,7 @@ library(lubridate)
 ```{r working days}
 
 #read local file -- No working days in each month
-working_days <- read_excel("workdays.xlsx",sheet = "workdays")
+working_days <- read_excel("N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/BSA Calendar data/workdays.xlsx",sheet = "workdays")
 working_days$month <- as.Date(working_days$Month)
 
 ```
@@ -474,7 +474,7 @@ BPE_data$commissioner_name <- paste0(BPE_data$commissioner_name,
 ```{r population data at ICB level}
 
 #read local file -- No working days in each month
-population_ICB <- read_excel("ICB_population_master.xlsx",sheet = "Sheet1")
+population_ICB <- read_excel("N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/BSA Calendar data/ICB_population_master.xlsx",sheet = "Sheet1")
 population_ICB$month <- as.Date(population_ICB$Date)
 population_ICB$`ICB Name` <- str_sub(population_ICB$`ICB Name`,5)
 population_ICB$`ICB Name` <- str_to_title(population_ICB$`ICB Name`)

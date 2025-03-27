@@ -196,7 +196,7 @@ data_ICB_unique_quarterly_children <- data_ICB_unique_quarterly %>%
 # create Excel file
 # create function to run the output
 
-create_export_file <- function(){
+create_export_file_quartly <- function(){
   output_file <- createWorkbook()
 
   addWorksheet(output_file, "ED22_unique adults")
