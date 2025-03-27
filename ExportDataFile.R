@@ -19,7 +19,8 @@ data_Nat_UDA=plot_UDA_UOA_delivery_wd(data = UDA_calendar_data,
 
 data_Nat_UDA<- data_Nat_UDA %>% 
   select(calendar_month,UDAs_annual_contracted,UDAs_delivered_month,UDAs_delivered_month_percent_contracted_standardised)%>%
-  mutate(geography_level='National',geography_name='England') %>% 
+  mutate(geography_level='National',geography_name='England',region_ICB_map='England'
+         ) %>% 
   arrange(desc(calendar_month))
 
 data_reg_UDA=plot_UDA_UOA_delivery_all_regions(data = UDA_calendar_data, 
@@ -31,14 +32,16 @@ data_reg_UDA=plot_UDA_UOA_delivery_all_regions(data = UDA_calendar_data,
 data_reg_UDA <- data_reg_UDA %>%
   select(calendar_month,geography_name=region_name,
          UDAs_annual_contracted,UDAs_delivered_month,UDAs_delivered_month_percent_contracted_standardised)%>%
-  mutate(geography_level='Regional') %>% 
+  mutate(geography_level='Regional',region_ICB_map=geography_name
+         ) %>% 
   arrange(desc(calendar_month))
 
 data_ICB_UDA <- Table_UDA_UOA_delivery_all_ICBs(data = UDA_calendar_data, 
                                 UDAorUOA = "UDA")
 
+
 data_ICB_UDA <- data_ICB_UDA %>%
-  select(calendar_month,geography_name=commissioner_name,
+  select(calendar_month,geography_name=commissioner_name,region_ICB_map=region_name,
          UDAs_annual_contracted,UDAs_delivered_month,UDAs_delivered_month_percent_contracted_standardised)%>%
   mutate(geography_level='ICB') %>% 
   arrange(desc(calendar_month))
@@ -52,7 +55,9 @@ data_Nat_YTD_UDA<- Table_YTD_UDA_UOA_delivery (data = UDA_calendar_data,
                                        all_regions_and_STPs = FALSE)
 
 data_Nat_YTD_UDA<- data_Nat_YTD_UDA %>% 
-  mutate(geography_level='National',geography_name='England') %>% 
+  mutate(geography_level='National',geography_name='England'
+         #,region_ICB_map='England'
+         ) %>% 
   arrange(desc(calendar_month))
 
 data_reg_YTD_UDA<- Table_YTD_UDA_UOA_delivery (data = UDA_calendar_data, 
@@ -61,7 +66,9 @@ data_reg_YTD_UDA<- Table_YTD_UDA_UOA_delivery (data = UDA_calendar_data,
                                                all_regions_and_STPs =TRUE)
 data_reg_YTD_UDA <- data_reg_YTD_UDA %>%
   rename(geography_name=region_name)%>%
-  mutate(geography_level='Regional') %>% 
+  mutate(geography_level='Regional'
+         #,region_ICB_map=geography_name
+         ) %>% 
   arrange(desc(calendar_month))
 
 data_icb_YTD_UDA<- Table_YTD_UDA_UOA_delivery (data = UDA_calendar_data, 
@@ -69,7 +76,9 @@ data_icb_YTD_UDA<- Table_YTD_UDA_UOA_delivery (data = UDA_calendar_data,
                                                level = "STP",
                                                all_regions_and_STPs =TRUE)
 data_icb_YTD_UDA <- data_icb_YTD_UDA %>%
-  rename(geography_name=commissioner_name)%>%
+  rename(geography_name=commissioner_name
+         #,region_ICB_map=region_name
+         )%>%
   mutate(geography_level='ICB') %>% 
   arrange(desc(calendar_month))
 
@@ -85,7 +94,9 @@ data_Nat_CoT <- table_banded_CoT(data = UDA_calendar_data_FD,
 data_Nat_CoT <- data_Nat_CoT %>% 
   rowwise() %>% 
   mutate(CoT_total_delivered_incl_FD_standardised = sum(band1, band2, band3, other, urgent, na.rm = TRUE)) %>%
-  mutate(geography_level='National',geography_name='England') %>% 
+  mutate(geography_level='National',geography_name='England'
+         #,region_ICB_map='England'
+         ) %>% 
   rename(calendar_month = month, 
          CoT_band1_delivered_incl_FD_standardised = band1, 
          CoT_band2_delivered_incl_FD_standardised = band2,
@@ -109,7 +120,9 @@ data_reg_CoT <- data_reg_CoT %>%
 # Create the Total FP17s column by summing the specified numeric columns
 data_reg_CoT <- data_reg_CoT %>%
   mutate(CoT_total_delivered_incl_FD_standardised = rowSums(across(c(band1, band2, band3, other, urgent)), na.rm = TRUE))%>%
-  mutate(geography_level = "Regional") %>% 
+  mutate(geography_level = "Regional"
+        # ,region_ICB_map=region_name
+         ) %>% 
   rename(calendar_month = month,
          geography_name = region_name,
          CoT_band1_delivered_incl_FD_standardised = band1, 
@@ -137,6 +150,7 @@ data_icb_CoT <- data_icb_CoT %>% ungroup()
 # Create the Total FP17s column by summing the specified numeric columns
 data_icb_CoT <- data_icb_CoT %>%
   mutate(CoT_total_delivered_incl_FD_standardised = rowSums(select(., band1, band2, band3, other, urgent), na.rm = TRUE))%>%
+  select(-c('region_name'))%>%
   mutate(geography_level = "ICB") %>% 
   rename(calendar_month = month,
          geography_name = commissioner_name,
@@ -159,7 +173,9 @@ data_Nat_CoT_unstandardised <- table_banded_CoT(data = UDA_calendar_data_FD,
 data_Nat_CoT_unstandardised <- data_Nat_CoT_unstandardised %>% 
   rowwise() %>% 
   mutate(CoT_total_delivered_incl_FD = sum(band1, band2, band3, other, urgent, na.rm = TRUE)) %>%
-  mutate(geography_level='National',geography_name='England') %>% 
+  mutate(geography_level='National',geography_name='England'
+         #,region_ICB_map='England'
+         ) %>% 
   rename(calendar_month = month, 
          CoT_band1_delivered_incl_FD = band1, 
          CoT_band2_delivered_incl_FD = band2,  
@@ -183,7 +199,9 @@ data_reg_CoT_unstandardised <- data_reg_CoT_unstandardised %>%
 # Create the Total FP17s column by summing the specified numeric columns
 data_reg_CoT_unstandardised <- data_reg_CoT_unstandardised %>%
   mutate(CoT_total_delivered_incl_FD = rowSums(across(c(band1, band2, band3, other, urgent)), na.rm = TRUE))%>%
-  mutate(geography_level = "Regional") %>% 
+  mutate(geography_level = "Regional"
+         #,region_ICB_map=region_name
+         ) %>% 
   rename(calendar_month = month,
          geography_name = region_name,
          CoT_band1_delivered_incl_FD = band1, 
@@ -211,6 +229,7 @@ data_icb_CoT_unstandardised <- data_icb_CoT_unstandardised %>% ungroup()
 # Create the Total FP17s column by summing the specified numeric columns
 data_icb_CoT_unstandardised <- data_icb_CoT_unstandardised %>%
   mutate(CoT_total_delivered_incl_FD = rowSums(select(., band1, band2, band3, other, urgent), na.rm = TRUE))%>%
+ select(-c('region_name'))%>%
   mutate(geography_level = "ICB") %>% 
   rename(calendar_month = month,
          geography_name = commissioner_name,
@@ -229,7 +248,9 @@ data_CoT_standardised <- rbind(data_Nat_CoT, data_reg_CoT, data_icb_CoT)
 data_CoT_unstandardised <- rbind(data_Nat_CoT_unstandardised, data_reg_CoT_unstandardised, data_icb_CoT_unstandardised)
 
 data_CoT <- data_CoT_unstandardised %>% 
-  full_join(data_CoT_standardised, by = c("calendar_month", "geography_name", "geography_level"))
+  full_join(data_CoT_standardised, by = c("calendar_month", "geography_name", "geography_level"
+                                          #,'region_ICB_map'
+                                          ))
 
 ###### UOA #####
 #### No UOA delivered, contracted & percentage & start/complete
@@ -249,7 +270,8 @@ data_Nat_UOA<- data_Nat_UOA %>%
   select(calendar_month, financial_year,`UOAs_annual_contracted`,`UOAs_delivered_month`,`no workdays`,
          UOAs_delivered_month_percent_contracted_standardised)%>%
    left_join(data_start_nat,by='calendar_month')%>%
-  mutate(geography_level='National',geography_name='England') %>%
+  mutate(geography_level='National',geography_name='England',region_ICB_map='England'
+         ) %>%
   arrange(desc(calendar_month))
 
 data_start_reg <- UOA_calendar_data %>%
@@ -267,7 +289,8 @@ data_reg_UOA <- data_reg_UOA %>%
   select(calendar_month, financial_year, geography_name=region_name,`UOAs_annual_contracted`,`UOAs_delivered_month`,`no workdays`,
          UOAs_delivered_month_percent_contracted_standardised)%>%
   left_join(data_start_reg,by=c('calendar_month','geography_name'))%>%
-  mutate(geography_level='Regional') %>% 
+  mutate(geography_level='Regional',region_ICB_map=geography_name
+         ) %>% 
   arrange(desc(calendar_month))
 
 
@@ -281,15 +304,18 @@ data_ICB_UOA <- Table_UDA_UOA_delivery_all_ICBs(data = UOA_calendar_data,
                                                 UDAorUOA = "UOA")
 
 data_ICB_UOA <- data_ICB_UOA %>%
-  select(calendar_month, financial_year, geography_name=commissioner_name,`UOAs_annual_contracted`=annual_contracted_UDA_UOA,
+  select(calendar_month, financial_year,region_name,
+         geography_name=commissioner_name,`UOAs_annual_contracted`=annual_contracted_UDA_UOA,
          `UOAs_delivered_month`=monthly_UDA_UOAs_delivered,`no workdays`,
          UOAs_delivered_month_percent_contracted_standardised=perc_standardised_wd)%>%
   left_join(data_start_ICB,by=c('calendar_month','geography_name'))%>%
+  rename(region_ICB_map=region_name)%>%
   mutate(geography_level='ICB') %>% 
   arrange(desc(calendar_month))
 
 data_UOA_de_co<- rbind(data_Nat_UOA, data_reg_UOA, data_ICB_UOA) %>% 
- select(calendar_month, financial_year,geography_level,geography_name,UOAs_annual_contracted,UOAs_delivered_month,
+ select(calendar_month, financial_year,geography_level,geography_name,region_ICB_map,
+        UOAs_annual_contracted,UOAs_delivered_month,
         UOAs_delivered_month_percent_contracted_standardised,UOA_started,UOA_completed)
 
 ####YTD delivery
@@ -299,7 +325,9 @@ data_Nat_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data,
                                               all_regions_and_STPs = FALSE)
 
 data_Nat_YTD_UOA<- data_Nat_YTD_UOA %>%
- mutate(geography_level='National',geography_name='England') %>% 
+ mutate(geography_level='National',geography_name='England'
+       # ,region_ICB_map='England'
+        ) %>% 
   arrange(desc(calendar_month))
 
 data_reg_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data,
@@ -309,7 +337,9 @@ data_reg_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data,
 
 data_reg_YTD_UOA <- data_reg_YTD_UOA %>%
  rename(geography_name=region_name)%>%
- mutate(geography_level='Regional') %>% 
+ mutate(geography_level='Regional'
+        #,region_ICB_map=geography_name
+        ) %>% 
   arrange(desc(calendar_month))
 
 data_icb_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data,
@@ -318,7 +348,9 @@ data_icb_YTD_UOA<- Table_YTD_UDA_UOA_delivery (data = UOA_calendar_data,
                                               all_regions_and_STPs =TRUE)
 
 data_icb_YTD_UOA <- data_icb_YTD_UOA %>%
- rename(geography_name=`commissioner_name`)%>%
+ rename(geography_name=`commissioner_name`
+        #,region_ICB_map=region_name
+        )%>%
  mutate(geography_level='ICB') %>% 
   arrange(desc(calendar_month))
 
@@ -326,7 +358,10 @@ data_UOA_YTD<- rbind(data_Nat_YTD_UOA, data_reg_YTD_UOA, data_icb_YTD_UOA) %>%
   rename(UOAs_delivered_year_to_date = YTD_delivery)
 
 data_orthodontic_activity <- data_UOA_de_co %>% 
-  full_join(data_UOA_YTD, by = c("calendar_month", "financial_year", "geography_name", "geography_level"))
+  full_join(data_UOA_YTD, by = c("calendar_month", "financial_year", "geography_name", "geography_level"
+                                 #,'region_ICB_map'
+                                 ))%>% 
+  select(calendar_month, financial_year, geography_level, geography_name,region_ICB_map, everything())
 
 ### Unique patients seen ####
 # Unique patients rolling
@@ -335,7 +370,9 @@ data_Nat_unique <- pull_unique_patients() %>%
   select(month, all_12m_count_ctry, child_12m_count_ctry, adult_24m_count_ctry) %>% 
   distinct() %>% 
   mutate(month = format(as.Date(month), "%Y-%m"), 
-         geography_level='National',geography_name='England') %>% 
+         geography_level='National',geography_name='England'
+         #,region_ICB_map='England'
+         ) %>% 
   rename(unique_patients_seen_12_month = all_12m_count_ctry, 
          unique_children_seen_12_month = child_12m_count_ctry, 
          unique_adults_seen_24_month = adult_24m_count_ctry, 
@@ -343,7 +380,9 @@ data_Nat_unique <- pull_unique_patients() %>%
   arrange(desc(calendar_month))
 
 data_ICB_unique <- pull_unique_patients() %>% 
-  select(month, commissioner_name, all_12m_count, child_12m_count, adult_24m_count) %>% 
+  select(month, 
+         #region_ICB_map=region_name,
+         commissioner_name, all_12m_count, child_12m_count, adult_24m_count) %>% 
   mutate(commissioner_name = str_to_title(commissioner_name), 
          commissioner_name = gsub("Icb", "ICB", commissioner_name), 
          month = format(as.Date(month), "%Y-%m"), 
@@ -370,6 +409,7 @@ npp_nat <- npp_data %>%
             child_NPP_band_23 = sum(band23_child_count)) %>% 
   mutate(geography_level = "National", 
          geography_name = "England", 
+         #region_ICB_map='England',
          month = format(as.Date(month), "%Y-%m")) %>% 
   arrange(desc(month)) %>% 
   rename(calendar_month = month)
@@ -384,7 +424,8 @@ npp_reg <- npp_data %>%
             adult_NPP_band_23 = sum(band23_adult_count), 
             child_NPP_band_1 = sum(band1_child_count), 
             child_NPP_band_23 = sum(band23_child_count)) %>% 
-  mutate(geography_level = "Regional", 
+  mutate(geography_level = "Regional",
+        # region_ICB_map=region_name,
          month = format(as.Date(month), "%Y-%m")) %>% 
   arrange(desc(month)) %>% 
   rename(geography_name = region_name, 
@@ -392,7 +433,7 @@ npp_reg <- npp_data %>%
 
 npp_icb <- npp_data %>% 
   filter(month >= "2024-03-01" & new_patient_tariff_amount > 0) %>% 
-  group_by(month, commissioner_name) %>% 
+  group_by(month,commissioner_name) %>% 
   summarise(total_NPP_patients_seen = sum(total),
             adult_NPP_patients_seen = sum(adult_count), 
             child_NPP_patients_seen = sum(child_count), 
@@ -404,7 +445,9 @@ npp_icb <- npp_data %>%
          month = format(as.Date(month), "%Y-%m")) %>% 
   arrange(desc(month)) %>% 
   rename(geography_name = commissioner_name, 
-         calendar_month = month)
+         calendar_month = month
+         #,region_ICB_map=region_name
+         )
 
 npp_total <- rbind(npp_nat, npp_reg, npp_icb)
 
@@ -519,7 +562,7 @@ data_dental_activity<-data_UDA_de_co%>%
   left_join(npp_total, by = c("calendar_month", "geography_name", "geography_level")) %>% 
   #left_join(npp_contracts, by = c("calendar_month", "geography_name", "geography_level")) %>% 
   left_join(npp_comparison, by = c("calendar_month", "geography_name", "geography_level")) %>% 
-  select(calendar_month, financial_year, geography_level, geography_name, everything())
+  select(calendar_month, financial_year, geography_level, geography_name,region_ICB_map, everything())
 
 
 ##########DCP#######################################
@@ -611,7 +654,7 @@ data_dental_activity<-data_UDA_de_co%>%
     pivot_longer(cols = DCP_description:DCP_DIR_DESC, names_to = "variable", values_to = "DCP_description") %>% 
     select(-variable) %>% 
     filter(!DCP_description == "") %>% 
-    group_by(month, commissioner_name, DCP_description) %>%
+    group_by(month,Region, commissioner_name, DCP_description) %>%
       dplyr::summarise (completed_courses_of_treatment = sum(FP17_Current_Year_total, na.rm = TRUE),
                         UDA_B1 = sum(Band_1._UDA, na.rm = TRUE),
                         UDA_B2 = sum(Band_2._UDA, na.rm = TRUE),
@@ -645,7 +688,7 @@ data_dental_activity<-data_UDA_de_co%>%
     
     total_national <- all_lookup_national %>% 
       mutate (dcp_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
-      mutate(geography_name='England',geography_level='National') %>% 
+      mutate(geography_name='England',geography_level='National',region_ICB_map='England') %>% 
       arrange(desc(month))
     
     
@@ -672,7 +715,7 @@ data_dental_activity<-data_UDA_de_co%>%
     total_regional <- all_lookup_regional %>% 
       mutate (dcp_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
       rename(geography_name=`Region`)%>%
-      mutate(geography_level='Region') %>% 
+      mutate(geography_level='Region',region_ICB_map=geography_name) %>% 
       arrange(desc(month))
   
   dcp_summary_icb_longer <- dcp_summary_icb %>% pivot_longer ( ##where does dcp summary come from?
@@ -693,11 +736,11 @@ data_dental_activity<-data_UDA_de_co%>%
   
   all_lookup_icb <- left_join(dcp_summary_icb_longer, delivery_total_ICB_longer, by = 
                             c("month", "DCP_metric", "commissioner_name")) %>% 
-    select (month, commissioner_name,DCP_description.x, DCP_metric, numbers, DCP_description.y, all_numbers)
+    select (month, Region,commissioner_name,DCP_description.x, DCP_metric, numbers, DCP_description.y, all_numbers)
   
   total_icb <- all_lookup_icb %>% 
     mutate (dcp_percent = formattable::percent (numbers / all_numbers, digits=2))%>%
-    rename(geography_name=`commissioner_name`)%>%
+    rename(geography_name=`commissioner_name`,region_ICB_map=Region)%>%
     mutate(geography_level='ICB') %>% 
     arrange(desc(month))
   
@@ -705,7 +748,7 @@ data_dental_activity<-data_UDA_de_co%>%
     filter(DCP_metric != "completed_courses_of_treatment") %>% 
     mutate(financial_year = get_financial_year(month), 
            `month` = format(as.Date(month), "%Y-%m"))%>%
-    select(calendar_month=month, financial_year,geography_level,geography_name,DCP_metric,DCP_description=DCP_description.x,
+    select(calendar_month=month, financial_year,geography_level,geography_name,region_ICB_map,DCP_metric,DCP_description=DCP_description.x,
            metric_count_by_DCP = numbers,metric_count_total = all_numbers,DCP_involved_percent = dcp_percent)
   
 
@@ -736,7 +779,7 @@ data_dental_activity<-data_UDA_de_co%>%
   
   BPE_all_national<-data_total_national%>%
     left_join(data_high_national, by='Year_Month')%>%
-    mutate(geography_name='England',geography_level='National',
+    mutate(geography_name='England',geography_level='National',region_ICB_map='England',
            pct_low_risk_recalled=formattable::percent (low_risk_NContractors/ NContractors, digits =0) ) %>% 
     arrange(desc(Year_Month))
 
@@ -766,7 +809,7 @@ data_dental_activity<-data_UDA_de_co%>%
   
   BPE_all_region<-data_total_region%>%
     left_join(data_high_region, by=c('Year_Month',"geography_name"))%>%
-    mutate(geography_level='Region',
+    mutate(geography_level='Region',region_ICB_map=geography_name,
            pct_low_risk_recalled=formattable::percent (low_risk_NContractors/ NContractors, digits =0) ) %>% 
     arrange(desc(Year_Month))
   
@@ -774,7 +817,7 @@ data_dental_activity<-data_UDA_de_co%>%
   data_ICB <-BPE_data %>% 
     filter(Total.Form.Count>0,
            Year_Month>= "2023-04-01") %>%
-    group_by(Year_Month, commissioner_name,Contract.Number) %>%
+    group_by(Year_Month, Latest.Region.Description,commissioner_name,Contract.Number) %>%
     summarise (nlow_risk = 
                  sum (as.numeric(Total_Form_Count_Highest_BPE_Sextant_Score_0_or_1_and_0_UDT), na.rm = TRUE),
                low_risk_less1year = 
@@ -786,24 +829,25 @@ data_dental_activity<-data_UDA_de_co%>%
     mutate(threshold_percent_low_risk_whic_are1_year=ifelse(percent_low_risk_whic_are1_year >= 0.5, 'YES','NO'))
   
   data_total_ICB<- data_ICB %>% 
-    group_by(Year_Month, geography_name=commissioner_name) %>%
+    group_by(Year_Month,Latest.Region.Description, geography_name=commissioner_name) %>%
     summarise (NContractors = n_distinct(Contract.Number)) 
   
   data_high_ICB<- data_ICB %>% 
     filter(threshold_percent_low_risk_whic_are1_year=='YES') %>%
-    group_by(Year_Month, geography_name=commissioner_name) %>%
+    group_by(Year_Month,Latest.Region.Description, geography_name=commissioner_name) %>%
     summarise (low_risk_NContractors = n_distinct(Contract.Number)) 
   
   BPE_all_ICB<-data_total_ICB%>%
-    left_join(data_high_ICB, by=c('Year_Month',"geography_name"))%>%
+    left_join(data_high_ICB, by=c('Year_Month','Latest.Region.Description',"geography_name"))%>%
     mutate(geography_level='ICB',
            pct_low_risk_recalled=formattable::percent (low_risk_NContractors/ NContractors, digits =0) ) %>% 
+    rename(region_ICB_map=Latest.Region.Description)%>% 
     arrange(desc(Year_Month))
   
   total_bpe<- rbind(BPE_all_national, BPE_all_region, BPE_all_ICB) %>% 
     mutate(financial_year = get_financial_year(Year_Month), 
       Year_Month = format(as.Date(Year_Month), "%Y-%m"))%>%
-    select(calendar_month=Year_Month, financial_year, geography_level,geography_name,no_contracts=NContractors,
+    select(calendar_month=Year_Month, financial_year, geography_level,geography_name,region_ICB_map,no_contracts=NContractors,
            no_contracts_recall_50pct_low_risk=low_risk_NContractors,
            pct_contracts_recall_50pct_low_risk=pct_low_risk_recalled)
 

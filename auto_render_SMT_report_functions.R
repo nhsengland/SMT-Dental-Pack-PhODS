@@ -32,6 +32,8 @@ source("planning_data_output.R")
 # produce data file
 create_export_file()
 
+create_export_file_quartly()
+
 # produce extract for PCDID
 create_pcdid_extract()
 

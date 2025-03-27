@@ -319,7 +319,7 @@ plot_UDA_UOA_delivery_all_regions <- function(data = UDA_calendar_data,
 
 ```{r UDA/UOA %delivered/contracted - standardised by working days without historical data -- include all ICBs -- table}
 # used in export data file
-Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
+Table_UDA_UOA_delivery_all_ICBs <- function(data = UDA_calendar_data,
                                             UDAorUOA = "UOA"){
 
   if(UDAorUOA == "UDA"){
@@ -327,7 +327,7 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
     data <- data %>%
       mutate(month = as.Date(month)) %>%
       filter(month >= as.Date ("2020-04-01")) %>%
-      select(month, contract_number, commissioner_name, region_name, annual_contracted_UDA, UDA_band_1,UDA_band_2,UDA_band_3,UDA_other,UDA_urgent,UDA_delivered)
+      select(month, contract_number,region_name, commissioner_name, annual_contracted_UDA, UDA_band_1,UDA_band_2,UDA_band_3,UDA_other,UDA_urgent,UDA_delivered)
     
     #get data into the right format and calculate the annual contracted UDA, delivered UDA and percentage of UDA delivered
     data <- get_delivery_data(data = data, UDAorUOA = "UDA", all_regions_and_STPs = TRUE)
@@ -335,7 +335,7 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
       filter(month>"2020-03-01")
     
     data <- data %>%
-      group_by(month, commissioner_name) %>%
+      group_by(month,region_name, commissioner_name) %>%
       summarise(monthly_UDA_UOAs_BAND1_delivered = sum(monthly_UDA_UOAs_BAND1_delivered, na.rm = TRUE),
               monthly_UDA_UOAs_BAND2_delivered = sum(monthly_UDA_UOAs_BAND2_delivered, na.rm = TRUE),
               monthly_UDA_UOAs_BAND3_delivered = sum(monthly_UDA_UOAs_BAND3_delivered, na.rm = TRUE),
@@ -374,7 +374,7 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UOA_calendar_data,
       filter(month>"2020-03-01")
     
     data <- data %>%
-      group_by(month, commissioner_name) %>%
+      group_by(month,region_name, commissioner_name) %>%
       summarise(monthly_UDA_UOAs_delivered = sum(monthly_UDA_UOAs_delivered, na.rm = TRUE),
                 annual_contracted_UDA_UOA = sum(annual_contracted_UDA_UOA, na.rm = TRUE))
     
@@ -1265,15 +1265,15 @@ table_banded_CoT <- function(data = UDA_calendar_data_FD,
       
       #filter for region or STP
       #calculate in each band
-      data_to_print <- reshape2::melt(data_to_print, id.vars = c("month", "commissioner_name"))
+      data_to_print <- reshape2::melt(data_to_print, id.vars = c("month","region_name", "commissioner_name"))
       
       data <- data_to_print %>%
-          filter(variable != "region_name") %>% 
+         # filter(variable != "region_name") %>% 
           left_join(working_days, by = c("month")) %>%
           mutate(month = format(as.Date(month), "%Y-%m"),
                  CoTs = as.numeric(value),
                  standardised_CoTs = CoTs*(`no workdays`/`total workdays`)) %>% 
-          group_by(month, commissioner_name, variable) %>% 
+          group_by(month, region_name,commissioner_name, variable) %>% 
           summarise(standardised_CoTs = sum(standardised_CoTs, na.rm = TRUE), 
                     CoTs = sum(CoTs, na.rm = TRUE))
       
