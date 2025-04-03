@@ -2,6 +2,8 @@
 library(rmarkdown)
 library(knitr)
 
+#AS test comment
+
 # Print the current working directory
 current_wd <- getwd()
 print(paste("Current working directory:", current_wd))
