@@ -312,24 +312,7 @@ plot_npp_activity(level = "National",
 -   New Patient Premiums are part of the Dental Recovery Plan: <https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/>
 -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
 
-## Eligible contracts that have seen new patients
 
-This slide is not currently shown as the methodology is being reviewed.
-
-<!-- COMMENTED OUT WHILE METHODOLOGY REVIEWED -->
-<!-- ```{r npp contracts, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'} -->
-<!-- plot <- plot_npp_contracts(level = "National", -->
-<!--                            region_STP_name = NULL) -->
-
-<!-- table <- table_npp_contracts(level = "National",  -->
-<!--                              region_STP_name = NULL) -->
-
-<!-- grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1),  -->
-<!--              layout_matrix = rbind(c(1, 1, 2))) -->
-<!-- ``` -->
-
-<!-- -   New Patient Premiums are part of the Dental Recovery Plan: <https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/> -->
-<!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
 
 ## NPP activity to date against previous year's delivery
 
