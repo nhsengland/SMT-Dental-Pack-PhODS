@@ -24,7 +24,32 @@ SELECT * INTO  [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Act
 
 SELECT * INTO [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000_bk] FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000]
 
-### Need to add lines below to remove provisional data first###########################################
+### Need to add lines below to remove provisional data and save them to different tables ###########################################
+
+INSERT INTO  [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts_urgent_700000_provisional_archived] 
+SELECT *, [date_removed]= getdate()
+FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts_urgent_700000] 
+where [FINAL_YN]= 'N'
+
+INSERT INTO  [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_urgent_700000_provisional_archived] 
+SELECT *, [date_removed]= getdate()
+FROM  [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_urgent_700000]
+where [FINAL_YN]= 'N'
+
+
+INSERT INTO [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000_provisional_archived] 
+SELECT *, [date_removed]= getdate()
+FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000]
+where [FINAL_YN]= 'N'
+
+DELETE FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts_urgent_700000] 
+where [FINAL_YN]= 'N'
+
+DELETE FROM  [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_urgent_700000]
+where [FINAL_YN]= 'N'
+
+DELETE FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000]
+where [FINAL_YN]= 'N'
 
 "
 result<-dbSendQuery(con,sql)
@@ -117,7 +142,9 @@ SELECT * FROM  [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Act
 result<-dbSendQuery(con,sql)
 dbClearResult(result)
 
-## delete temp tables once checked in NCDR
+
+########################################################
+## delete temp tables after QA -----
 sql=" 
 Drop table [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts_urgent_700000_temp]
 
@@ -125,7 +152,11 @@ Drop table [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activit
 
 Drop table [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000_temp]
 
+Drop table [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts_urgent_700000_bk]
 
+Drop table [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_urgent_700000_bk]
+
+Drop table [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000_bk]
 "
 result<-dbSendQuery(con,sql)
 dbClearResult(result)

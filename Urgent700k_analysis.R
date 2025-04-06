@@ -109,7 +109,7 @@ df<-distinct(df)
 names(df) <- base::tolower(names(df))
 
 df_12mon_avg<-df%>%
-  filter(year_month>="2024-12-01", year_month<="2024-11-01")%>%
+  filter(year_month>="2024-01-01", year_month<="2024-12-01")%>%
   group_by(contract_number, icb_code, icb_name, uda_perf_target)%>%
   summarise(no_uda_month =n(),
             uda_delivered_12mon_avg = mean(uda_delivered, na.rm = T),
@@ -121,7 +121,7 @@ df_12mon_avg<-df%>%
   collect()
 
 df_12mon_sum<-df%>%
-  filter(year_month>="2024-12-01", year_month<="2024-11-01")%>%
+  filter(year_month>="2024-01-01", year_month<="2024-12-01")%>%
   group_by(contract_number, icb_code, icb_name, uda_perf_target)%>%
   summarise(no_uda_month =n(),
             uda_delivered_12mon = sum(uda_delivered, na.rm = T),
@@ -132,6 +132,6 @@ df_12mon_sum<-df%>%
          perc_urgent_uda_12mon=ifelse(uda_delivered_12mon==0, NA, round((uda_urgent_same_day_delivered_12mon+uda_urgent_diff_day_delivered_12mon)/uda_delivered_12mon, 3)))%>%
   collect()
 
-dataset_names1 <- list('Monthly_Jul23toNov24' = subset(df, select = -c(`month`)), 'Last 12months_average' = df_12mon_avg, 'Last 12months_sum' = df_12mon_sum)
+dataset_names1 <- list('Monthly_Jul23toDec24' = subset(df, select = -c(`month`)), 'Last 12months_average' = df_12mon_avg, 'Last 12months_sum' = df_12mon_sum)
 
 openxlsx::write.xlsx(dataset_names1, file = paste0('~/Rprojects/SMT-Dental-Pack-PhODS/\\Urgent700k_UDAdelivery.xlsx')) 
