@@ -30,7 +30,8 @@ get_fy_start <- function(financial_year){
 ```
 
 ```{r set financial year dates}
-current_fy_start <- get_fy_start(latest_final_month)
+fy <- get_financial_year(latest_final_month)
+current_fy_start <- get_fy_start(fy)
 current_fy_end <- current_fy_start %m+% months(11)
 current_fy <- get_financial_year(current_fy_start)
 previous_fy_start <- current_fy_start %m-% months(12)
