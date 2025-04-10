@@ -2459,9 +2459,10 @@ This slide is not currently shown as the methodology is being reviewed.
 
 ---
 
+
 name: NPP-comparison
 #### NPP activity to date against previous year's delivery
-
+<!-- CODE COMMENTED OUT WHILE METHODOLOGY REVIEWED -->
 
 ```{r xaringan-panelset-NPP-comparison, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -2471,189 +2472,212 @@ xaringanExtra::use_panelset()
 
 .panel[.panel-name[`r region`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot <- plot_npp_activity_monitoring(level = "Regional", 
-                                     region_STP_name = region)
-
-table <- table_npp_monitoring(level = "Regional", 
-                                     region_STP_name = region)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# plot <- plot_npp_activity_monitoring(level = "Regional", 
+#                                      region_STP_name = region)
+# 
+# table <- table_npp_monitoring(level = "Regional", 
+#                                      region_STP_name = region)
+# 
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
 ]
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP1)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+#                                      region_STP_name = STP1)
+# 
+# table <- table_npp_monitoring(level = "STP", 
+#                                      region_STP_name = STP1)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP1)
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 .panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP2)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+#                                     region_STP_name = STP2)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP2)
+# table <- table_npp_monitoring(level = "STP", 
+#                                     region_STP_name = STP2)
 
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 .panel[.panel-name[`r STP3`]
 ```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP3)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+#                                      region_STP_name = STP3)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP3)
+# table <- table_npp_monitoring(level = "STP", 
+#                                      region_STP_name = STP3)
 
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP4)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+ #                                     region_STP_name = STP4)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP4)
+# table <- table_npp_monitoring(level = "STP", 
+#                                      region_STP_name = STP4)
 
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 .panel[.panel-name[`r STP5`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP5)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+#                                      region_STP_name = STP5)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP5)
+# table <- table_npp_monitoring(level = "STP", 
+#                                      region_STP_name = STP5)
 
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 .panel[.panel-name[`r STP6`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP6)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+#                                      region_STP_name = STP6)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP6)
+# table <- table_npp_monitoring(level = "STP", 
+#                                      region_STP_name = STP6)
 
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+ #             layout_matrix = rbind(c(1, 1, 2)))
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 .panel[.panel-name[`r STP7`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP7)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+#                                      region_STP_name = STP7)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP7)
+# table <- table_npp_monitoring(level = "STP", 
+ #                                     region_STP_name = STP7)
 
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP8)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+ #                                     region_STP_name = STP8)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP8)
+# table <- table_npp_monitoring(level = "STP", 
+#                                      region_STP_name = STP8)
 
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+ #             layout_matrix = rbind(c(1, 1, 2)))
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 .panel[.panel-name[`r STP9`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP9)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+ #                                     region_STP_name = STP9)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP9)
+# table <- table_npp_monitoring(level = "STP", 
+ #                                     region_STP_name = STP9)
 
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+ #             layout_matrix = rbind(c(1, 1, 2)))
 
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 .panel[.panel-name[`r STP10`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP10)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+ #                                     region_STP_name = STP10)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP10)
+# table <- table_npp_monitoring(level = "STP", 
+ #                                     region_STP_name = STP10)
 
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+#              layout_matrix = rbind(c(1, 1, 2)))
 
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 .panel[.panel-name[`r STP11`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
-plot <- plot_npp_activity_monitoring(level = "STP", 
-                                     region_STP_name = STP11)
+# plot <- plot_npp_activity_monitoring(level = "STP", 
+ #                                     region_STP_name = STP11)
 
-table <- table_npp_monitoring(level = "STP", 
-                                     region_STP_name = STP11)
+# table <- table_npp_monitoring(level = "STP", 
+#                                      region_STP_name = STP11)
 
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
+# grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
+ #             layout_matrix = rbind(c(1, 1, 2)))
 
 ```
--   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources.
--   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days.
+<!-- -   Data before the NPP was introduced is taken from eDEN, while data after the introduction of the NPP (excluding unpaid) is from COMPASS. This is because it is not possible to replicate the COMPASS method on eDEN data to compare activity delivered prior to the NPP's introduction. The table shows the difference between COMPASS and eDEN data for months where we have both sources. -->
+<!-- -   This data is not standardised by working day, so some of the difference between months may be due to differences in the number of working days. -->
+This slide is not currently shown as the methodology is being reviewed. The data is available in the accompanying excel file.
+
 ]
 ]
 
