@@ -1071,18 +1071,18 @@ plot_monthly_uda_delivered <- function(data = UDA_calendar_data,
   # create data labels for latest complete month (two months prior to most recent month)
   latest_complete_month <- format(latest_final_month, "%B")
   
-  data_labels <- data %>% 
-    filter(month_name == latest_complete_month)
+ # data_labels <- data %>% 
+  #  filter(month_name == latest_complete_month)
 
   # plot chart
   ggplot(data, aes(x = month_name, y = uda_delivered, fill = financial_year)) + 
     geom_bar(position = "dodge", stat = "identity") +  
-    geom_text(aes(label = prettyNum(uda_delivered, big.mark=",")), 
-              data = data_labels,
-              colour = "black",
-              vjust = -0.5, 
-              position = position_dodge(.9), 
-              size = 7/.pt) + 
+   # geom_text(aes(label = prettyNum(uda_delivered, big.mark=",")), 
+   #           data = data_labels,
+   #           colour = "black",
+   #           vjust = -0.5, 
+   #           position = position_dodge(.9), 
+   #           size = 7/.pt) + 
     theme_bw() +
     theme(legend.position = "bottom") + 
     labs(title = "Monthly UDAs delivered", 
