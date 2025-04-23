@@ -17,8 +17,6 @@ library(ggpubr)
 # get financial year from month
 latest_final_month <- max(UDA_calendar_data$month[UDA_calendar_data$final_yn == "Y"])
 
-latest_month <- max(UDA_calendar_data$month)
-
 get_financial_year <- function(month, ...){
   ifelse(month(month)>3, 
        paste(year(month), "/", substr(year(month)+1,start=3,stop=4), sep = ""), 
@@ -32,7 +30,7 @@ get_fy_start <- function(financial_year){
 ```
 
 ```{r set financial year dates}
-fy <- get_financial_year(latest_month)
+fy <- get_financial_year(latest_final_month)
 current_fy_start <- get_fy_start(fy)
 current_fy_end <- current_fy_start %m+% months(11)
 current_fy <- get_financial_year(current_fy_start)
@@ -2229,9 +2227,8 @@ table_working_days <- function(){
     pivot_wider(names_from = fy, 
                 values_from = `no workdays`) %>% 
     rename(Month = month_name, 
-           #`2023/24 \n working days` = `2023/24`,
-           `2024/25 \n working days` = `2024/25`,
-           `2025/26 \n working days` = `2025/26`)
+           `2023/24 \n working days` = `2023/24`,
+           `2024/25 \n working days` = `2024/25`)
   
   # convert to grob object to use in slides
   table_to_print <- tableGrob(workdays, rows = NULL)

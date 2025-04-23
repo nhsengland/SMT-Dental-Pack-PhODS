@@ -49,7 +49,7 @@ library(openxlsx)
       ungroup()
     
     #create Quarter for working days
-    working_days <- working_days %>%
+    working_days1 <- working_days %>%
       mutate(
         month = as.Date(month),   # Convert 'month' to Date format if it isn't already
         month_num = month(month),   # Extract month number
@@ -72,7 +72,7 @@ library(openxlsx)
     
     
     data <- data %>% 
-      left_join(working_days,by=c('Year_Quarter')) %>%
+      left_join(working_days1,by=c('Year_Quarter')) %>%
       mutate(planning_ref='E.D.24',
         quarterly_contracted_UDA =annual_contracted_UDA_UOA*(`no workdays`/`total workdays`),
              perc_standardised_wd_int = 
