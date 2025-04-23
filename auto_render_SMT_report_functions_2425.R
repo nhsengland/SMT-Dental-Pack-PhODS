@@ -24,9 +24,9 @@ if (!dir.exists(reports_dir)) {
 print("Directory 'reports' exists or was successfully created.")
 
 # Source the necessary RMarkdown files
-source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE) 
+source(knitr::purl("SQLpulls_2425.Rmd", output = tempfile()))
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
-source(knitr::purl("plotting.Rmd", output = tempfile())) 
+source(knitr::purl("plotting_2425.Rmd", output = tempfile()))
 source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
 source("ExportDataFile.R")
 source("planning_data_output.R")
@@ -73,7 +73,7 @@ render_report = function(region) {
                      "_ICBs_reporting_to_",
                      gsub(" ", "_",latest_month), 
                      '.html')
-
+  
   rmarkdown::render(
     "SMT_dental_report_region_ICB_level.rmd", 
     params = list(region = region),
