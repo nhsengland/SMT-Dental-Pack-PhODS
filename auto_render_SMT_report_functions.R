@@ -24,9 +24,9 @@ if (!dir.exists(reports_dir)) {
 print("Directory 'reports' exists or was successfully created.")
 
 # Source the necessary RMarkdown files
-source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
+source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE) ##this need to be changed to source(knitr::purl("SQLpulls_2425.Rmd", output = tempfile()))if you need 24/25 pack
 source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
-source(knitr::purl("plotting.Rmd", output = tempfile()))
+source(knitr::purl("plotting.Rmd", output = tempfile())) ##this need to be changed to source(knitr::purl("plotting_2425.Rmd", output = tempfile()))if you need 24/25 pack
 source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
 source("ExportDataFile.R")
 source("planning_data_output.R")

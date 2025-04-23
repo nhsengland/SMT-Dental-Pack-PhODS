@@ -1913,6 +1913,8 @@ plot_unique_patients_rolling(level = "STP",
 name: NPP
 #### Patients seen under the New Patient Premium definition
 
+<!-- CODE COMMENTED OUT WHILE METHODOLOGY REVIEWED -->
+
 ```{r xaringan-panelset-NPP, echo=FALSE}
 xaringanExtra::use_panelset()
 ```
@@ -1921,146 +1923,158 @@ xaringanExtra::use_panelset()
 
 .panel[.panel-name[`r region`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_npp_activity(level = "Regional",
-                              region_STP_name = region,
-                  by_band = FALSE)
+#plot_npp_activity(level = "Regional",
+#                              region_STP_name = region,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP1,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP1,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP2,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP2,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP3`]
 ```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP3,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP3,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP4,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP4,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP5`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP5,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP5,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP6`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP6,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP6,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP7`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP7,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP7,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP8,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP8,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP9`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP9,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP9,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP10`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP10,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP10,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP11`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP11,
-                  by_band = FALSE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP11,
+#                  by_band = FALSE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 ]
@@ -2079,146 +2093,157 @@ xaringanExtra::use_panelset()
 
 .panel[.panel-name[`r region`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_npp_activity(level = "Regional",
-                              region_STP_name = region,
-                  by_band = TRUE)
+#plot_npp_activity(level = "Regional",
+#                              region_STP_name = region,
+#                  by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP1`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP1,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP1,
+#                  by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP2`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP2,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP2,
+#                  by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP3`]
 ```{r  echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP3,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP3,
+ #                 by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP4`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval4}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP4,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP4,
+#                  by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP5`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval5}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP5,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP5,
+#                  by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
-
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 ]
 .panel[.panel-name[`r STP6`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval6}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP6,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP6,
+#                  by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP7`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval7}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP7,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP7,
+ #                 by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval8}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP8,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP8,
+#                  by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP9`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval9}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP9,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP9,
+ #                 by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP10`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval10}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP10,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP10,
+#                  by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP11`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval=eval11}
-plot_npp_activity(level = "STP",
-                                  region_STP_name = STP11,
-                  by_band = TRUE)
+#plot_npp_activity(level = "STP",
+#                                  region_STP_name = STP11,
+#                  by_band = TRUE)
 
 ```
 
--   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+<!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 ]
@@ -2253,7 +2278,7 @@ xaringanExtra::use_panelset()
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP1`]
@@ -2272,7 +2297,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP2`]
@@ -2290,7 +2315,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP3`]
@@ -2308,7 +2333,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP4`]
@@ -2326,7 +2351,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -2344,7 +2369,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -2362,7 +2387,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -2380,7 +2405,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP8`]
@@ -2398,7 +2423,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -2416,7 +2441,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -2434,7 +2459,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -2452,7 +2477,7 @@ This slide is not currently shown as the methodology is being reviewed.
 
 <!-- -   New Patient Premiums are part of the Dental Recovery Plan: https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/ -->
 <!-- -   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 ]
 ]

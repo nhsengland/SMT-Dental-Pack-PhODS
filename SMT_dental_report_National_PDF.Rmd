@@ -31,12 +31,7 @@ library(gridExtra)
 options(htmltools.dir.version = FALSE, htmltools.preserve.raw = FALSE)
 options(knitr.duplicate.label = 'allow')
 
-#source in all files
-source(knitr::purl("SQLpulls.Rmd", output = tempfile()), local = TRUE)
-source(knitr::purl("Data_Processing.Rmd", output = tempfile()))
-source(knitr::purl("plotting.Rmd", output = tempfile()))
-source(knitr::purl("appendix_functions.Rmd", output = tempfile()))
-source("ExportDataFile.R")
+
 ```
 
 ```{r setup, include=FALSE}
@@ -291,30 +286,30 @@ plot_unique_patients_rolling(level = "National",
 -   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
 
 ## Patients seen under the New Patient Premium definition
-
-```{r npp activity, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+New Patient Premium metrics have been removed from this pack as the scheme has ended
+<!-- ```{r npp activity, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_npp_activity(level = "National", 
                   region_STP_name = NULL, 
                   by_band = FALSE)
 ```
 
 -   New Patient Premiums are part of the Dental Recovery Plan: <https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/>
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
 
 ## Patients seen under the New Patient Premium definition by band
-
-```{r npp activity by band, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+New Patient Premium metrics have been removed from this pack as the scheme has ended
+<!-- ```{r npp activity by band, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_npp_activity(level = "National", 
                   region_STP_name = NULL, 
                   by_band = TRUE)
 ```
 
 -   New Patient Premiums are part of the Dental Recovery Plan: <https://www.england.nhs.uk/long-read/update-on-the-dental-recovery-plan/>
--   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment.
+-   The New Patient Premium scheme started in March 2024. Dentists are paid on completion of a course of treatment. -->
 
 ## Eligible contracts that have seen new patients
 
-This slide is not currently shown as the methodology is being reviewed.
+New Patient Premium metrics have been removed from this pack as the scheme has ended
 
 <!-- COMMENTED OUT WHILE METHODOLOGY REVIEWED -->
 <!-- ```{r npp contracts, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'} -->
@@ -431,51 +426,6 @@ plot_111_referrals()
 
 Helpful reading <https://www.kingsfund.org.uk/insight-and-analysis/long-reads/dentistry-england-explained>
 
-## Impact of swapping to calendar data for dentistry
-
--   Dental activity data can be grouped into months using two different methods - by 'calendar' month or by 'scheduled' month.
-
--   Using calendar month means that activity is allocated to months based on the month in which the course of treatment finished.
-
--   Using scheduled month means that activity is allocated to months based on the month the dentist claimed for payment following a finished course of treatment.
-
--   This pack has switched from using scheduled data to calendar data to better reflect when dental activity occurs.
-
--   Dentists have 62 days following the completion of a course of treatment to claim payment. This means that the latest two months of any charts using activity data should now be considered provisional, as more claims for treatment ending in these months can be submitted.
-
--   While the last two months of activity data will be incomplete, UDA claim patterns indicate that most activity is claimed for in the same month as treatment finished.
-
--   For example, for treatment ending in December 2023:
-
-    -   90% was submitted in December 2023.
-
-    -   9% was submitted in January 2024.
-
-    -   1% was submitted in February 2024.
-
-## Comparison of monthly UDA data
-
-Switching to calendar data means that spikes in the number of claims submitted due to submission arrangements are smoothed out.
-
-```{r time series comparison UOA, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
-plot <- plot_time_series_comparison(UDAorUOA = "UDA")
-table <- table_time_series_comparison(UDAorUOA = "UDA")
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
-```
-
-## Comparison of monthly UOA data
-
-Spikes are also smoothed out in UOA data. UOA calendar data is incomplete for the latest financial year and we expect final data to be higher.
-
-```{r time series comparison, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14}
-plot <- plot_time_series_comparison(UDAorUOA = "UOA")
-table <- table_time_series_comparison(UDAorUOA = "UOA")
-
-grid.arrange(plot, table, nrow = 1, widths = c(1, 1, 1), 
-             layout_matrix = rbind(c(1, 1, 2)))
-```
 
 # Data sources
 
