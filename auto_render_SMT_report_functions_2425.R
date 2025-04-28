@@ -2,7 +2,7 @@
 library(rmarkdown)
 library(knitr)
 
-#AS test trying to push to git again AGAIN
+#AS doing test Git pushes
 
 # Print the current working directory
 current_wd <- getwd()
