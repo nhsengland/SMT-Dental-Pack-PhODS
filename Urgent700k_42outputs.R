@@ -9,22 +9,25 @@ library(tidyr)
 
 con <- dbConnect(odbc::odbc(), "NCDR")
 
-############ Extract data from NCDR ----
+############ Extract data from NCDR ---- excluding 5 contracts that are not urgent care for north west
 
 sql <- "SELECT *
-  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts_urgent_700000]"
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts_urgent_700000] 
+WHERE CONTRACT_NUMBER NOT IN ('1004930000','1004950000','1005030000','1005050000','6962930001')" 
 result <- dbSendQuery(con, sql)
 u7_contract <- dbFetch(result)
 dbClearResult(result)
 
 sql <- "SELECT *
-  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_urgent_700000]"
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_urgent_700000]
+WHERE CONTRACT_NUMBER NOT IN ('1004930000','1004950000','1005030000','1005050000','6962930001')"
 result <- dbSendQuery(con, sql)
 u7_UDA <- dbFetch(result)
 dbClearResult(result)
 
 sql <- "SELECT *
-  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000]"
+  FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000]
+WHERE CONTRACT_NUMBER NOT IN ('1004930000','1004950000','1005030000','1005050000','6962930001')"
 result <- dbSendQuery(con, sql)
 u7_FDonly <- dbFetch(result)
 dbClearResult(result)
@@ -88,6 +91,7 @@ master<-master%>%
          URGENT_DIFF_DAY_DELIVERED_LATE,
          URGENT_DELIVERED_LATE, 
          Region_Name)%>%
+  #filter(!YEAR_MONTH %in% c(max(YEAR_MONTH)%m-% months(1), max(YEAR_MONTH)))%>% no longer removing the last two provisional months
   collect()
 
 
@@ -100,7 +104,12 @@ region_list<-distinct(subset(master, select = c( Region_Name)))
 
 
 ### get month of update (this will be used as part of ICB output file name)
+
+# need to change the file name as not helpful using system date. needs to be final month #todo
 update<- format(Sys.Date(), '%b%y') 
+update2<- max(master$YEAR_MONTH, '%b%y') #not showing as year_month
+
+
 
 
 ### prep a complete list of contracts available in all three data files during this time period
@@ -171,7 +180,7 @@ extract_icb_data<-function(ICB="QRV"){
     }
   }
   
-  openxlsx::write.xlsx(dataset_names, file = paste0(reports_dir,'\\Urgent700k_',ICB,'_',update, '_update.xlsx')) 
+  openxlsx::write.xlsx(dataset_names, file = paste0(reports_dir,'\\Urgent700k_',ICB,'_',update, '_output.xlsx')) 
   
 }
 
@@ -223,7 +232,7 @@ extract_region_data<-function(reg="London"){
       stop("Failed to create 'reports' directory")
     }
   }
-  openxlsx::write.xlsx(dataset_names, file = paste0(reports_dir,'\\Urgent700k_',reg,'_',update, '_update.xlsx')) 
+  openxlsx::write.xlsx(dataset_names, file = paste0(reports_dir,'\\Urgent700k_',reg,'_',update, '_output.xlsx')) 
 }
 
 ### Write all 7 regional files ----
