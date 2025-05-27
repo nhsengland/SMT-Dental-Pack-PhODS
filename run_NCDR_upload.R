@@ -2,7 +2,7 @@ source("NCDR_upload_functions.R")
 
 ## MANUAL INPUTS ##
 # each month, update to the next month
-latest_expected_month <- "2024-10-01"
+latest_expected_month <- "2025-04-01"
 
 #### CALENDAR - initial ####
 folder_name <- c("BPE", "Contract", "NPP", "UDA Activity", "UDA Activity DCP", "UDA Activity FD only", "Unique rolling", "UOA Activity")
