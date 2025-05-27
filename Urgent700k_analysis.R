@@ -32,7 +32,8 @@ dbClearResult(result)
 ############################################################################
 #### UDA urgent care Analysis ----
 ## Add monthly UDA target in by adjusting annual contracted UDA with number of workdays ##
-working_days <- read_excel("workdays.xlsx",sheet = "workdays")
+#read local file -- No working days in each month
+working_days <- read_excel("N:/_Everyone/Primary Care Group/SMT_Dental Calendar data format/BSA Calendar data/workdays.xlsx",sheet = "workdays")
 working_days<-working_days%>%mutate(`YEAR_MONTH`=as.Date(`Month`))
 
 master<-u7_UDA%>%
@@ -108,8 +109,31 @@ df<-distinct(df)
 
 names(df) <- base::tolower(names(df))
 
+### to get one-off % of urgent UDA for SMT 24-25 pack update in May25
+df_SMT_contract<-df%>%
+  filter(year_month=='2025-04-01')%>%
+  select(year_month, 
+         contract_number, 
+         icb_code, 
+         icb_name, 
+         uda_annual_target=uda_perf_target, 
+         urgent_COT_delivered=urgent_delivered, 
+         uda_urgent_delivered, uda_monthly_target=mon_uda_target)%>%
+  mutate(perc_urgent_UDA=uda_urgent_delivered/ uda_monthly_target)%>%
+  collect()
+
+df_SMT_national<-df_SMT_contract%>%
+  group_by(year_month)%>%
+  summarise(no_contracts=n_distinct(contract_number), 
+            total_monthly_commisioned_UDA=sum(uda_monthly_target, na.rm=T),
+            total_uda_urgent_delivered = sum(uda_urgent_delivered, na.rm=T),
+            total_urgent_COT_delivered = sum(urgent_COT_delivered, na.rm=T))%>%
+  mutate(perc_urgent_UDA=total_uda_urgent_delivered/total_monthly_commisioned_UDA)%>%
+  collect()
+  
+
 df_12mon_avg<-df%>%
-  filter(year_month>="2024-01-01", year_month<="2024-12-01")%>%
+  filter(year_month>="2024-05-01", year_month<="2025-04-01")%>%
   group_by(contract_number, icb_code, icb_name, uda_perf_target)%>%
   summarise(no_uda_month =n(),
             uda_delivered_12mon_avg = mean(uda_delivered, na.rm = T),
@@ -121,7 +145,7 @@ df_12mon_avg<-df%>%
   collect()
 
 df_12mon_sum<-df%>%
-  filter(year_month>="2024-01-01", year_month<="2024-12-01")%>%
+  filter(year_month>="2024-05-01", year_month<="2025-04-01")%>%
   group_by(contract_number, icb_code, icb_name, uda_perf_target)%>%
   summarise(no_uda_month =n(),
             uda_delivered_12mon = sum(uda_delivered, na.rm = T),
@@ -132,6 +156,6 @@ df_12mon_sum<-df%>%
          perc_urgent_uda_12mon=ifelse(uda_delivered_12mon==0, NA, round((uda_urgent_same_day_delivered_12mon+uda_urgent_diff_day_delivered_12mon)/uda_delivered_12mon, 3)))%>%
   collect()
 
-dataset_names1 <- list('Monthly_Jul23toDec24' = subset(df, select = -c(`month`)), 'Last 12months_average' = df_12mon_avg, 'Last 12months_sum' = df_12mon_sum)
+dataset_names1 <- list('Monthly_Jul23toDec24' = subset(df, select = -c(`month`)), 'Last 12months_average' = df_12mon_avg, 'Last 12months_sum' = df_12mon_sum,'SMT_contract' = df_SMT_contract,'SMT_national' = df_SMT_national)
 
 openxlsx::write.xlsx(dataset_names1, file = paste0('~/Rprojects/SMT-Dental-Pack-PhODS/\\Urgent700k_UDAdelivery.xlsx')) 

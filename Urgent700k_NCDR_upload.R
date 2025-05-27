@@ -24,7 +24,7 @@ SELECT * INTO  [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Act
 
 SELECT * INTO [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000_bk] FROM [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_UDA_Activity_FD_only_urgent_700000]
 
-### Need to add lines below to remove provisional data and save them to different tables ###########################################
+--- Need to add lines below to remove provisional data and save them to different tables ###########################################
 
 INSERT INTO  [NHSE_Sandbox_PrimaryCareNHSContracts].[Dental].[Calendar_Contracts_urgent_700000_provisional_archived] 
 SELECT *, [date_removed]= getdate()

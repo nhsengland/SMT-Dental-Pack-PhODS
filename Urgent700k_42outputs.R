@@ -88,6 +88,7 @@ master<-master%>%
          URGENT_DIFF_DAY_DELIVERED_LATE,
          URGENT_DELIVERED_LATE, 
          Region_Name)%>%
+  filter(!CONTRACT_NUMBER %in% c(1004930000,1004950000,1005030000,1005050000,6962930001)) %>%  ## excluding 5 contracts from baseline
   collect()
 
 
@@ -104,25 +105,36 @@ update<- format(Sys.Date(), '%b%y')
 
 
 ### prep a complete list of contracts available in all three data files during this time period
-contract_a<-distinct(subset(u7_contract, select = c(COMMISSIONER_CODE, 
-                                                    COMMISSIONER_NAME, 
-                                                    CONTRACT_NUMBER, 
-                                                    PROVIDER_ID, 
-                                                    PROVIDER_NAME)))
+contract_a1<-distinct(subset(u7_contract, select = c(COMMISSIONER_CODE 
+                                                    ,COMMISSIONER_NAME
+                                                    ,CONTRACT_NUMBER)))
 
-contract_b<- distinct(subset(u7_UDA, select = c(COMMISSIONER_CODE, 
-                                                COMMISSIONER_NAME, 
-                                                CONTRACT_NUMBER, 
-                                                PROVIDER_ID, 
-                                                PROVIDER_NAME)))
-contract_c<- distinct(subset(u7_FDonly, select = c(COMMISSIONER_CODE, 
-                                                   COMMISSIONER_NAME, 
-                                                   CONTRACT_NUMBER, 
-                                                   PROVIDER_ID, 
-                                                   PROVIDER_NAME)))
+### Some contracts have different provider id/names in 3 data sources causing duplicated rows in outputs, so changed to use most recent values in contracts data for provider
+contract_a2<- distinct(subset(u7_contract, select = c(CONTRACT_NUMBER
+                                                      ,YEAR_MONTH)))%>%
+  group_by(CONTRACT_NUMBER)%>%
+  mutate(YEAR_MONTH=max(YEAR_MONTH))%>%
+  distinct()%>%
+  left_join(distinct(subset(u7_contract, select = c(CONTRACT_NUMBER
+                                                    , PROVIDER_ID
+                                                    ,PROVIDER_NAME
+                                                    ,YEAR_MONTH))), c("CONTRACT_NUMBER", "YEAR_MONTH"))
 
-contract<- distinct(rbind(contract_a, contract_b, contract_c))%>%
+
+
+contract_b<- distinct(subset(u7_UDA, select = c(COMMISSIONER_CODE 
+                                                ,COMMISSIONER_NAME
+                                                ,CONTRACT_NUMBER)))
+contract_c<- distinct(subset(u7_FDonly, select = c(COMMISSIONER_CODE 
+                                                   ,COMMISSIONER_NAME
+                                                   ,CONTRACT_NUMBER)))
+
+contract<- distinct(rbind(contract_a1, contract_b, contract_c))%>%
   rename(ICB_CODE = COMMISSIONER_CODE, ICB_NAME = COMMISSIONER_NAME)%>%
+  left_join(contract_a2, "CONTRACT_NUMBER")%>% 
+ #group_by(CONTRACT_NUMBER) %>%
+ #slice_tail(n = 1) %>%
+ #ungroup()%>%
   left_join(ICB_region,by=c("ICB_CODE"="STP_Code"))%>%
   collect()
 
