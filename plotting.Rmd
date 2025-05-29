@@ -400,6 +400,84 @@ Table_UDA_UOA_delivery_all_ICBs <- function(data = UDA_calendar_data,
 
 ```
 
+
+
+```{r commissioned UDA activity- standardised by working days with historical data}
+
+plot_historic_commissioned_UDA_wd <- function(data = UDA_calendar_data,
+                                          level = "National",
+                                          region_STP_name = NULL){
+  
+  #filter for STP or region in need
+  if(level == "Regional"){
+    data <- data %>%
+      filter(region_name == region_STP_name)
+    subtitle <- region_STP_name
+    
+  }else if(level == "STP"){
+    
+    data <- data %>%
+      filter(commissioner_name == region_STP_name)
+    subtitle <- region_STP_name
+    
+  }else{
+    
+    subtitle <- "England"
+  }
+  
+  
+  #get current FY data ready
+  # way to calculate percentage of UDA delivered which is standardized by no of working days 
+  #calculate UDA_delivery & contracted_UDAs
+  data_try <- data %>%
+    group_by(month) %>%
+    summarise(#UDA_delivery = sum(UDA_delivered, na.rm = TRUE),
+              contracted_UDAs = sum(annual_contracted_UDA, na.rm = TRUE)) %>%
+    # only include current FY data -- calculate percentage of UDA delivered -- standardized by no of working days 
+    filter(month >= as.Date (previous_fy_start)) %>%
+    left_join(working_days,by=c('month')) %>% 
+    mutate(std_UDA_delivered = (contracted_UDAs*(`no workdays`/`total workdays`))) %>%
+    filter(!is.na(month))%>%
+    select(month,std_UDA_delivered)
+  
+
+
+# Define plot 2
+p2 <- ggplot() +
+  geom_line(data = data_try, linetype = 1, 
+            aes(x = month, y = std_UDA_delivered), colour = "black") +
+  ylab(NULL) +
+  xlab(NULL) +
+  geom_text(data = data_try,
+            aes(x = month, y = std_UDA_delivered + min(std_UDA_delivered)/100, label = round(std_UDA_delivered, 0)),
+            size = 3) +
+  scale_x_date(breaks = "1 month", date_labels = "%b %Y") +
+  #scale_y_continuous(limits = c(min(c(data_try$std_UDA_delivered, 95), na.rm = T) - 5,                                                           #                        max(c(data_try$std_UDA_delivered, 95), na.rm = T) + 5)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, vjust = -0.0001),
+        legend.position = "none")
+
+# Define title and subtitle
+main_title <- "Monthly annual commissioned UDAs standardised by working days"
+
+
+# Create annotation
+annotation <- annotate_figure(
+  p2,
+  top = text_grob(paste(main_title, "\n", subtitle), hjust = 0, x = unit(40, "pt"), size = 14),
+  bottom = text_grob("Time period")
+)
+
+
+print(annotation)
+
+}
+```
+
+
+
+
+
 ```{r UDA activity- standardised by working days with historical data}
 
 plot_historic_UDA_delivery_wd <- function(data = UDA_calendar_data,
@@ -533,13 +611,7 @@ annotation <- annotate_figure(
   bottom = text_grob("Time period")
 )
 
-# Add footnote through annotation
-annotation2 <- annotate_figure(
-  annotation, 
-  bottom = textGrob(footnote_text, x = unit(0, "npc"), y = unit(0, "npc") + unit(1, "line"), just = "left", gp = gpar(fontsize = 10, fontface = "italic"))
-)
-
-print(annotation2)
+print(annotation)
 
 }
 ```
