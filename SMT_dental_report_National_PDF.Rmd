@@ -161,6 +161,17 @@ Note that following a finished Course of Treatment (CoT), dentists have 62 days 
 -   Count of orthodontic contracts included (`r latest_month_formatted`): `r n_contracts_uoa`.
 -   Orthodontic activity is subject to change within a financial year. As of `r latest_month_formatted` year to date UOA delivery is `r ytd_uoa_delivery`.
 
+# Commissioned Units of Dental Activity (UDA) Information
+
+## Commissioned Units of Dental Activity - Standardised by working days
+
+```{r UDA_activity_contracted, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                              level = "National",
+                              region_STP_name = NULL)
+```
+
+
 # Units of Dental Activity (UDA) Information
 
 ## Units of Dental Activity - Calendar activity data standardised by working days

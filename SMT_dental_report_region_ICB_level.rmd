@@ -271,6 +271,7 @@ This pack will continue to evolve and change, any questions/comments should be d
 name: contents
 #### Contents
 
+- [Commissioned Units of Dental Activity (UDA) - Standardised by working days](#uda-conmmissioned)
 - [Units of Dental Activity (UDA) - Calendar activity data standardised by working days](#uda-activity)
 - [Units of Dental Activity (UDA) - Calendar year to date delivery](#ytd-uda-delivery)
 - [Units of Dental Activity (UDA) - Monthly activity compared to previous financial year](#monthly-uda-activity)
@@ -289,6 +290,140 @@ name: contents
 - [Units of Orthodontic Activity (UOA) - Calendar year to date delivery](#YTD-UOA-delivery)
 - [Units of Orthodontic Activity (UOA) - Started/Completed](#YTD-UOA-STARTED)
 
+
+---
+
+
+name: uda-conmmissioned
+#### Commissioned UDA - Standardised by working days
+
+```{r xaringan-panelset-UDA_delivery_wd, echo=FALSE}
+xaringanExtra::use_panelset()
+```
+ <font size="2">
+.panelset[
+
+.panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data, 
+                                  level = "Regional",
+                                  region_STP_name = region)
+
+
+```
+
+
+]
+.panel[.panel-name[`r STP1`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                             region_STP_name = STP1)
+
+```
+
+
+]
+.panel[.panel-name[`r STP2`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                  region_STP_name = STP2)
+```
+
+
+]
+.panel[.panel-name[`r STP3`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                  region_STP_name = STP3)
+
+```
+
+
+]
+.panel[.panel-name[`r STP4`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval = eval4}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                  region_STP_name = STP4)
+
+```
+
+
+]
+.panel[.panel-name[`r STP5`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval = eval5}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                  region_STP_name = STP5)
+
+```
+
+
+]
+.panel[.panel-name[`r STP6`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval = eval6}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                  region_STP_name = STP6)
+
+```
+
+
+]
+.panel[.panel-name[`r STP7`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval = eval7}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                  region_STP_name = STP7)
+
+```
+
+]
+.panel[.panel-name[`r STP8`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval = eval8}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                  region_STP_name = STP8)
+
+```
+
+
+]
+.panel[.panel-name[`r STP9`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval = eval9}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                  region_STP_name = STP9)
+
+```
+
+
+]
+.panel[.panel-name[`r STP10`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval = eval10}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                  region_STP_name = STP10)
+
+```
+
+
+]
+.panel[.panel-name[`r STP11`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval = eval11}
+plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
+                                             level = "STP",
+                                  region_STP_name = STP11)
+
+```
+
+
+]
+
+]
 
 ---
 
