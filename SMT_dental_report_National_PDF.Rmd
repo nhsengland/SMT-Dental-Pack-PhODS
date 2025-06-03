@@ -163,7 +163,7 @@ Note that following a finished Course of Treatment (CoT), dentists have 62 days 
 
 # Commissioned Units of Dental Activity (UDA) Information
 
-## Commissioned Units of Dental Activity - Standardised by working days
+## Commissioned Units of Dental Activity
 
 ```{r UDA_activity_contracted, echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
 plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
@@ -171,6 +171,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
                               region_STP_name = NULL)
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 # Units of Dental Activity (UDA) Information
 
