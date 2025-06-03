@@ -62,7 +62,7 @@ get_colour_palette <- function(){
 
 
 
-```{r commissioned UDA activity- standardised by working days with historical data}
+```{r commissioned UDA activity}
 
 plot_historic_commissioned_UDA_wd <- function(data = UDA_calendar_data,
                                           level = "National",
@@ -93,39 +93,38 @@ plot_historic_commissioned_UDA_wd <- function(data = UDA_calendar_data,
     group_by(month) %>%
     summarise(#UDA_delivery = sum(UDA_delivered, na.rm = TRUE),
               contracted_UDAs = sum(annual_contracted_UDA, na.rm = TRUE)) %>%
-    # only include current FY data -- calculate percentage of UDA delivered -- standardized by no of working days 
-    filter(month >= as.Date (previous_fy_start)) %>%
+    filter(month >= "2023-04-01") %>%
     left_join(working_days,by=c('month')) %>% 
     mutate(std_UDA_delivered = (contracted_UDAs*(`no workdays`/`total workdays`))) %>%
     filter(!is.na(month))%>%
-    select(month,std_UDA_delivered)
+    select(month,contracted_UDAs)
   
 
 
 # Define plot 2
 p2 <- ggplot() +
   geom_line(data = data_try, linetype = 1, 
-            aes(x = month, y = std_UDA_delivered), colour = "black") +
-  ylab(NULL) +
+            aes(x = month, y = contracted_UDAs), colour = "black") +
   xlab(NULL) +
-  geom_text(data = data_try,
-            aes(x = month, y = std_UDA_delivered + min(std_UDA_delivered)/100, label = round(std_UDA_delivered, 0)),
-            size = 3) +
-  scale_x_date(breaks = "1 month", date_labels = "%b %Y") +
-  #scale_y_continuous(limits = c(min(c(data_try$std_UDA_delivered, 95), na.rm = T) - 5,                                                           #                        max(c(data_try$std_UDA_delivered, 95), na.rm = T) + 5)) +
+  ylab("commissioned UDAs") +
+  #geom_text(data = data_try,
+  #          aes(x = month, y = contracted_UDAs + min(contracted_UDAs)/450, label = round(contracted_UDAs, 0)),
+  #          size = 2.5,check_overlap = TRUE) +
+  scale_x_date(breaks = "2 month", date_labels = "%b %Y") +
+  #scale_y_continuous(limits = c(min(c(data_try$contracted_UDAs, 95), na.rm = T) - 5,                                                           #                        max(c(data_try$contracted_UDAs, 95), na.rm = T) + 5)) +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 90, vjust = -0.0001),
         legend.position = "none")
 
 # Define title and subtitle
-main_title <- "Monthly annual commissioned UDAs standardised by working days"
+main_title <- "Monthly total commissioned UDAs"
 
 
 # Create annotation
 annotation <- annotate_figure(
   p2,
   top = text_grob(paste(main_title, "\n", subtitle), hjust = 0, x = unit(40, "pt"), size = 14),
-  bottom = text_grob("Time period")
+  bottom = text_grob("Month")
 )
 
 

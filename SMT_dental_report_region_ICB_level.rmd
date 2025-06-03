@@ -271,7 +271,7 @@ This pack will continue to evolve and change, any questions/comments should be d
 name: contents
 #### Contents
 
-- [Commissioned Units of Dental Activity (UDA) - Standardised by working days](#uda-conmmissioned)
+- [Commissioned Units of Dental Activity (UDA)](#uda-conmmissioned)
 - [Units of Dental Activity (UDA) - Calendar activity data standardised by working days](#uda-activity)
 - [Units of Dental Activity (UDA) - Calendar year to date delivery](#ytd-uda-delivery)
 - [Units of Dental Activity (UDA) - Monthly activity compared to previous financial year](#monthly-uda-activity)
@@ -295,7 +295,7 @@ name: contents
 
 
 name: uda-conmmissioned
-#### Commissioned UDA - Standardised by working days
+#### Commissioned UDA
 
 ```{r xaringan-panelset-UDA_delivery_wd, echo=FALSE}
 xaringanExtra::use_panelset()
@@ -312,6 +312,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 .panel[.panel-name[`r STP1`]
@@ -322,6 +324,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 .panel[.panel-name[`r STP2`]
@@ -331,6 +335,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
                                   region_STP_name = STP2)
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 .panel[.panel-name[`r STP3`]
@@ -341,6 +347,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 .panel[.panel-name[`r STP4`]
@@ -351,6 +359,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 .panel[.panel-name[`r STP5`]
@@ -361,6 +371,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 .panel[.panel-name[`r STP6`]
@@ -371,6 +383,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 .panel[.panel-name[`r STP7`]
@@ -381,6 +395,9 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
+
 ]
 .panel[.panel-name[`r STP8`]
 ```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center', eval = eval8}
@@ -390,6 +407,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 .panel[.panel-name[`r STP9`]
@@ -400,6 +419,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 .panel[.panel-name[`r STP10`]
@@ -410,6 +431,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 .panel[.panel-name[`r STP11`]
@@ -420,6 +443,8 @@ plot_historic_commissioned_UDA_wd(data = UDA_calendar_data,
 
 ```
 
+-   This plot shows commissioned UDAs as recorded in ComPASS each month, commissioned UDAs represent the UDAs that contractors are expected to deliver over the financial year. Variation in commissioned UDAs represent total changes from changes in total contracts held by ICBs and changes to contracted UDAs within contracts. 
+-   Including only GDS/PDS/PDS+ contracts where total contracted UDAs \>100. This means contracts with low UDA targets are excluded because they are usually not monitored against UDA delivery.
 
 ]
 
