@@ -379,6 +379,25 @@ data_Nat_unique <- pull_unique_patients() %>%
          calendar_month = month) %>% 
   arrange(desc(calendar_month))
 
+data_region_unique <- pull_unique_patients() %>% 
+  select(month, 
+         #region_ICB_map=region_name,
+         region_name, all_12m_count, child_12m_count, adult_24m_count) %>%
+  group_by(month,region_name)%>% 
+  summarise(all_12m_count = sum(all_12m_count),
+            child_12m_count = sum(child_12m_count),
+            adult_24m_count = sum(adult_24m_count))%>% 
+  mutate(region_name = str_to_title(region_name), 
+         month = format(as.Date(month), "%Y-%m"), 
+         geography_level = "Regional") %>% 
+  rename(geography_name = region_name, 
+         unique_patients_seen_12_month = all_12m_count, 
+         unique_children_seen_12_month = child_12m_count, 
+         unique_adults_seen_24_month = adult_24m_count, 
+         calendar_month = month) %>% 
+  filter(!is.na(geography_name)) %>% 
+  arrange(desc(calendar_month))
+
 data_ICB_unique <- pull_unique_patients() %>% 
   select(month, 
          #region_ICB_map=region_name,
@@ -394,7 +413,7 @@ data_ICB_unique <- pull_unique_patients() %>%
          calendar_month = month) %>% 
   arrange(desc(calendar_month))
 
-data_unique <- rbind(data_Nat_unique, data_ICB_unique)
+data_unique <- rbind(data_Nat_unique, data_region_unique,data_ICB_unique)
 
 ### New Patient Premium ####
 npp_nat <- npp_data %>% 

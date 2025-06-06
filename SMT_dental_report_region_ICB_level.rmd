@@ -1732,9 +1732,17 @@ xaringanExtra::use_panelset()
 .panelset[
 
 .panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level =  "Regional", 
+                             region_STP_name = region,
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = FALSE)
+```
 
--   Data on unique patients seen is not available at regional level, however ICB level data is available.
-
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months. <https://www.nice.org.uk/guidance/cg19/chapter/Recommendations>
 
 ]
 .panel[.panel-name[`r STP1`]
@@ -1906,8 +1914,17 @@ xaringanExtra::use_panelset()
 .panelset[
 
 .panel[.panel-name[`r region`]
+```{r echo = FALSE, warning = FALSE, message = FALSE, fig.width=14, fig.height=5, fig.align='center'}
+plot_unique_patients_rolling(level =  "Regional", 
+                             region_STP_name = region, 
+                             plotChart = TRUE, 
+                             all_regions_and_STPs = FALSE, 
+                             asIndex = TRUE)
+```
 
--   Data on unique patients seen is not available at regional level, however ICB level data is available.
+-   This chart shows the number of unique patients seen in a 24 month period for adults, and 12 month period for children compared to February 2020 levels.
+-   A person seen more than once in the rolling 12/24 months would be counted only once.
+-   NICE guidelines recommend that children should be seen at least 12 months and adults at least every 24 months.https://www.nice.org.uk/guidance/cg19/chapter/Recommendations
 
 ]
 .panel[.panel-name[`r STP1`]
