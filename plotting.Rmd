@@ -1443,6 +1443,7 @@ plot_unique_patients_rolling <- function(data = unique_patients_rolling,
   #get data in the right format for unique_patients
   data <- pull_unique_patients()
   
+   data$region_name <- str_to_title(data$region_name)
   data$commissioner_name <- str_to_title(data$commissioner_name)
   data$commissioner_name <- gsub("Icb", "ICB", data$commissioner_name)
   
@@ -1454,7 +1455,21 @@ The most recent two months data will be incomplete and subject to change, partic
 Unique patients are based on ICB of patient home postcode, each patient is counted only once and allocated to an ICB as identified by their most recent FP17 patient postcode."
 
 #set subtitles and select columns to use for ICB or national
-if(level == "STP"){
+if(level == "Regional"){
+    subtitle <- region_STP_name
+    
+     # select regional unique patient numbers
+    new_data <- data %>% 
+      filter(region_name == region_STP_name) %>% 
+      select(month, all_12m_count, child_12m_count, adult_24m_count) %>% 
+      group_by(month)%>% 
+      summarise(all_12m_count = sum(all_12m_count),
+                child_12m_count = sum(child_12m_count),
+                adult_24m_count = sum(adult_24m_count))
+    
+
+    }
+else if(level == "STP"){
   subtitle <- region_STP_name
   
   # select ICB unique patient numbers
