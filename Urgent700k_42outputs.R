@@ -118,7 +118,8 @@ contract_a2<- distinct(subset(u7_contract, select = c(CONTRACT_NUMBER
   left_join(distinct(subset(u7_contract, select = c(CONTRACT_NUMBER
                                                     , PROVIDER_ID
                                                     ,PROVIDER_NAME
-                                                    ,YEAR_MONTH))), c("CONTRACT_NUMBER", "YEAR_MONTH"))
+                                                    ,YEAR_MONTH))), c("CONTRACT_NUMBER", "YEAR_MONTH"))%>%
+  select(CONTRACT_NUMBER, PROVIDER_ID,PROVIDER_NAME)
 
 
 
